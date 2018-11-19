@@ -10,6 +10,9 @@ body {
     align-items: center;
     height: 100vh;
     background-image: linear-gradient(to bottom right, rgb(19, 72, 94), rgb(0, 174, 255));
+    background-image: url('image1.JPG');
+    background-size: cover;
+    background-position: center;
 }
 
 div#container {
@@ -19,7 +22,8 @@ div#container {
     width: 500px;
     height: 200px;
     background-color:#f8f9fa;
-    box-shadow: 3px 3px 5px #0a0a0a;
+    box-shadow: 3px 3px 7px #0a0a0a;
+
 }
 
 #container h1 {
@@ -43,7 +47,9 @@ form {
     text-align: left;
 }
 .form input {
-    width:150px;
+    width:200px;
+    border-radius:3px;
+    border:1px solid #0000002e;
 }
 
 .form label, .form input, .form button{
@@ -51,12 +57,14 @@ form {
 }
 
 .form button {
-    margin-left:215px;
+    margin-left:250px;
     border-radius: 5px;
     border: 0px solid;
     text-decoration: none;
-    background-color: #55acee;
-    box-shadow: 0px 1px 0px 0px #3C93D5;
+    background-color: #8798a5;
+    padding: 5px 10px;
+    box-shadow: 0px 1px 0px 0px #000;
+    color: white;
 }
 
 .form button:hover {
@@ -65,8 +73,8 @@ form {
 }
 
 #copyright {
-    background-color:#e6ecf0;  
-    clear: both;	
+
+    clear: both;  
   }
   
   #copyright-list {
@@ -82,4 +90,8 @@ form {
     padding-right:15px;
     color:rgb(150, 150, 150);
     font-size:13px
+  }
+  footer {
+    position: absolute;
+    bottom: 50px;
   }
