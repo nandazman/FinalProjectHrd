@@ -7,7 +7,7 @@
     <title>FORTNITE CORPS | Form</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/formRequester.css" />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Heebo|Catamaran" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <script src="main.js"></script>
 </head>
@@ -45,7 +45,8 @@
             </div>
             <div class="listForm">
                 <p>ON BEHALF NAME</p>
-                <input type="text" /><span>(Position Minimum L4)</span>
+                <input type="text" />
+                <small id="help">(Position Minimum L4)</small>
             </div>
             <div class="listForm">
                 <p>ON BEHALF POSITION</p>
@@ -53,7 +54,19 @@
             </div>
             <div class="listForm">
                 <p>EMPLOYEE</p>
-                <input type="text" /><input type="text" />
+                <div>
+                    <select class="doublelist1">
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="opel">Opel</option>
+                        <option value="audi">Audi</option>
+                    </select>
+                    <br>
+                    <input type="text" class="doubleinput2" />
+                </div>
+            </div>
+            <div>
+
             </div>
             <div class="listForm">
                 <p>PROCESS ID</p>
@@ -62,7 +75,7 @@
         </div>
         <!--current-->
         <header>
-            <h3><i class="far fa-file"></i>CURRENT</h3>
+            <h3><i class="far fa-file"></i> CURRENT</h3>
             <i class="fas fa-chevron-down" onclick="showCurrent()"></i>
         </header>
         <div id="current">
@@ -80,7 +93,10 @@
             </div>
             <div class="listForm">
                 <p>COST CENTER</p>
-                <input type="text" /><input type="text" />
+                <div>
+                    <input type="text" class="doubleinput1" /><br>
+                    <input type="text" class="doubleinput2" />
+                </div>
             </div>
             <div class="listForm">
                 <p>PERSONAL AREA</p>
@@ -97,13 +113,18 @@
         </div>
         <!--proposed-->
         <header>
-            <h3><i class="far fa-file-alt"></i>PROPOSED</h3>
+            <h3><i class="far fa-file-alt"></i> PROPOSED</h3>
             <i class="fas fa-chevron-down" onclick="showProposed()"></i>
         </header>
         <div id="proposed">
             <div class="listForm">
                 <p>POSITION CODE</p>
-                <input type="text" />
+                <select class="down-list">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="opel">Opel</option>
+                    <option value="audi">Audi</option>
+                </select>
             </div>
             <div class="listForm">
                 <p>POSITION</p>
@@ -111,11 +132,17 @@
             </div>
             <div class="listForm">
                 <p>COST CENTER</p>
-                <input type="text" /><input type="text" />
+                <div>
+                    <input type="text" class="doubleinput1" /><br>
+                    <input type="text" class="doubleinput2" />
+                </div>
             </div>
             <div class="listForm">
                 <p>DISTRIBUTION COST CENTER</p>
-                <input type="text" /><input type="text" />
+                <div>
+                    <input type="text" class="doubleinput1" /><br>
+                    <input type="text" class="doubleinput2" />
+                </div>
             </div>
             <div class="listForm">
                 <p>COMPANY</p>
@@ -134,12 +161,12 @@
                 <input type="text" />
             </div>
             <div class="listForm">
-                <p>RECEIVER (Position Minimum L4)</p>
+                <p>RECEIVER <small id="help">(Position Minimum L4)</small></p>
                 <input type="text" />
             </div>
             <div class="listForm">
                 <p>EFFECTIVE DATE START</p>
-                <input type="text" />
+                <input type="date" id="start" name="trip-start" value="yyyy-mm-dd" min="2018-01-01" max="2018-12-31">
             </div>
             <div class="listForm">
                 <p>JUSTIFICATION</p>
@@ -149,28 +176,30 @@
         <button type="button" id="submitButton">SUBMIT</button>
     </section>
     <footer id="copyright">
-        &copy;2018 FORTNITE CORPS Tbk. All Right Reserved. 
+        &copy;2018 FORTNITE CORPS Tbk. All Right Reserved.
     </footer>
     <script>
-        function showInformation(){
-            if (document.getElementById("new-information").style.display == "none"){
+        function showInformation() {
+            if (document.getElementById("new-information").style.display == "none") {
                 document.getElementById("new-information").style.display = "block"
             } else {
-                document.getElementById("new-information").style.display = "none"   
+                document.getElementById("new-information").style.display = "none"
             }
         }
-        function showCurrent(){
-            if (document.getElementById("current").style.display == "none"){
+
+        function showCurrent() {
+            if (document.getElementById("current").style.display == "none") {
                 document.getElementById("current").style.display = "block"
             } else {
-                document.getElementById("current").style.display = "none"   
+                document.getElementById("current").style.display = "none"
             }
         }
-        function showProposed(){
-            if (document.getElementById("proposed").style.display == "none"){
+
+        function showProposed() {
+            if (document.getElementById("proposed").style.display == "none") {
                 document.getElementById("proposed").style.display = "block"
             } else {
-                document.getElementById("proposed").style.display = "none"   
+                document.getElementById("proposed").style.display = "none"
             }
         }
     </script>

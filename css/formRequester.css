@@ -1,31 +1,24 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Noto Sans TC', sans-serif;
-}
-
-body{
-    /* background-image: linear-gradient(to bottom right, #d7faff, white); */
-    /* background-image: url(image2.jpg); */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    /* background-size: cover; */
 }
 
 nav{
     position: fixed;
     top:0;
-    height: 100px;
+    height: 60px;
     width: 100vw;
-    padding: 20px 100px 0px 100px;
+    padding: 0px 100px 0px 100px;
     background: rgb(101,162, 207);
     color: white;
     z-index: 1;
+    font-family: 'Catamaran', sans-serif;
+    font-size: 17px;
 }
 section {
-    margin-top: 70px;
+    margin-top: 85px;
     text-align: center;
+    font-family: 'Heebo', sans-serif;
 }
 
 #container-nav {
@@ -41,22 +34,28 @@ section {
 
 #left-nav p{
     width: 100px;
-    padding-bottom: 5px;
+    line-height: 60px;
+    vertical-align: middle;
+    height: 60px;
+
 }
 
 #left-nav p:hover{
-    border-bottom: 3px solid black;
-    margin-bottom: -3px;
+    background: rgba(253, 253, 253, 0.322);
+    height: 60px;
 }
 
 #right-nav{
     width: 100px;
+    line-height: 60px;
+    vertical-align: middle;
+    height: 60px;
     text-align: center;
 }
 
 #right-nav:hover{
-    border-bottom: 3px solid black;
-    margin-bottom: -3px;
+    background: rgba(253, 253, 253, 0.322);
+    height: 60px;
 }
 
 header {
@@ -69,9 +68,7 @@ header {
     background: rgba(111, 168, 209, 0.603);
     border-radius: 4px;
     padding: 5px 15px;
-    color: #08333a;
-    /* #17a3b8a8 */
-    
+    color: rgb(34, 66, 88);
 }
 
 .requester {
@@ -81,6 +78,12 @@ header {
 
 h3 {
     font-weight: normal;
+}
+
+#help{
+    line-height: 34px;
+    vertical-align: middle;
+    height: 34px;
 }
 
 .listForm{
@@ -98,6 +101,34 @@ h3 {
     margin-right: 35px;
     width: 300px;
     padding: 5px;
+}
+
+.doublelist1{
+    margin-right: 35px;
+    height: 34px;
+    width: 312px;
+    margin-bottom: 15px;
+}
+
+.doubleinput1{
+    margin-right: 35px;
+    height: 22px;
+    width: 300px;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+
+.doubleinput2{
+    margin-right: 35px;
+    height: 22px;
+    width: 300px;
+    padding: 5px;
+}
+
+.down-list{
+    margin-right: 35px;
+    height: 34px;
+    width: 312px;
 }
 
 #current {
@@ -119,7 +150,7 @@ footer {
     margin:0 auto;
     padding-top:40px;
     padding-bottom: 10px;
-    color:black;
+    color:rgb(34, 66, 88);
     text-align: center;
 }
 
