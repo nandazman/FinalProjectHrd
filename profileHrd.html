@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SAT | HRD Dashboard</title>
+    <title>FORTNITE CORPS | HRD Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/profileHrd.css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
@@ -28,7 +28,7 @@
         <!--requester info-->
         <header>
             <h3><i class="fas fa-info-circle"></i>HRD INFORMATION</h3>
-            <i class="fas fa-chevron-down"></i>
+            <!-- <i class="fas fa-chevron-down"></i> -->
         </header>
         <div id="requester">
             <div id="foto">
@@ -50,9 +50,9 @@
         <!--new request-->
         <header>
             <h3><i class="fas fa-plus-circle"></i>NEW REQUEST</h3>
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down" onclick="showRequest()"></i>
         </header>
-        <div class="request">
+        <div class="request" id="new-request">
             <div class="itemrequest">
                 <img src="image1.jpg">
                 <p>Name</p>
@@ -73,8 +73,162 @@
         </div>
     </section>
     <footer id="copyright">
-        &copy;2018 SAT Tbk. All Right Reserved.
+        &copy;2018 FORTNITE CORPS Tbk. All Right Reserved.
     </footer>
+
+    <script>
+        function showRequest(){
+            if (document.getElementById("new-request").style.display == "none"){
+                document.getElementById("new-request").style.display = "block"
+            } else {
+                document.getElementById("new-request").style.display = "none"   
+            }
+        }
+    </script>
+
+    <!--MODAL-->
+    <button id="btn-modal">Open Modal</button>
+    <div id="modal-form" class="modal">
+        <section id="modal-summary">
+            <div id="modal-header">
+                <span id="close">&times;</span>
+                <h2>Request Form Summary</h2>
+            </div>
+
+            <!--requester info-->
+            <header class="modal-header">
+                <h3><span class="number">1</span><span class="title">REQUESTER INFORMATION</span></h3>
+            </header>
+            <div>
+                <div class="modal-listForm">
+                    <p>REQUESTER NAME</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>REQUESTER NPK</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>REQUESTER POSITION</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>ON BEHALF NAME</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>ON BEHALF POSITION</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>EMPLOYEE</p>
+                    <input type="text" /><input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>PROCESS ID</p>
+                    <input type="text" />
+                </div>
+            </div>
+            <!--current-->
+            <header class="modal-header">
+                <h3><span class="number">2</span><span class="title">CURRENT</span></h3>
+            </header>
+            <div>
+                <div class="modal-listForm">
+                    <p>POSITION CODE</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>POSITION</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>COMPANY</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>COST CENTER</p>
+                    <input type="text" /><input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>PERSONAL AREA</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>EMPLOYEE GROUP</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>EMPLOYEE SUBGROUP</p>
+                    <input type="text" />
+                </div>
+            </div>
+            <!--proposed-->
+            <header class="modal-header">
+                <h3><span class="number">3</span><span class="title">PROPOSED</span></h3>
+            </header>
+            <div>
+                <div class="modal-listForm">
+                    <p>POSITION CODE</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>POSITION</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>COST CENTER</p>
+                    <input type="text" /><input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>DISTRIBUTION COST CENTER</p>
+                    <input type="text" /><input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>COMPANY</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>PERSONNEL AREA</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>PERSONNEL SUB AREA</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>EMPLOYEE TYPE</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>RECEIVER</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>EFFECTIVE DATE START</p>
+                    <input type="text" />
+                </div>
+                <div class="modal-listForm">
+                    <p>JUSTIFICATION</p>
+                    <input type="text" />
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById("btn-modal").onclick = function () {
+            document.getElementById('modal-form').style.display = "block";
+        }
+        document.getElementById("close").onclick = function () {
+            document.getElementById('modal-form').style.display = "none";
+        }
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('modal-form')) {
+                document.getElementById('modal-form').style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>
