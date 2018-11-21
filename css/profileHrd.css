@@ -4,22 +4,27 @@
     font-family: 'Noto Sans TC', sans-serif;
 }
 
+img{
+    height: 100px;
+    width: 80px;
+}
+
+section {
+    margin-top: 70px;
+}
+
 body{
     background-image: linear-gradient(to bottom right, #d7faff, white);
 }
 
 nav{
+    padding: 20px 100px 0px 100px;
     position: fixed;
     top:0;
     width: 100vw;
-    padding: 20px 100px 0px 100px;
     background: #17a2b8;
     color: white;
     z-index: 1;
-}
-section {
-    margin-top: 70px;
-    text-align: center;
 }
 
 #container-nav {
@@ -60,14 +65,45 @@ header {
     align-items: center;
     margin: 0 auto;
     margin-top: 20px;
+    padding: 5px 15px;
     background: #17a2b8;
     border-radius: 4px;
-    padding: 5px 15px;
 }
 
 #requester {
     width: 75vw;
     margin: 0 auto;
+    display: grid;
+    grid-row-gap: 20px;
+    grid-template-columns: 250px 10px 500px;
+    grid-template-rows: 20px 20px 20px 0.5px auto;
+    grid-template-areas: 
+    'foto . a'
+    'foto . b'
+    'foto . c'
+    '. . .'
+}
+
+#foto{
+    grid-area: foto;
+    text-align: center;
+}
+
+#foto img {
+    margin: 10px;
+    text-align: center;
+}
+
+#list1{
+    grid-area: a;
+}
+
+#list2{
+    grid-area: b;
+}
+
+#list3{
+    grid-area: c;
 }
 
 h3 {
@@ -76,33 +112,43 @@ h3 {
 
 .listForm{
     display: flex;
-    margin: 15px;
-    text-align: left;
+    margin: 10px;
 }
 
 .listForm p{
     width: 250px;
-    padding: 5px;
+    height: 30px;
 }
 
-.listForm input {
+.listForm input{
     margin-right: 35px;
     width: 300px;
-    padding: 5px;
+    height: 30px;
 }
 
-#current {
-    width: 75vw;
-    margin: 0 auto;
-}
-
-#proposed {
-    width: 75vw;
-    margin: 0 auto;
-}
-
-.fa-info-circle, .fa-file, .fa-file-alt{
+.fa-info-circle, .fa-plus-circle, .fa-history{
     padding-right: 10px;
+}
+
+.request{   
+    width: 75vw;
+    margin: 0 auto;
+}
+.itemrequest{
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.itemrequest:hover{
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.itemrequest:nth-child(odd) {
+    background-color: #a3cbe1;
 }
 
 footer {
@@ -113,15 +159,3 @@ footer {
     color:black;
     text-align: center;
 }
-
-#submitButton{
-    width: 200px;
-    margin: 30px;
-    border-radius: 5px;
-    border: 0px solid;
-    text-decoration: none;
-    background-color: #17a2b8;
-    padding: 7px 25px;
-    color: white;
-}
-
