@@ -9,8 +9,8 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: linear-gradient(to bottom right, rgb(19, 72, 94), rgb(0, 174, 255));
-    background-image: url('image1.JPG');
+    /* background-image: linear-gradient(to bottom right, rgb(19, 72, 94), rgb(0, 174, 255)); */
+    background-image: url('image1.jpg');
     background-size: cover;
     background-position: center;
 }
