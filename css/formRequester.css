@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+body{
+    background-image: linear-gradient(to bottom right, #d7faff, white);
+}
+
+nav{
+    position: fixed;
+    top:0;
+    width: 100vw;
+    padding: 20px 100px 0px 100px;
+    background: #17a2b8;
+    color: white;
+    z-index: 1;
+}
+section {
+    margin-top: 70px;
+    text-align: center;
+}
+
+#container-nav {
+    width: 83.5vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+#left-nav {
+    display: flex;
+    text-align: center;
+}
+
+#left-nav p{
+    width: 100px;
+    padding-bottom: 5px;
+}
+
+#left-nav p:hover{
+    border-bottom: 3px solid black;
+    margin-bottom: -3px;
+}
+
+#right-nav{
+    width: 100px;
+    text-align: center;
+}
+
+#right-nav:hover{
+    border-bottom: 3px solid black;
+    margin-bottom: -3px;
+}
+
+header {
+    width: 80vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 20px;
+    background: #17a2b8;
+    border-radius: 4px;
+    padding: 5px 15px;
+}
+
+#requester {
+    width: 75vw;
+    margin: 0 auto;
+}
+
+h3 {
+    font-weight: normal;
+}
+
+.listForm{
+    display: flex;
+    margin: 15px;
+    text-align: left;
+}
+
+.listForm p{
+    width: 250px;
+    padding: 5px;
+}
+
+.listForm input {
+    margin-right: 35px;
+    width: 300px;
+    padding: 5px;
+}
+
+#current {
+    width: 75vw;
+    margin: 0 auto;
+}
+
+#proposed {
+    width: 75vw;
+    margin: 0 auto;
+}
+
+.fa-info-circle, .fa-file, .fa-file-alt{
+    padding-right: 10px;
+}
+
+footer {
+    bottom: 3vh;
+    margin:0 auto;
+    padding-top:40px;
+    padding-bottom: 10px;
+    color:black;
+    text-align: center;
+}
+
+#submitButton{
+    width: 200px;
+    margin: 30px;
+    border-radius: 5px;
+    border: 0px solid;
+    text-decoration: none;
+    background-color: #17a2b8;
+    padding: 7px 25px;
+    color: white;
+}
+
