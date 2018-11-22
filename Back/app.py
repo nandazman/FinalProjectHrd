@@ -23,9 +23,13 @@ class Access_User(db.Model):
     password = db.Column(db.String())
     photo = db.Column(db.String())
     token = db.Column(db.String())
+    position_id = db.Column(db.Integer())
+    departemen_id = db.Column(db.Integer())
+
 
 class Position(db.Model):
-    position_code = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    position_code = db.Column(db.Integer())
     position = db.Column(db.String())
     company = db.Column(db.String())
     cost_center = db.Column(db.String())
@@ -36,22 +40,26 @@ class Position(db.Model):
     employee_sub_group = db.Column(db.String())
 
 class Employee(db.Model):
-    npk = db.Column(db.Integer, primary_key=True)
-    position_code = db.Column(db.Integer())
+    id = db.Column(db.Integer, primary_key=True)
+    npk = db.Column(db.Integer())
+    position_id = db.Column(db.Integer())
     nama = db.Column(db.String())
+    departemen_id = db.Column(db.Integer())
 
 class Request_Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     process_id = db.Column(db.Integer())
     record_id = db.Column(db.Integer())
-    requester_npk = db.Column(db.Integer())
-    employee_npk = db.Column(db.Integer())
-    receiver_npk = db.Column(db.Integer())
-    proposed_position_code = db.Column(db.Integer())
+    requester_id = db.Column(db.Integer())
+    employee_id = db.Column(db.Integer())
+    receiver_id = db.Column(db.Integer())
     distribution_cost_center = db.Column(db.Integer())
     dates = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
-    justify = db.Column(db.String())
+    coment = db.Column(db.String())
 
+class List_Departemen(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nama = db.Column(db.String())
 
 @app.route('/login', methods=['POST'])
 def login():
