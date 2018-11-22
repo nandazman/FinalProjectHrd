@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Noto Sans TC', sans-serif;
+    
 }
 
 img{
@@ -10,21 +10,22 @@ img{
 }
 
 section {
-    margin-top: 70px;
-}
-
-body{
-    background-image: linear-gradient(to bottom right, #d7faff, white);
+    margin-top: 85px;
+    text-align: center;
+    font-family: 'Heebo', sans-serif;
 }
 
 nav{
-    padding: 20px 100px 0px 100px;
     position: fixed;
     top:0;
+    height: 60px;
     width: 100vw;
-    background: #17a2b8;
+    padding: 0px 100px 0px 100px;
+    background: rgb(101,162, 207);
     color: white;
     z-index: 1;
+    font-family: 'Catamaran', sans-serif;
+    font-size: 17px;
 }
 
 #container-nav {
@@ -40,22 +41,27 @@ nav{
 
 #left-nav p{
     width: 100px;
-    padding-bottom: 5px;
+    line-height: 60px;
+    vertical-align: middle;
+    height: 60px;
 }
 
 #left-nav p:hover{
-    border-bottom: 3px solid black;
-    margin-bottom: -3px;
+    background: rgba(253, 253, 253, 0.322);
+    height: 60px;
 }
 
 #right-nav{
     width: 100px;
+    line-height: 60px;
+    vertical-align: middle;
+    height: 60px;
     text-align: center;
 }
 
 #right-nav:hover{
-    border-bottom: 3px solid black;
-    margin-bottom: -3px;
+    background: rgba(253, 253, 253, 0.322);
+    height: 60px;
 }
 
 header {
@@ -66,13 +72,15 @@ header {
     margin: 0 auto;
     margin-top: 20px;
     padding: 5px 15px;
-    background: #17a2b8;
+    background: rgba(111, 168, 209, 0.603);
     border-radius: 4px;
+    color: rgb(34, 66, 88);
 }
 
 #requester {
     width: 75vw;
     margin: 0 auto;
+    margin-top: 25px;
     display: grid;
     grid-row-gap: 20px;
     grid-template-columns: 250px 10px 500px;
@@ -118,6 +126,8 @@ h3 {
 .listForm p{
     width: 250px;
     height: 30px;
+    text-align: left;
+
 }
 
 .listForm input{
@@ -147,8 +157,12 @@ h3 {
     opacity: 0.7;
 }
 
-.itemrequest:nth-child(odd) {
+.itemrequest:nth-child(even) {
     background-color: #a3cbe1;
+}
+
+.itemrequest:nth-child(odd) {
+    background-color: #d4faff;
 }
 
 footer {
@@ -156,9 +170,10 @@ footer {
     margin:0 auto;
     padding-top:40px;
     padding-bottom: 10px;
-    color:black;
+    color:rgb(34, 66, 88);
     text-align: center;
 }
+
 
 #new-request{
     display: none;
