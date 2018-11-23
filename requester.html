@@ -6,10 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>FORTNITE CORPS | Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="css/homeRequester.css" />
-    <link href="https://fonts.googleapis.com/css?family=Heebo|Catamaran" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Heebo|Catamaran|Noto+Sans+SC" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/requester.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="main.js"></script>
+    <script>
+        $(document).ready(function(){
+        $("#request-tab").click(function(){
+            $("#new-request").slideToggle();
+            $(".second-box").slideUp();
+        });
+    });
+    $(document).ready(function(){
+        $("#commenthis").click(function(){
+            $(".second-box").slideToggle();
+            $("#new-request").slideUp();
+        });
+    });
+    </script>
 </head>
 
 <body>
@@ -25,48 +39,32 @@
         </div>
     </nav>
     <section>
-        <!--requester info-->
-        <header>
-            <h3><i class="fas fa-info-circle"></i>REQUESTER INFORMATION</h3>
-
-        </header>
-        <div id="requester" class="request">
-            <div id="foto">
-                <img src="image1.jpg">
-            </div>
-            <div class="listForm" id="list1">
-                <p>REQUESTER NAME</p>
-                <input type="text" />
-            </div>
-            <div class="listForm" id="list2">
-                <p>REQUESTER NPK</p>
-                <input type="text" />
-            </div>
-            <div class="listForm" id="list3">
-                <p>REQUESTER POSITION</p>
-                <input type="text" />
-            </div>
+        <div id="user">
+            <h4>Hello!</h4>
         </div>
-
-
-        <!--new request-->
         <header>
-            <h3><i class="fas fa-plus-circle"></i>NEW REQUEST</h3>
-            <i class="fas fa-chevron-down" onclick="showRequest()"></i>
+            <div class="tittle" id="request-tab">
+                <img src="contract.png">
+                <h4 id="new-req">New Request</h4>
+            </div>
+            <div class="tittle" id="commenthis">
+                <img src="checklist.png">
+                <h4 id="comment">Comments History</h4>
+            </div>
         </header>
+        <!--NEW REQUEST-->
         <div id="new-request" class="request">
-            <div class="itemrequest">
+            <div class="itemrequest" onclick="showModal()">
                 <img src="image1.jpg">
                 <p>Name</p>
                 <p>ProcessID</p>
             </div>
-            <div class="itemrequest">
+            <div class="itemrequest" onclick="showModal()">
                 <img src="image1.jpg">
                 <p>Name</p>
                 <p>ProcessID</p>
-
             </div>
-            <div class="itemrequest">
+            <div class="itemrequest" onclick="showModal()">
                 <img src="image1.jpg">
                 <p>Name</p>
                 <p>ProcessID</p>
@@ -74,106 +72,75 @@
             </div>
         </div>
 
-
-        <!--Comments History-->
-        <header>
-            <h3><i class="fas fa-history"></i>COMMENTS HISTORY</h3>
-            <i class="fas fa-chevron-down" onclick="showComment()"></i>
-        </header>
-
-        <div id="comment-history" class="request">
-            <div class="history">
-                <p>Participants</p>
-                <p></p>
-                <p>Position</p>
-                <p>Activity</p>
-                <p>Started</p>
-                <p>Completed</p>
-                <p>Response</p>
-                <p>Comment</p>
+        <!--comment-->
+        <div class="second-box">
+            <div id="comment-history">
+                <div class="history">
+                    <p>Participants</p>
+                    <p></p>
+                    <p>Position</p>
+                    <p>Activity</p>
+                    <p>Started</p>
+                    <p>Completed</p>
+                    <p>Response</p>
+                    <p>Comment</p>
+                </div>
+                <div class="comment">
+                    <img src="image1.jpg">
+                    <p>Name</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                </div>
             </div>
-            <div class="comment">
-                <img src="image1.jpg">
-                <p>Name</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
+            <div id="comment-history">
+                <div class="history">
+                    <p>Participants</p>
+                    <p></p>
+                    <p>Position</p>
+                    <p>Activity</p>
+                    <p>Started</p>
+                    <p>Completed</p>
+                    <p>Response</p>
+                    <p>Comment</p>
+                </div>
+                <div class="comment">
+                    <img src="image1.jpg">
+                    <p>Name</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                </div>
+                <div class="comment">
+                    <img src="image1.jpg">
+                    <p>Name</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                    <p>XXXX</p>
+                </div>
             </div>
-            <div class="comment">
-                <img src="image1.jpg">
-                <p>Name</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-            </div>
-
-            <div class="history">
-                <p>Participants</p>
-                <p></p>
-                <p>Position</p>
-                <p>Activity</p>
-                <p>Started</p>
-                <p>Completed</p>
-                <p>Response</p>
-                <p>Comment</p>
-            </div>
-            <div class="comment">
-                <img src="image1.jpg">
-                <p>Name</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-            </div>
-            <div class="comment">
-                <img src="image1.jpg">
-                <p>Name</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-                <p>XXXX</p>
-            </div>
-
         </div>
-
-
     </section>
     <footer id="copyright">
         &copy;2018 FORTNITE CORPS Tbk. All Right Reserved.
     </footer>
 
-
-
     <script>
-        function showRequest(){
-            if (document.getElementById("new-request").style.display == "none"){
-                document.getElementById("new-request").style.display = "block"
-            } else {
-                document.getElementById("new-request").style.display = "none"   
-            }
-        }
-        function showComment(){
-            if (document.getElementById("comment-history").style.display == "none"){
-                document.getElementById("comment-history").style.display = "block"
-            } else {
-                document.getElementById("comment-history").style.display = "none"   
-            }
-        }
+
     </script>
 
 
+    <!--modal-->
     <!--MODAL-->
-    <button id="btn-modal">Open Modal</button>
     <div id="modal-form" class="modal">
         <section id="modal-summary">
             <div id="modal-header">
@@ -208,7 +175,10 @@
                 </div>
                 <div class="modal-listForm">
                     <p>EMPLOYEE</p>
-                    <input type="text" /><input type="text" />
+                    <div>
+                        <input type="text" class="doubleinput1" /><br>
+                        <input type="text" class="doubleinput2" />
+                    </div>
                 </div>
                 <div class="modal-listForm">
                     <p>PROCESS ID</p>
@@ -234,7 +204,10 @@
                 </div>
                 <div class="modal-listForm">
                     <p>COST CENTER</p>
-                    <input type="text" /><input type="text" />
+                    <div>
+                        <input type="text" class="doubleinput1" /><br>
+                        <input type="text" class="doubleinput2" />
+                    </div>
                 </div>
                 <div class="modal-listForm">
                     <p>PERSONAL AREA</p>
@@ -264,11 +237,17 @@
                 </div>
                 <div class="modal-listForm">
                     <p>COST CENTER</p>
-                    <input type="text" /><input type="text" />
+                    <div>
+                        <input type="text" class="doubleinput1" /><br>
+                        <input type="text" class="doubleinput2" />
+                    </div>
                 </div>
                 <div class="modal-listForm">
                     <p>DISTRIBUTION COST CENTER</p>
-                    <input type="text" /><input type="text" />
+                    <div>
+                        <input type="text" class="doubleinput1" /><br>
+                        <input type="text" class="doubleinput2" />
+                    </div>
                 </div>
                 <div class="modal-listForm">
                     <p>COMPANY</p>
@@ -301,9 +280,8 @@
             </div>
         </section>
     </div>
-
     <script>
-        document.getElementById("btn-modal").onclick = function () {
+        function showModal() {
             document.getElementById('modal-form').style.display = "block";
         }
         document.getElementById("close").onclick = function () {

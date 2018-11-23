@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: rgb(4, 66, 99);
+}
+
+nav{
+    position: fixed;
+    top:0;
+    height: 60px;
+    width: 100vw;
+    padding: 0px 100px 0px 100px;
+    background: rgb(107, 165, 206);
+    color: white;
+    z-index: 1;
+    font-family: 'Catamaran', sans-serif;
+    font-size: 17px;
+    #container-nav {
+        width: 83.5vw;
+        display: flex;
+        justify-content: space-between;
+        #left-nav {
+            display: flex;
+            text-align: center;
+            p{
+                width: 100px;
+                line-height: 60px;
+                vertical-align: middle;
+                height: 60px;
+            }
+            :hover{
+                background: rgba(253, 253, 253, 0.322);
+                height: 60px;
+                cursor: pointer;
+            }
+        }
+
+        #right-nav{
+            width: 100px;
+            line-height: 60px;
+            vertical-align: middle;
+            height: 60px;
+            text-align: center;
+            :hover{
+                background: rgba(253, 253, 253, 0.322);
+                height: 60px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+  
+#regForm {
+    background-color: #ffffff;
+    box-shadow: 10px 10px 10px #000000;
+    margin: 100px auto;
+    font-family: Raleway;
+    padding: 40px;
+    width: 70%;
+    min-width: 300px;
+    font-family: 'Heebo', sans-serif;
+    .tab {
+        display: none;
+        .listForm{
+            display: flex;
+            margin: 15px;
+            text-align: left;
+            p{
+                width: 250px;
+                padding: 5px;
+            }
+            input {
+                margin-right: 35px;
+                width: 300px;
+                padding: 5px;
+            }
+            .doublelist1{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+                margin-bottom: 15px;
+            }
+            .doubleinput1{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+                padding: 5px;
+                margin-bottom: 15px;
+            }
+            .doubleinput2{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+                padding: 5px;
+            }
+            .down-list{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+            }
+        }
+      }
+    h1 {
+        text-align: center;  
+      }
+    input {
+    padding: 10px;
+    width: 100%;
+    font-size: 17px;
+    font-family: Raleway;
+    border: 1px solid #aaaaaa;
+    .invalid {
+        background-color: #ffdddd;
+      }
+    }
+}
+  
+button {
+background-color: #4CAF50;
+color: #ffffff;
+border: none;
+padding: 10px 20px;
+font-size: 17px;
+font-family: Raleway;
+cursor: pointer;
+    :hover {
+        opacity: 0.8;
+    }
+}
+  
+#prevBtn {
+    background-color: #bbbbbb;
+}
+.step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;  
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+    .active {
+        opacity: 1;
+    }
+    .finish {
+        background-color: #4CAF50;
+    }
+}
