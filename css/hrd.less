@@ -7,52 +7,6 @@ body{
     background: rgb(4, 66, 99);
 }
 
-nav{
-    position: fixed;
-    top:0;
-    height: 60px;
-    width: 100vw;
-    padding: 0px 100px 0px 100px;
-    background: rgb(107, 165, 206);
-    color: white;
-    z-index: 1;
-    font-family: 'Catamaran', sans-serif;
-    font-size: 17px;
-    #container-nav {
-        width: 83.5vw;
-        display: flex;
-        justify-content: space-between;
-        #left-nav {
-            display: flex;
-            text-align: center;
-            p{
-                width: 100px;
-                line-height: 60px;
-                vertical-align: middle;
-                height: 60px;
-            }
-            :hover{
-                background: rgba(253, 253, 253, 0.322);
-                height: 60px;
-                cursor: pointer;
-            }
-        }
-
-        #right-nav{
-            width: 100px;
-            line-height: 60px;
-            vertical-align: middle;
-            height: 60px;
-            text-align: center;
-            &:hover{
-                background: rgba(253, 253, 253, 0.322);
-                height: 60px;
-                cursor: pointer;
-            }
-        }
-    }
-}
-
 #user{
     margin: 100px 0px 100px 188px;
     text-align: left;
@@ -72,6 +26,7 @@ nav{
         border-left: 20px solid black;
         background-color: #eceff1;
         box-shadow: 10px 10px 10px #000000;
+        transition: all 0.5s;
         img{
             height: 80px;
             width: 60px;
