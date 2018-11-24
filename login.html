@@ -8,16 +8,16 @@
     <link rel="stylesheet" type="text/css" media="screen" href="css/login.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"> 
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC" rel="stylesheet">
-    <script src="main.js"></script>
+    
 </head>
 <body>
     <div id="container">
         <h1>FORTNITE CORPS</h1>
-        <form onsubmit="event.preventDefault(); signIn()" method="POST">
+        <form onsubmit="event.preventDefault(); logIn()" method="POST">
 
             <div class="form">
                 <i class="fas fa-user"> </i>
-                <input type="text" name="email" placeholder="Email" required />
+                <input type="text" id="email" name="email" placeholder="Email" required />
             </div>
 
             <div class="form">
@@ -33,5 +33,7 @@
       &copy;2018 FORTNITE CORPS Tbk. All Right Reserved. 
 
     </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

@@ -7,16 +7,16 @@ import datetime
 import os
 import jwt
 import requests
-import dotenv
+
 
 
 
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/Rotation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DataNext'
 app.config['SECRET_KEY'] = os.urandom(24)
-JWTsecretKey = "aserehe"
+
 CORS(app)
 
 db = SQLAlchemy(app)
@@ -42,9 +42,11 @@ class AccessUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     npk = db.Column(db.Integer())
     email = db.Column(db.String())
+    name = db.Column(db.String())
     password = db.Column(db.String())
     photo = db.Column(db.String())
     token = db.Column(db.String())
+    role = db.Column(db.String())
     departemen_id = db.Column(db.Integer, db.ForeignKey('departemen.id'))
     position_id = db.Column(db.Integer, db.ForeignKey('position.id'))
 
@@ -77,16 +79,16 @@ def login():
 
         req_email = request_data.get('email')
         req_password = request_data.get('password')
-
         userDB = AccessUser.query.filter_by(email=req_email, password=req_password).first()
         if userDB is not None:
+            
             payload = {
-                "email" : userDB.email,
-                "secretkey" : "asarehe"
+                "email" : userDB.email
             }
+            
+            encoded = jwt.encode(payload, 'tralala', algorithm='HS256')
 
-            encoded = jwt.encode(payload, JWTsecretKey, algorithm = 'HS256')
-            return encoded, 201
+            return encoded, 200
 
         else:
             return 'Email or Password is not found' , 404
@@ -252,6 +254,36 @@ def submit_to_HRD(req_comment, user_token):
 #         return str(data_db.id)
 #     else:
 #         return None
+
+@app.route('/GetTask', methods = ['GET', 'POST'])
+#### Get access user task ####
+def get_task():
+    request_data = request.get_json()
+    print(request_data)
+    req_email = request_data['email']
+
+    userDB = AccessUser.query.filter_by(email = req_email).first()
+
+    if userDB is not None:
+        user_token = userDB.token
+        name = userDB.role
+        # print(name)
+        query = "folder=app:task:all&filter[name]=%s&filter[state]=active&filter[definition_id]=%s" % (name, os.getenv("DEFINITION_ID"))
+        
+        # https://mosaic-engine.dev.nextflow.tech/makers/api/tasks?folder=app:task:all&filter[name]=%s&filter[state]=active&filter[definition_id]=%s
+        # https://mosaic-engine.dev.nextflow.tech/makers/api/tasks?folder=app:task:all&filter[name]=%s&filter%5Bstate%5D=active&filter%5Bdefinition_id%5D=definitions%3Abpmn%3Afabf8af1-4516-4876-ba13-a7c9ee118133
+        # ngubah url nya
+        url = os.getenv("BASE_URL_TASK")+"?"+quote(query, safe="&=")
+        print(url)
+        # bearer %s user tokennya
+        # buat ngambil task ddari si requesternya apa aja
+        r = requests.get(url , headers = {
+                "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+            })
+
+        result = json.loads(r.text)
+
+        return json.dumps(result)
 
 @app.route('/HRDCheck', methods = ['GET', 'POST'])
 #### hrd department to manager department ####
