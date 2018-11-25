@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Heebo|Catamaran|Noto+Sans+SC" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="css/requester.css" />
-    <script src="main.js"></script>
+    
 
 </head>
 
 <body>
     <section>
         <div id="user">
-            <h4>Hello, Syifa!</h4>
+            
         </div>
         <header>
             <div class="tittle" id="request-tab">
@@ -35,18 +35,7 @@
                 <div class="tab">
                     <h1>Requester Information</h1>
                     <div id="new-information" class="requester">
-                        <div class="listForm">
-                            <p>REQUESTER NAME</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>REQUESTER NPK</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>REQUESTER POSITION</p>
-                            <input type="text" />
-                        </div>
+                        
                         <div class="listForm">
                             <p>ON BEHALF NAME</p>
                             <input type="text" />
@@ -71,10 +60,6 @@
                         </div>
                         <div>
 
-                        </div>
-                        <div class="listForm">
-                            <p>PROCESS ID</p>
-                            <input type="text" />
                         </div>
                     </div>
                 </div>
@@ -321,23 +306,12 @@
 
         <!--tasklist--> 
         <div class="task">
-            <h3><i class="fas fa-plus-circle"></i>TASK LIST</h3>
-            <div class="taskitem">
-                <img src="image1.jpg">
-                <p>Name</p>
-                <p>ProcessID</p>
+            
+            <div id="alltaskuser">
+                <h3><i class="fas fa-plus-circle"></i>TASK LIST</h3>
+
             </div>
-            <div class="taskitem">
-                <img src="image1.jpg">
-                <p>Name</p>
-                <p>ProcessID</p>
-    
-            </div>
-            <div class="taskitem">
-                <img src="image1.jpg">
-                <p>Name</p>
-                <p>ProcessID</p>
-            </div>
+            
         </div>
 
     </section>
@@ -346,9 +320,7 @@
         &copy;2018 FORTNITE CORPS Tbk. All Right Reserved.
     </footer>
 
-    <script>
 
-    </script>
     <!--modal-->
     <!--MODAL-->
     <div id="modal-form" class="modal">
@@ -571,6 +543,7 @@
 
         </section>
     </div>
+    <script src="js/main.js"></script>
     <script>
         function showModal() {
             document.getElementById('modal-form').style.display = "block";
@@ -586,10 +559,18 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
+        if (getCookie('requester') !== 'true'){
+            $("#request-tab").hide()
+            $("#commenthis").hide()
+            $("#form-input").hide()
+        } else {
+            $('#alltaskuser').hide()
+        }
         $(document).ready(function () {
             $("#request-tab").click(function () {
                 $("#new-request").slideToggle();
                 $(".second-box").slideUp();
+                
             });
         });
         $(document).ready(function () {
@@ -598,6 +579,8 @@
                 $("#new-request").slideUp();
             });
         });
+        allTask()
+        getProfile()
     </script>
 </body>
 

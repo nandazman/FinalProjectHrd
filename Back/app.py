@@ -14,7 +14,7 @@ import requests
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DataNext'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/Rotation'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -26,6 +26,7 @@ class Position(db.Model):
     position_code = db.Column(db.Integer())
     position = db.Column(db.String())
     company = db.Column(db.String())
+    cost_center_code = db.Column(db.String())
     cost_center = db.Column(db.String())
     personal_area = db.Column(db.String())
     personal_sub_area = db.Column(db.String())
@@ -42,7 +43,7 @@ class AccessUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     npk = db.Column(db.Integer())
     email = db.Column(db.String())
-    name = db.Column(db.String())
+    nama = db.Column(db.String())
     password = db.Column(db.String())
     photo = db.Column(db.String())
     token = db.Column(db.String())
@@ -95,6 +96,28 @@ def login():
     else:
         return 'Method Not Allowed', 405
     
+@app.route('/getProfile', methods = ["GET"])
+def profile():
+    if request.method == 'GET':
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+
+        user = AccessUser.query.filter_by(email=decoded['email']).first()
+        position = Position.query.filter_by(id=user.position_id).first()
+        user_nama = {
+            "nama": user.nama,
+            "npk": user.npk,
+            "role": position.position
+        }
+        user = json.dumps(user_nama)
+
+        return user
+
+@app.route('/employee', methods = ["GET"])
+def employee():
+    if request.method == 'GET':
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+
+
 
 #########################################################
 ####################### Nextflow ########################
