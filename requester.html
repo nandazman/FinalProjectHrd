@@ -29,7 +29,7 @@
         </header>
         <!--form -->
         <div id="form-input">
-            <form id="regForm" action="/action_page.php">
+            <form id="regForm">
                 <!-- <h1>Requester Information</h1> -->
                 <!-- One "tab" for each step in the form: -->
                 <div class="tab">
@@ -48,56 +48,20 @@
                         <div class="listForm">
                             <p>EMPLOYEE</p>
                             <div>
-                                <select class="doublelist1">
-                                    <option value="volvo">Volvo</option>
-                                    <option value="saab">Saab</option>
-                                    <option value="opel">Opel</option>
-                                    <option value="audi">Audi</option>
+                                <select class="doublelist1" id="employee-selection" onchange="getEmployeeData()">
+                                    <option disabled selected>--Employee List--</option>
                                 </select>
-                                <br>
-                                <input type="text" class="doubleinput2" />
+
                             </div>
                         </div>
-                        <div>
 
-                        </div>
                     </div>
                 </div>
                 <div class="tab">
                     <h1>Current</h1>
 
                     <div id="current">
-                        <div class="listForm">
-                            <p>POSITION CODE</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>POSITION</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>COMPANY</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>COST CENTER</p>
-                            <div>
-                                <input type="text" class="doubleinput1" /><br>
-                                <input type="text" class="doubleinput2" />
-                            </div>
-                        </div>
-                        <div class="listForm">
-                            <p>PERSONAL AREA</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>EMPLOYEE GROUP</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>EMPLOYEE SUBGROUP</p>
-                            <input type="text" />
-                        </div>
+
                     </div>
                 </div>
                 <div class="tab">
@@ -367,6 +331,7 @@
                     <input type="text" />
                 </div>
             </div>
+           
             <!--current-->
             <header class="modal-header">
                 <h3><span class="number">2</span><span class="title">CURRENT</span></h3>
@@ -386,9 +351,10 @@
                 </div>
                 <div class="modal-listForm">
                     <p>COST CENTER</p>
-                    <div>
-                        <input type="text" class="doubleinput1" /><br>
-                        <input type="text" class="doubleinput2" />
+                    <div class="double-input">
+                        <input type="text" />
+                        <br>
+                        <input type="text" />
                     </div>
                 </div>
                 <div class="modal-listForm">
@@ -419,17 +385,11 @@
                 </div>
                 <div class="modal-listForm">
                     <p>COST CENTER</p>
-                    <div>
-                        <input type="text" class="doubleinput1" /><br>
-                        <input type="text" class="doubleinput2" />
-                    </div>
+                    <input type="text" /><input type="text" />
                 </div>
                 <div class="modal-listForm">
                     <p>DISTRIBUTION COST CENTER</p>
-                    <div>
-                        <input type="text" class="doubleinput1" /><br>
-                        <input type="text" class="doubleinput2" />
-                    </div>
+                    <input type="text" /><input type="text" />
                 </div>
                 <div class="modal-listForm">
                     <p>COMPANY</p>
@@ -451,136 +411,29 @@
                     <p>RECEIVER</p>
                     <input type="text" />
                 </div>
-                <!--current-->
-                <header class="modal-header">
-                    <h3><span class="number">2</span><span class="title">CURRENT</span></h3>
-                </header>
-                <div>
-                    <div class="modal-listForm">
-                        <p>POSITION CODE</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>POSITION</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>COMPANY</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>COST CENTER</p>
-                        <div class="double-input">
-                            <input type="text" />
-                            <br>
-                            <input type="text" />
-                        </div>
-                    </div>
-                    <div class="modal-listForm">
-                        <p>PERSONAL AREA</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>EMPLOYEE GROUP</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>EMPLOYEE SUBGROUP</p>
-                        <input type="text" />
-                    </div>
+                <div class="modal-listForm">
+                    <p>EFFECTIVE DATE START</p>
+                    <input type="text" />
                 </div>
-                <!--proposed-->
-                <header class="modal-header">
-                    <h3><span class="number">3</span><span class="title">PROPOSED</span></h3>
-                </header>
-                <div>
-                    <div class="modal-listForm">
-                        <p>POSITION CODE</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>POSITION</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>COST CENTER</p>
-                        <input type="text" /><input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>DISTRIBUTION COST CENTER</p>
-                        <input type="text" /><input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>COMPANY</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>PERSONNEL AREA</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>PERSONNEL SUB AREA</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>EMPLOYEE TYPE</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>RECEIVER</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>EFFECTIVE DATE START</p>
-                        <input type="text" />
-                    </div>
-                    <div class="modal-listForm">
-                        <p>JUSTIFICATION</p>
-                        <input type="text" />
-                    </div>
+                <div class="modal-listForm">
+                    <p>JUSTIFICATION</p>
+                    <input type="text" />
                 </div>
             </div>
 
+            <div id="confirmation">
+            </div>
+            
         </section>
     </div>
-    <script src="js/main.js"></script>
-    <script>
-        function showModal() {
-            document.getElementById('modal-form').style.display = "block";
-        }
-        document.getElementById("close").onclick = function () {
-            document.getElementById('modal-form').style.display = "none";
-        }
-        window.onclick = function (event) {
-            if (event.target == document.getElementById('modal-form')) {
-                document.getElementById('modal-form').style.display = "none";
-            }
-        }
-    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+    
+    
     <script>
-        if (getCookie('requester') !== 'true'){
-            $("#request-tab").hide()
-            $("#commenthis").hide()
-            $("#form-input").hide()
-        } else {
-            $('#alltaskuser').hide()
-        }
-        $(document).ready(function () {
-            $("#request-tab").click(function () {
-                $("#new-request").slideToggle();
-                $(".second-box").slideUp();
-                
-            });
-        });
-        $(document).ready(function () {
-            $("#commenthis").click(function () {
-                $(".second-box").slideToggle();
-                $("#new-request").slideUp();
-            });
-        });
-        allTask()
         getProfile()
+        allTask()
+        
     </script>
 </body>
 

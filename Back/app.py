@@ -14,7 +14,7 @@ import requests
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/Rotation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/Rotation'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -95,7 +95,8 @@ def login():
             return 'Email or Password is not found' , 404
     else:
         return 'Method Not Allowed', 405
-    
+
+
 @app.route('/getProfile', methods = ["GET"])
 def profile():
     if request.method == 'GET':
@@ -106,7 +107,8 @@ def profile():
         user_nama = {
             "nama": user.nama,
             "npk": user.npk,
-            "role": position.position
+            "role": position.position,
+            "departemen_id": user.departemen_id
         }
         user = json.dumps(user_nama)
 
@@ -116,6 +118,71 @@ def profile():
 def employee():
     if request.method == 'GET':
         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+
+        user = AccessUser.query.filter_by(email=decoded['email']).first()
+        employeeDB = Employee.query.filter_by(departemen_id=user.departemen_id).all()
+
+        employee_data = []
+
+        for data in employeeDB:
+            employee = {
+                'npk': data.npk,
+                'nama': data.nama,
+                'position_id': data.position_id
+            }
+            employee_data.append(employee)
+
+        data = json.dumps(employee_data)
+        # print(data)
+        return data, 200
+
+@app.route('/current', methods = ['POST'])
+def current_data():
+    if request.method == 'POST':
+
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+    
+
+        request_data = request.get_json()
+        position_id = request_data['id']
+
+        position_data = Position.query.filter_by(id=position_id).first()
+        print(position_data)
+
+        employee = {
+                'position_code': position_data.position_code,
+                'position': position_data.position,
+                'company': position_data.company,
+                'cost_center': position_data.cost_center,
+                'cost_center_code': position_data.cost_center_code,
+                'personal_area': position_data.personal_area,
+                'employee_group': position_data.employee_group,
+                'employee_sub_group': position_data.employee_sub_group
+            }
+
+        data = json.dumps(employee)
+        print(data)
+        return data, 200
+# @app.route('/getProfile', methods = ["GET"])
+# def profile():
+#     if request.method == 'GET':
+#         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+
+#         user = AccessUser.query.filter_by(email=decoded['email']).first()
+#         position = Position.query.filter_by(id=user.position_id).first()
+#         user_nama = {
+#             "nama": user.nama,
+#             "npk": user.npk,
+#             "role": position.position
+#         }
+#         user = json.dumps(user_nama)
+
+#         return user
+
+# @app.route('/employee', methods = ["GET"])
+# def employee():
+#     if request.method == 'GET':
+#         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
 
 
 
@@ -226,12 +293,14 @@ def submit_to_HRD(req_comment, user_token):
         })
 
     result = json.loads(r.text)
-
+    task_id = result['data'][-1]['id']
     # get manager email dan task id
-    
+
+    result = waitingRespone(user_token,url, task_id)
+
     hrdDepartment = result['data'][0]['form_data']['pvHrdept']
     hrdCompany = result['data'][0]['form_data']['pvHrcomp']
-    task_id = result['data'][0]['id']
+    task_id = result['data'][-1]['id']
 
     # gerakin flow dari requester ke hrd
     # task list dari requester bakal pindah ke hrd
@@ -254,7 +323,18 @@ def submit_to_HRD(req_comment, user_token):
     result = json.loads(r.text)
 
     return result
+
+def waitingRespone(user_token,url,task_id):
     
+    r = requests.get(url , headers = {
+            "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+        })
+
+    result = json.loads(r.text)
+    
+    if result['data'] != [] and result['data'][-1]['id'] != task_id:
+        return result
+    return waitingRespone(user_token,url,task_id)
 # fungsi untuk memasukan data ke db
 # def submit_to_database(record_id, process_id):
 #     # request_data = request.get_json()
@@ -281,11 +361,9 @@ def submit_to_HRD(req_comment, user_token):
 @app.route('/GetTask', methods = ['GET', 'POST'])
 #### Get access user task ####
 def get_task():
-    request_data = request.get_json()
-    print(request_data)
-    req_email = request_data['email']
+    decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
 
-    userDB = AccessUser.query.filter_by(email = req_email).first()
+    userDB = AccessUser.query.filter_by(email = decoded['email']).first()
 
     if userDB is not None:
         user_token = userDB.token
@@ -297,7 +375,7 @@ def get_task():
         # https://mosaic-engine.dev.nextflow.tech/makers/api/tasks?folder=app:task:all&filter[name]=%s&filter%5Bstate%5D=active&filter%5Bdefinition_id%5D=definitions%3Abpmn%3Afabf8af1-4516-4876-ba13-a7c9ee118133
         # ngubah url nya
         url = os.getenv("BASE_URL_TASK")+"?"+quote(query, safe="&=")
-        print(url)
+        # print(url)
         # bearer %s user tokennya
         # buat ngambil task ddari si requesternya apa aja
         r = requests.get(url , headers = {
@@ -307,6 +385,128 @@ def get_task():
         result = json.loads(r.text)
 
         return json.dumps(result)
+
+@app.route('/submitTask', methods = ['GET', 'POST'])
+### Submit task by User ###
+def submit_task():
+    if request.method == "POST":
+        currentToTarget = {
+            "HR Department": "Germen_hrd@makersinsitute.id",
+            "HR Company": "Germen_hrd@makersinsitute.id",
+            "Department Manager": "status_revise",
+            "Senior Manager ": "status_revise",
+            "Proposed HR Department": "sent_email",
+            "Requester": ["Hader_hrd@makersinstitute.id","Haper_hrd@makersinstitute.id"]
+            }
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+    
+    
+        userDB = AccessUser.query.filter_by(email = decoded['email']).first()
+
+        if userDB is not None:
+            user_token = userDB.token
+            request_data = request.get_json()
+            task_id = request_data.get('taskid')
+            record_id = request_data.get('recordid')
+            status = request_data.get('status')
+            req_comment = request_data.get('comment')
+
+            r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + record_id + "/stageview", data = request_data, headers = {
+                    "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+                })
+
+            result = json.loads(r.text)
+            
+            # get manager email dan task id
+            for data in result['data']:
+                try:
+                    if data['target']['id'] == task_id:
+                        currentUserTask = data['target']['display_name']
+                        break
+                except KeyError:
+                    continue
+            
+            nextTarget = currentToTarget[currentUserTask]
+            
+
+            if nextTarget == "Germen_hrd@makersinsitute.id":
+                print(nextTarget)
+                submit_data = {
+                    "data": {
+                        "form_data": {
+                            # ini ngirim ke siapa aja
+                            "pvDeptman": nextTarget
+                        },
+                        "comment": req_comment
+                    }
+                }
+            elif nextTarget == "status_revise":
+                submit_data = {
+                    "data": {
+                        "form_data": {
+                            # ini ngirim ke siapa aja
+                            "pvAction": status
+                        },
+                        "comment": req_comment
+                    }
+                }
+            elif nextTarget == "sent_email":
+                submit_data = {
+                    "data": {
+                        "comment": req_comment
+                    }
+                }
+            elif nextTarget[0] ==  "Hader_hrd@makersinstitute.id":
+                submit_data = {
+                    "data": {
+                        "form_data": {
+                            # ini ngirim ke siapa aja
+                            "pvHrdept": nextTarget[0],
+                            "pvHrcomp": nextTarget[1]
+                        },
+                        "comment": req_comment
+                    }
+                }
+
+            r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
+                "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+            })
+
+            result = json.loads(r.text)
+            # nextTarget = result['data'][0]['form_data']['pvHrdept']
+
+
+
+            # gerakin flow dari requester ke hrd
+            # task list dari requester bakal pindah ke hrd
+            # submit_data = {
+            #     "data": {
+            #         "form_data": {
+            #             # ini ngirim ke siapa aja
+            #             "pvHrdept": hrdDepartment,
+            #             "pvHrcomp": hrdCompany
+            #         },
+            #         "comment": req_comment
+            #     }
+            # }
+
+            # # buat ngirim requestnya
+            # r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
+            #     "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+            # })
+
+            # result = json.loads(r.text)
+
+            # return result
+            
+            return "Submitted", 200
+        else:
+            return "Bad request", 400
+    else:
+        return "Methond Not Allowed", 405
+
+
+
 
 @app.route('/HRDCheck', methods = ['GET', 'POST'])
 #### hrd department to manager department ####
