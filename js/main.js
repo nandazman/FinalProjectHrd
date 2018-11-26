@@ -14,6 +14,25 @@ function getCookie(cname) {
     return "";
 }
 
+
+function deleteCookie(){
+    document.cookie = ' requester=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+    document.cookie = ' token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+    document.cookie = ' hr=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+}
+
+function security(){
+    var username = getCookie('token');
+    if (username != ""){
+
+    }else {
+        alert('Please Login')
+        document.cookie = 'requester=${isRequest}; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+        window.location = 'login.html'
+    }
+}
+
+
 /******* INTERACTION WITH BACK END ******/
 
 
@@ -213,7 +232,112 @@ function getEmployeeData(){
                 <input value="${data.employee_sub_group}" />
             </div>
             `)
+            $.ajax({
+                method: 'POST',
+                url: 'http://localhost:7000/proposed',
+                beforeSend: function(req) {
+                    req.setRequestHeader("Content-Type", "application/json");
+                },
+                data: JSON.stringify({
+                    "id": data.id
+                }),
+                success: function(res){
+                    data = JSON.parse(res)
+                    console.log(data)
+                    data.forEach(data=> {
+                        $('#position-list').append(`
+                            <option value="${data.id}">${data.position_code} - ${data.position}</option>
+                        `)
+    
+                    })
+                },
+                error: function(err){
+                    console.log(err)
+                }
+            })
+        },
+        error: function(err){
+            console.log(err)
+        }
+    })
+}
+
+function getProposedPositionData(){
+    // console.log($('#employee-selection').val())
+    $.ajax({
+        method: 'POST',
+        url: 'http://localhost:7000/current',
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', getCookie('token'));
+            req.setRequestHeader("Content-Type", "application/json");
+        },
+        data: JSON.stringify({
+            "id": $('#employee-selection').val()
+        }),
+        success: function(res){
+            data = JSON.parse(res)
             console.log(data)
+            $('#current').append(``)
+
+        },
+        error: function(err){
+            console.log(err)
+        }
+    })
+}
+
+function getPositionData(){
+    console.log($('#position-list').val())
+    $.ajax({
+        method: 'POST',
+        url: 'http://localhost:7000/proposed',
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', getCookie('token'));
+            req.setRequestHeader("Content-Type", "application/json");
+        },
+        data: JSON.stringify({
+            "id": $('#position-list').val()
+        }),
+        success: function(res){
+            data = JSON.parse(res)
+            $('#proposed').append(`
+            <div class="listForm">
+                <p>POSITION CODE</p>
+                <input value="${data.position_code}" />
+            </div>
+            <div class="listForm">
+                <p>POSITION</p>
+                <input value="${data.position}" />
+            </div>
+            <div class="listForm">
+                <p>COMPANY</p>
+                <input value="${data.company}" />
+            </div>
+            <div class="listForm">
+                <p>COST CENTER</p>
+                <div>
+                <input class="doubleinput1" value="${data.cost_center_code}" />
+                <br>
+                <input class="doubleinput2" value="${data.cost_center}" />
+                </div>
+            </div>
+            <div class="listForm">
+                <p>PERSONAL AREA</p>
+                <input value="${data.personal_area}" />
+            </div>
+            <div class="listForm">
+                <p>EMPLOYEE GROUP</p>
+                <input value="${data.employee_group}" />
+            </div>
+            <div class="listForm">
+                <p>EMPLOYEE SUBGROUP</p>
+                <input value="${data.employee_sub_group}" />
+            </div>
+            `)
+          
+        },
+        error: function(err){
+            console.log(err)
         }
     })
 }

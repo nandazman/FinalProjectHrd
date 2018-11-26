@@ -14,7 +14,7 @@ import requests
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/Rotation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/Rotation'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -33,6 +33,7 @@ class Position(db.Model):
     employee_type = db.Column(db.String())
     employee_group = db.Column(db.String())
     employee_sub_group = db.Column(db.String())
+    departemen_id = db.Column(db.Integer, db.ForeignKey("departemen.id"))
 
 
 class Departemen(db.Model):
@@ -48,14 +49,12 @@ class AccessUser(db.Model):
     photo = db.Column(db.String())
     token = db.Column(db.String())
     role = db.Column(db.String())
-    departemen_id = db.Column(db.Integer, db.ForeignKey('departemen.id'))
     position_id = db.Column(db.Integer, db.ForeignKey('position.id'))
 
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     npk = db.Column(db.Integer())
     nama = db.Column(db.String())
-    departemen_id = db.Column(db.Integer, db.ForeignKey("departemen.id"))
     position_id = db.Column(db.Integer, db.ForeignKey("position.id"))
 
 class Summary(db.Model):
@@ -104,11 +103,12 @@ def profile():
 
         user = AccessUser.query.filter_by(email=decoded['email']).first()
         position = Position.query.filter_by(id=user.position_id).first()
+
         user_nama = {
             "nama": user.nama,
             "npk": user.npk,
             "role": position.position,
-            "departemen_id": user.departemen_id
+            "departemen_id": position.departemen_id
         }
         user = json.dumps(user_nama)
 
@@ -120,17 +120,21 @@ def employee():
         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
 
         user = AccessUser.query.filter_by(email=decoded['email']).first()
-        employeeDB = Employee.query.filter_by(departemen_id=user.departemen_id).all()
+        position = Position.query.filter_by(id=user.position_id).first()
+        departemenManager = position.departemen_id
+        employeeDB = Employee.query.all()
 
         employee_data = []
 
         for data in employeeDB:
-            employee = {
-                'npk': data.npk,
-                'nama': data.nama,
-                'position_id': data.position_id
-            }
-            employee_data.append(employee)
+            departemenEmployee = (Position.query.filter_by(id=data.position_id).first()).departemen_id
+            if departemenManager == departemenEmployee:
+                employee = {
+                    'npk': data.npk,
+                    'nama': data.nama,
+                    'position_id': data.position_id
+                }
+                employee_data.append(employee)
 
         data = json.dumps(employee_data)
         # print(data)
@@ -147,9 +151,10 @@ def current_data():
         position_id = request_data['id']
 
         position_data = Position.query.filter_by(id=position_id).first()
-        print(position_data)
+
 
         employee = {
+                'id': position_data.id,
                 'position_code': position_data.position_code,
                 'position': position_data.position,
                 'company': position_data.company,
@@ -161,8 +166,59 @@ def current_data():
             }
 
         data = json.dumps(employee)
-        print(data)
+        
         return data, 200
+
+@app.route('/proposed', methods = ['POST'])
+def proposed_position():
+    if request.method == 'POST':
+    
+        request_data = request.get_json()
+        position_id = request_data['id']
+        print(position_id)
+        position_data = Position.query.filter(Position.id != position_id).all()
+        positions = []
+        for data in position_data:
+            position = {
+                    'id': data.id,
+                    'position_code': data.position_code,
+                    'position': data.position
+                }
+            positions.append(position)
+        data = json.dumps(positions)
+
+        return data, 200
+
+
+@app.route('/proposed', methods = ['POST'])
+def proposed_data():
+    if request.method == 'POST':
+
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+    
+
+        request_data = request.get_json()
+        position_id = request_data['id']
+
+        position_data = Position.query.filter_by(id=position_id).first()
+
+
+        employee = {
+                'id': position_data.id,
+                'position_code': position_data.position_code,
+                'position': position_data.position,
+                'company': position_data.company,
+                'cost_center': position_data.cost_center,
+                'cost_center_code': position_data.cost_center_code,
+                'personal_area': position_data.personal_area,
+                'employee_group': position_data.employee_group,
+                'employee_sub_group': position_data.employee_sub_group
+            }
+
+        data = json.dumps(employee)
+        
+        return data, 200
+
 # @app.route('/getProfile', methods = ["GET"])
 # def profile():
 #     if request.method == 'GET':
@@ -504,7 +560,6 @@ def submit_task():
             return "Bad request", 400
     else:
         return "Methond Not Allowed", 405
-
 
 
 
