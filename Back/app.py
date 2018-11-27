@@ -7,6 +7,7 @@ import datetime
 import os
 import jwt
 import requests
+from sqlalchemy import and_
 
 
 
@@ -14,7 +15,7 @@ import requests
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/NextFlow'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHRD'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -59,14 +60,17 @@ class Employee(db.Model):
 
 class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    process_id = db.Column(db.Integer())
-    record_id = db.Column(db.Integer())
-    distribution_cost_center = db.Column(db.Integer())
-    dates = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
+    process_id = db.Column(db.String())
+    record_id = db.Column(db.String())
+    distribution_cost_center = db.Column(db.String())
+    dates = db.Column(db.String())
     coment = db.Column(db.String())
+    behalf_name = db.Column(db.String())
+    behalf_position = db.Column(db.String())
     requester_id = db.Column(db.Integer, db.ForeignKey("access_user.id"))
     receiver_id = db.Column(db.Integer, db.ForeignKey("access_user.id"))
     employee_id = db.Column(db.Integer, db.ForeignKey("employee.id"))
+    position_id = db.Column(db.Integer, db.ForeignKey("position.id"))
 
 @app.route('/')
 def hallo():
@@ -176,9 +180,11 @@ def proposed_position():
         request_data = request.get_json()
         position_id = request_data['id']
         print(position_id)
-        position_data = Position.query.filter(Position.id != position_id).all()
+        position_data = Position.query.filter_by(id = position_id).first()
+
+        position_list = Position.query.filter(and_(Position.id != position_data.id, Position.departemen_id != position_data.departemen_id, Position.departemen_id != 1)).all()
         positions = []
-        for data in position_data:
+        for data in position_list:
             position = {
                     'id': data.id,
                     'position_code': data.position_code,
@@ -200,6 +206,7 @@ def proposed_data():
         request_data = request.get_json()
         position_id = request_data['id']
         position_data = Position.query.filter_by(id=position_id).first()
+        print(position_data)
         # Tweets.query.join(Person, Person.id == Tweets.person_id).add_columns(Tweets.id, Tweets.content, ).order_by(Tweets.date)
         receiver = AccessUser.query.join(Position).add_columns(Position.departemen_id).filter(Position.departemen_id == position_data.departemen_id).first()
         receiver_email = receiver[0].email
@@ -224,6 +231,41 @@ def proposed_data():
         
         return data, 200
 
+
+@app.route('/tableSummary', methods = ["POST"])
+def get_Summary():
+    if request.method == 'POST':
+        
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+        
+        summary_data = Summary.query.filter_by(record_id='record:test-20181122-39').first()
+        userDB = AccessUser.query.filter_by(email = decoded['email']).first()
+        user_token = userDB.token
+
+        r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + summary_data.record_id + "/stageview", headers = {
+                    "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+                })
+
+        result = json.loads(r.text)
+        print(result)
+        return "ok", 200
+
+@app.route('/getSAP', methods = ["GET"])
+def get_SAP():
+    if request.method == 'GET':
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+        
+        SAP = Summary.query.all()
+        userDB = AccessUser.query.filter_by(email = decoded['email']).first()
+        user_token = userDB.token
+
+        r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + SAP.record_id + "/stageview", headers = {
+                    "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+                })
+
+        result = json.loads(r.text)
+        print(result)
+        return "ok", 200
 # @app.route('/getProfile', methods = ["GET"])
 # def profile():
 #     if request.method == 'GET':
@@ -254,13 +296,13 @@ def proposed_data():
 @app.route('/submitToHRD', methods = ['GET', 'POST'])
 ##### inisasi nextflow atau create record #####
 def create_record():
-    
+    decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
     request_data = request.get_json()
-    req_email = request_data.get('email')
+    
     req_comment = request_data.get('comment')
 
-    userDB = AccessUser.query.filter_by(email = req_email).first()
-    
+    userDB = AccessUser.query.filter_by(email = decoded['email']).first()
+
     if userDB is not None:
         user_token = userDB.token
   
@@ -295,7 +337,7 @@ def create_record():
 
         # masukin data ke database
         # ngriim record id sama process id dari process_instance
-        # data_db = submit_to_database(record_id, process_instance['data']['process_id'])
+        data_db = submit_to_database(record_id, process_instance['data']['process_id'],request_data)
 
         # return berupa id, dan statusnya
         return "Submitted", 200
@@ -354,7 +396,7 @@ def submit_to_HRD(req_comment, user_token):
         })
 
     result = json.loads(r.text)
-    task_id = result['data'][-1]['id']
+    task_id = 0
     # get manager email dan task id
 
     result = waitingRespone(user_token,url, task_id)
@@ -397,27 +439,48 @@ def waitingRespone(user_token,url,task_id):
         return result
     return waitingRespone(user_token,url,task_id)
 # fungsi untuk memasukan data ke db
-# def submit_to_database(record_id, process_id):
-#     # request_data = request.get_json()
-#     # req_code = request_data['data']['code']
-#     # req_price = request_data['data']['price']
 
-#     # buat ada template ke dbnya
-#     data_db = Summary(
-#         # code = req_code,
-#         # price = req_price,
-#         process_id = process_id,
-#         record_id = record_id
-#     )
+def submit_to_database(record_id, process_id,request_data):
 
-#     db.session.add(data_db)
-#     db.session.commit()
-#     db.session.flush()
+    req_employee_data = request_data.get('employee')
+    req_receiver = request_data.get('receiver')
+    req_requester = request_data.get('requester')
+    req_position_id = int(request_data.get('position'))
+    req_behalf_name = request_data.get('behalf-name')
+    req_behalf_position = request_data.get('behalf-position')
+    req_distribution = request_data.get('distribution')
+    req_date = request_data.get('date')
+    req_comment = request_data.get('comment')
 
-#     if data_db is not None:
-#         return str(data_db.id)
-#     else:
-#         return None
+    req_employee_name = req_employee_data.split(" - ")[1]
+ 
+    req_employee_id = (Employee.query.filter_by(nama = req_employee_name).first()).id
+    req_requester_id = (AccessUser.query.filter_by(nama = req_requester).first()).id
+    req_receiver_id = (AccessUser.query.filter_by(email = req_receiver).first()).id
+
+    # buat ada template ke dbnya
+    data_db = Summary(
+        process_id = process_id,
+        record_id = record_id,
+        distribution_cost_center = req_distribution,
+        dates = req_date,
+        coment = req_comment,
+        behalf_name = req_behalf_name,
+        behalf_position = req_behalf_position,
+        requester_id = req_requester_id,
+        receiver_id = req_receiver_id,
+        employee_id = req_employee_id,
+        position_id = req_position_id
+    )
+    
+    db.session.add(data_db)
+    db.session.commit()
+    # db.session.flush()
+
+    if data_db is not None:
+        return "str(data_db.id)"
+    else:
+        return None
 
 @app.route('/GetTask', methods = ['GET', 'POST'])
 #### Get access user task ####
@@ -425,7 +488,7 @@ def get_task():
     decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
 
     userDB = AccessUser.query.filter_by(email = decoded['email']).first()
-
+    
     if userDB is not None:
         user_token = userDB.token
         name = userDB.role

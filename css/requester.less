@@ -167,6 +167,151 @@ footer {
     }
 }
 
+button {
+background-color: #85b6d1;
+color: #3e3535;
+// box-shadow: 0px 1px 0px 0px #000;
+border-radius: 5px;
+border: none;
+padding: 10px 20px;
+font-size: 17px;
+// font-family: Raleway;
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}
+
+.ans{
+    border-bottom: 3px groove rgb(88, 147, 187);
+    // box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
+
+.inans{
+    margin-bottom: 15px;
+}
+
+
+#regForm {
+    background-color: #ffffff;
+    box-shadow: 10px 10px 10px #000000;
+    margin: 100px auto;
+    padding: 30px;
+    width: 60%;
+    // min-width: 300px;
+    font-family: 'Heebo', sans-serif;
+    border-radius: 5px;
+    .tab {
+        display: none;
+        .listForm{
+            display: flex;
+            margin: 15px;
+            text-align: left;
+            p{
+                width: 250px;
+                padding: 5px;
+            }
+            input {
+                margin-right: 35px;
+                width: 300px;
+                padding: 5px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
+            }
+            .doublelist1{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+                margin-bottom: 15px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
+            }
+            .doubleinput1{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+                padding: 5px;
+                margin-bottom: 15px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
+            }
+            .doubleinput2{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+                padding: 5px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
+            }
+            .down-list{
+                margin-right: 35px;
+                height: 32px;
+                width: 300px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
+            }
+        }
+      }
+    h1 {
+        text-align: center;  
+      }
+    input {
+    padding: 10px;
+    width: 100%;
+    // font-size: 17px;
+    // font-family: 'Noto Sans TC', sans-serif;
+    border: 1px solid #aaaaaa;
+    }
+    .invalid {
+        background-color: rgb(209, 209, 209);
+        }
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 90px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    a {
+      color: black;
+      padding: 2px;
+      text-decoration: none;
+      display: block;
+      font-size: 15px;
+      font-family: 'Heebo', sans-serif;
+      text-align: center;
+      &:hover {
+          background-color: #ddd;
+        }
+    }
+  }
+
+.dropdown:hover {
+    .dropdown-content {display: block;}
+}
 /* #######################################
 ############## MODAL HEADER ##############
 ####################################### */
@@ -266,14 +411,15 @@ footer {
 
 // form
 #regForm {
+    display:none;
     background-color: #ffffff;
     box-shadow: 10px 10px 10px #000000;
     margin: 100px auto;
-    font-family: Raleway;
-    padding: 40px;
-    width: 70%;
-    min-width: 300px;
+    padding: 30px;
+    width: 60%;
+    // min-width: 300px;
     font-family: 'Heebo', sans-serif;
+    border-radius: 5px;
     .tab {
         display: none;
         .listForm{
@@ -288,12 +434,24 @@ footer {
                 margin-right: 35px;
                 width: 300px;
                 padding: 5px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
             }
             .doublelist1{
                 margin-right: 35px;
                 height: 32px;
                 width: 300px;
                 margin-bottom: 15px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
             }
             .doubleinput1{
                 margin-right: 35px;
@@ -301,17 +459,35 @@ footer {
                 width: 300px;
                 padding: 5px;
                 margin-bottom: 15px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
             }
             .doubleinput2{
                 margin-right: 35px;
                 height: 32px;
                 width: 300px;
                 padding: 5px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
             }
             .down-list{
                 margin-right: 35px;
                 height: 32px;
                 width: 300px;
+                border-radius: 5px;
+                border: 1px solid #DDDDDD;
+                &:focus{
+                    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                    border: 1px solid rgba(81, 203, 238, 1);
+                }
             }
         }
       }
@@ -321,44 +497,13 @@ footer {
     input {
     padding: 10px;
     width: 100%;
-    font-size: 17px;
-    font-family: Raleway;
+    // font-size: 17px;
+    // font-family: 'Noto Sans TC', sans-serif;
     border: 1px solid #aaaaaa;
+    }
     .invalid {
-        background-color: #ffdddd;
-      }
-    }
+        background-color: rgb(209, 209, 209);
+        }
 }
   
-button {
-background-color: #4CAF50;
-color: #ffffff;
-border: none;
-padding: 10px 20px;
-font-size: 17px;
-font-family: Raleway;
-cursor: pointer;
-    :hover {
-        opacity: 0.8;
-    }
-}
-  
-#prevBtn {
-    background-color: #bbbbbb;
-}
-.step {
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
-    background-color: #bbbbbb;
-    border: none;  
-    border-radius: 50%;
-    display: inline-block;
-    opacity: 0.5;
-    .active {
-        opacity: 1;
-    }
-    .finish {
-        background-color: #4CAF50;
-    }
-}
+

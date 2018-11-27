@@ -46,7 +46,7 @@ function allTask(){
         },
         dataType: 'json',
         success: function(res){
-            
+            console.log(res)
             var requester = res.data
             if (requester.length == 0){
                 $('#alltaskuser').append(`<div class="taskitem")">
@@ -132,7 +132,11 @@ function getProfile(){
         success: function(res){
             
             data = JSON.parse(res)
-            $('#user').append(`<h4 id="userLogIn">Hello, ${data.nama}!</h4>`)
+            $('#user').append(`<h4 class="dropdown">Hello, ${data.nama}!
+            <div class="dropdown-content">
+            <a href="#">Sign Out</a>
+            </div>
+            </h4>`)
             $('#new-information').prepend(`<div class="listForm">
             <p>REQUESTER NAME</p>
             <p id="requester-nama">${data.nama}</p>
@@ -187,37 +191,37 @@ function getEmployeeData(){
             $('#current').append(`
             <div class="listForm">
                 <p>POSITION CODE</p>
-                <input value="${data.position_code}" />
+                <p class="ans">${data.position_code}</p>
             </div>
             <div class="listForm">
                 <p>POSITION</p>
-                <input value="${data.position}" />
+                <p class="ans">${data.position}</p>
             </div>
             <div class="listForm">
                 <p>COMPANY</p>
-                <input value="${data.company}" />
+                <p class="ans">${data.company}</p>
             </div>
             <div class="listForm">
                 <p>COST CENTER</p>
                 <div>
-                <input class="doubleinput1" value="${data.cost_center_code}" />
-                <br>
-                <input class="doubleinput2" value="${data.cost_center}" />
+                <p class="ans inans">${data.cost_center_code}</p>
+                <p class="ans">${data.cost_center}</p>
                 </div>
             </div>
             <div class="listForm">
                 <p>PERSONAL AREA</p>
-                <input value="${data.personal_area}" />
+                <p class="ans">${data.personal_area}</p>
             </div>
             <div class="listForm">
                 <p>EMPLOYEE GROUP</p>
-                <input value="${data.employee_group}" />
+                <p class="ans">${data.employee_group}</p>
             </div>
             <div class="listForm">
                 <p>EMPLOYEE SUBGROUP</p>
-                <input value="${data.employee_sub_group}" />
+                <p class="ans">${data.employee_sub_group}</p>
             </div>
             `)
+            alert(data.id)
             $.ajax({
                 method: 'POST',
                 url: 'http://localhost:7000/proposed',
@@ -275,7 +279,7 @@ function getPositionData(){
         <div class="listForm">
             <p>DISTRIBUTION COST CENTER</p>
             <div>
-                <input type="text" class="database-input" /><br>
+                <input type="text" id="distribution-cost" class="database-input" /><br>
             </div>
         </div>
         <div class="listForm">
@@ -300,11 +304,11 @@ function getPositionData(){
         </div>
         <div class="listForm">
             <p>EFFECTIVE DATE START</p>
-            <input type="date" id="start" name="trip-start" value="yyyy-mm-dd" min="2018-01-01" max="2018-12-31">
+            <input type="date" id="date-start" name="trip-start" value="yyyy-mm-dd" min="2018-01-01" max="2018-12-31">
         </div>
         <div class="listForm">
             <p>COMMENT</p>
-            <input type="text" />
+            <input id="comment-requester" type="text" />
         </div>`)
           
         },
@@ -317,35 +321,77 @@ function getPositionData(){
 
 function submitForm(){
     alert("aaaaaaaaaaaaaaa")
-    // document.getElementById('regForm').style.display = "none";
-    employee = $('#employee-selection').val()
+    document.getElementById('regForm').style.display = "none";
+    employee = $('#employee-selection option:selected').text()
     receiver = $('#receiver').val()
     requester = $('#requester-nama').text()
     position = $('#position-list').val()
-    
-    alert(employee)
-    alert(receiver)
-    alert(requester)
+    behalf = $('#behalf-position').val()
     alert(position)
-    // $.ajax({
-    //     method: 'POST',
-    //     url: 'http://localhost:7000/submitToHRD',
-    //     beforeSend: function(req) {
-    //         req.setRequestHeader('Authorization', getCookie('token'));
-    //         req.setRequestHeader("Content-Type", "application/json");
-    //     },
-    //     data: JSON.stringify({
-    //         "employee_id": $('#employee-selection').val(),
-    //         "receiver": $('#receiver').val(),
-    //         "requester": $('#userLogInuserLogIn').val()
-    //     }),
-    //     success: function(res){
-    //         console.log(res)
-    //     },
-    //     error: function(err){
-    //         console.log(err)
-    //     }
-    // })
+
+    $.ajax({
+        method: 'POST',
+        url: 'http://localhost:7000/submitToHRD',
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', getCookie('token'));
+            req.setRequestHeader("Content-Type", "application/json");
+        },
+        data: JSON.stringify({
+            "employee": $('#employee-selection option:selected').text(),
+            "receiver": $('#receiver').val(),
+            "requester": $('#requester-nama').text(),
+            "position": $('#position-list').val(),
+            'behalf-name': $('#behalf-name').val(),
+            'behalf-position' : $('#behalf-position').val(),
+            "distribution": $('#distribution-cost').val(),
+            "date": $('#date-start').val(),
+            "comment": $('#comment-requester').val()
+        }),
+        success: function(res){
+            console.log(res)
+        },
+        error: function(err){
+            console.log(err)
+        }
+    })
+}
+
+function getSAP(){
+    $.ajax({
+        method: 'GET',
+        url: 'http://localhost:7000/getSAP',
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', getCookie('token'));
+        },
+        success: function(res){
+            console.log(res)
+        },
+        error: function(err){
+            console.log(err)
+        }
+    })
+}
+
+function comentHistory(task_id,record_id){
+    alert("summary")
+    $.ajax({
+        method: 'POST',
+        url: 'http://localhost:7000/tableSummary',
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', getCookie('token'));
+            req.setRequestHeader("Content-Type", "application/json");
+        },
+        data: JSON.stringify({
+            "taskid": task_id,
+            "recordid": record_id 
+            }),
+        success: function(res){
+            console.log(res)
+        },
+        error: function(err){
+            console.log(err)
+        }
+    })
 }
 
 function getOneRecordId(){
