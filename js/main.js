@@ -1,3 +1,6 @@
+/*
+
+*/
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -55,7 +58,7 @@ function allTask(){
             } else {
                 requester.forEach(task => {
                     
-                    $('#alltaskuser').append(`<div class="taskitem" onclick="showModal('${task.id}','${task.record_id}')">
+                    $('#alltaskuser').append(`<div class="taskitem" onclick="showModal('${task.id}','${task.record_id}'); commentHistory('${task.id}','${task.record_id}')">
                     <img src="image1.jpg">
                     <p>Dear ${task.assignee.name}</p>
                     <p>${task.id}</p>
@@ -132,11 +135,13 @@ function getProfile(){
         success: function(res){
             
             data = JSON.parse(res)
-            $('#user').append(`<h4 class="dropdown">Hello, ${data.nama}!
+            $('#user').append(`<div class="greeting">Hello,<div class="dropdown"> 
+            <span>${data.nama}</span>
             <div class="dropdown-content">
             <a href="#">Sign Out</a>
             </div>
-            </h4>`)
+            </div>!
+            </div>`)
             $('#new-information').prepend(`<div class="listForm">
             <p>REQUESTER NAME</p>
             <p id="requester-nama">${data.nama}</p>
@@ -372,7 +377,8 @@ function getSAP(){
     })
 }
 
-function comentHistory(task_id,record_id){
+
+function commentHistory(task_id,record_id){
     alert("summary")
     $.ajax({
         method: 'POST',
@@ -386,7 +392,11 @@ function comentHistory(task_id,record_id){
             "recordid": record_id 
             }),
         success: function(res){
-            console.log(res)
+            commentHistory = (JSON.parse(res)).comment_history
+            formData = (JSON.parse(res)).form_data
+            console.log(commentHistory)
+            console.log("AAAAAAAAAAA")
+            console.log(formData)
         },
         error: function(err){
             console.log(err)

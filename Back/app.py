@@ -207,7 +207,7 @@ def proposed_data():
         position_id = request_data['id']
         position_data = Position.query.filter_by(id=position_id).first()
         print(position_data)
-        # Tweets.query.join(Person, Person.id == Tweets.person_id).add_columns(Tweets.id, Tweets.content, ).order_by(Tweets.date)
+        
         receiver = AccessUser.query.join(Position).add_columns(Position.departemen_id).filter(Position.departemen_id == position_data.departemen_id).first()
         receiver_email = receiver[0].email
         receier_id = receiver[0].id
@@ -237,18 +237,65 @@ def get_Summary():
     if request.method == 'POST':
         
         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
-        
-        summary_data = Summary.query.filter_by(record_id='record:test-20181122-39').first()
+        request_data = request.get_json()
+        record_id = request_data['recordid']
+        summary_data = Summary.query.filter_by(record_id = record_id).first()
+        print(summary_data)
+        # AccessUser.query.join(Position).add_columns(Position.departemen_id).filter(Position.departemen_id == position_data.departemen_id).first()
+
+        requester_data = AccessUser.query.join(Position).add_columns(AccessUser.nama, AccessUser.npk, Position.position).filter(AccessUser.id == summary_data.requester_id).first()
+        receiver_data = AccessUser.query.filter_by(id = summary_data.receiver_id).first()
+        employee_data = Employee.query.join(Position).add_columns(Employee.nama, Employee.npk, Position.position_code, Position.position, Position.company, Position.cost_center, Position.cost_center_code, Position.personal_area, Position.employee_group, Position.employee_sub_group).filter(Position.id == summary_data.position_id).first()
+
+        proposed_position = Position.query.filter_by(id = summary_data.position_id).first()
+
+        summary = {
+            'requester_name': requester_data[1],
+            'requester_npk': requester_data[2],
+            'requester_position': requester_data[3],
+            'behalf_name': summary_data.behalf_name,
+            'behalf_position': summary_data.behalf_position,
+            'employee_name': employee_data[1],
+            'employee_npk': employee_data[2],
+            'process_id': summary_data.process_id,
+            'current_position_code': employee_data[3],
+            'current_position': employee_data[4],
+            'current_company': employee_data[5],
+            'current_cost_center_code': employee_data[7],
+            'current_cost_center': employee_data[6],
+            'current_personal_area': employee_data[8],
+            'current_employee_group': employee_data[9],
+            'current_employee_sub_group': employee_data[10],
+            'proposed_position_code': proposed_position.position_code,
+            'proposed_position': proposed_position.position,
+            'distribution_cost_center': summary_data.distribution_cost_center,
+            'company': proposed_position.company,
+            'cost_center_code': proposed_position.cost_center_code,
+            'cost_center': proposed_position.cost_center,
+            'personal_area': proposed_position.personal_area,
+            'proposed_personal_sub_area': proposed_position.personal_sub_area,
+            'employee_type': proposed_position.employee_type,
+            'receiver': receiver_data.nama,
+            'date': summary_data.dates,
+            'comment': summary_data.coment
+        }
+
         userDB = AccessUser.query.filter_by(email = decoded['email']).first()
         user_token = userDB.token
 
-        r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + summary_data.record_id + "/stageview", headers = {
+        r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + request_data['recordid'] + "/stageview", headers = {
                     "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
                 })
 
         result = json.loads(r.text)
-        print(result)
-        return "ok", 200
+        
+        summarize = {
+            'form_data': summary,
+            'comment_history': result
+        }
+        
+        summarize = json.dumps(summarize)
+        return summarize , 200
 
 @app.route('/getSAP', methods = ["GET"])
 def get_SAP():

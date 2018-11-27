@@ -51,6 +51,9 @@ header .tittle img {
   position: relative;
   top: -80px;
 }
+.greeting {
+  display: flex;
+}
 .request {
   width: 70vw;
   margin: auto;
