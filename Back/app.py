@@ -14,7 +14,7 @@ import requests
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/Rotation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/NextFlow'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -190,7 +190,7 @@ def proposed_position():
         return data, 200
 
 
-@app.route('/proposed', methods = ['POST'])
+@app.route('/proposeddata', methods = ['POST'])
 def proposed_data():
     if request.method == 'POST':
 
@@ -199,10 +199,13 @@ def proposed_data():
 
         request_data = request.get_json()
         position_id = request_data['id']
-
         position_data = Position.query.filter_by(id=position_id).first()
-
-
+        # Tweets.query.join(Person, Person.id == Tweets.person_id).add_columns(Tweets.id, Tweets.content, ).order_by(Tweets.date)
+        receiver = AccessUser.query.join(Position).add_columns(Position.departemen_id).filter(Position.departemen_id == position_data.departemen_id).first()
+        receiver_email = receiver[0].email
+        receier_id = receiver[0].id
+        print(receiver)
+        print(receiver[0].email)
         employee = {
                 'id': position_data.id,
                 'position_code': position_data.position_code,
@@ -211,8 +214,10 @@ def proposed_data():
                 'cost_center': position_data.cost_center,
                 'cost_center_code': position_data.cost_center_code,
                 'personal_area': position_data.personal_area,
-                'employee_group': position_data.employee_group,
-                'employee_sub_group': position_data.employee_sub_group
+                'personal_sub_area': position_data.personal_sub_area,
+                'employee_type': position_data.employee_type,
+                'receiver': receiver_email,
+                'receier_id': receier_id
             }
 
         data = json.dumps(employee)

@@ -46,7 +46,7 @@ function allTask(){
         },
         dataType: 'json',
         success: function(res){
-            console.log(res.data)
+            
             var requester = res.data
             if (requester.length == 0){
                 $('#alltaskuser').append(`<div class="taskitem")">
@@ -87,7 +87,7 @@ function submitTask(taskid,recordid,status){
         }),
 
         success: function(res){
-            console.log(res)
+            
             $('#alltaskuser .taskitem p:contains("'+taskid+'")').parent().remove()
             $('#modal-form').slideUp()
             $('#revise').remove()
@@ -120,21 +120,7 @@ function submitTask(taskid,recordid,status){
     
 // })
 
-function updateSummary(){
-    $.ajax({
-        method: 'POST',
-        url: 'http://localhost:7000/',
-        beforeSend: function(req) {
-            req.setRequestHeader('Authorization', getCookie('token'));
-        },
-        success: function(res){
-            console.log(res)
-        },
-        error: function(err){
-            console.log(err)
-        }
-    })
-}
+
 
 function getProfile(){
     $.ajax({
@@ -144,12 +130,12 @@ function getProfile(){
             req.setRequestHeader('Authorization', getCookie('token'));
         },
         success: function(res){
-            console.log(JSON.parse(res))
+            
             data = JSON.parse(res)
-            $('#user').append(`<h4>Hello, ${data.nama}!</h4>`)
+            $('#user').append(`<h4 id="userLogIn">Hello, ${data.nama}!</h4>`)
             $('#new-information').prepend(`<div class="listForm">
             <p>REQUESTER NAME</p>
-            <p>${data.nama}</p>
+            <p id="requester-nama">${data.nama}</p>
         </div>
         <div class="listForm">
             <p>REQUESTER NPK</p>
@@ -166,7 +152,7 @@ function getProfile(){
                 req.setRequestHeader('Authorization', getCookie('token'));
             },
             success: function(res){
-                console.log(JSON.parse(res))
+                
                 data = JSON.parse(res)
                 data.forEach(data=> {
                     $('#employee-selection').append(`
@@ -243,7 +229,7 @@ function getEmployeeData(){
                 }),
                 success: function(res){
                     data = JSON.parse(res)
-                    console.log(data)
+                    
                     data.forEach(data=> {
                         $('#position-list').append(`
                             <option value="${data.id}">${data.position_code} - ${data.position}</option>
@@ -262,35 +248,12 @@ function getEmployeeData(){
     })
 }
 
-function getProposedPositionData(){
-    // console.log($('#employee-selection').val())
-    $.ajax({
-        method: 'POST',
-        url: 'http://localhost:7000/current',
-        beforeSend: function(req) {
-            req.setRequestHeader('Authorization', getCookie('token'));
-            req.setRequestHeader("Content-Type", "application/json");
-        },
-        data: JSON.stringify({
-            "id": $('#employee-selection').val()
-        }),
-        success: function(res){
-            data = JSON.parse(res)
-            console.log(data)
-            $('#current').append(``)
-
-        },
-        error: function(err){
-            console.log(err)
-        }
-    })
-}
 
 function getPositionData(){
-    console.log($('#position-list').val())
+
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/proposed',
+        url: 'http://localhost:7000/proposeddata',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -299,47 +262,90 @@ function getPositionData(){
             "id": $('#position-list').val()
         }),
         success: function(res){
+            
             data = JSON.parse(res)
-            $('#proposed').append(`
-            <div class="listForm">
-                <p>POSITION CODE</p>
-                <input value="${data.position_code}" />
+           
+            $('#proposed').append(`<div class="listForm">
+            <p>COST CENTER</p>
+            <div>
+                <input type="text" class="doubleinput1" value="${data.cost_center_code}"/><br>
+                <input type="text" class="doubleinput2" value="${data.cost_center}"/>
             </div>
-            <div class="listForm">
-                <p>POSITION</p>
-                <input value="${data.position}" />
+        </div>
+        <div class="listForm">
+            <p>DISTRIBUTION COST CENTER</p>
+            <div>
+                <input type="text" class="database-input" /><br>
             </div>
-            <div class="listForm">
-                <p>COMPANY</p>
-                <input value="${data.company}" />
-            </div>
-            <div class="listForm">
-                <p>COST CENTER</p>
-                <div>
-                <input class="doubleinput1" value="${data.cost_center_code}" />
-                <br>
-                <input class="doubleinput2" value="${data.cost_center}" />
-                </div>
-            </div>
-            <div class="listForm">
-                <p>PERSONAL AREA</p>
-                <input value="${data.personal_area}" />
-            </div>
-            <div class="listForm">
-                <p>EMPLOYEE GROUP</p>
-                <input value="${data.employee_group}" />
-            </div>
-            <div class="listForm">
-                <p>EMPLOYEE SUBGROUP</p>
-                <input value="${data.employee_sub_group}" />
-            </div>
-            `)
+        </div>
+        <div class="listForm">
+            <p>COMPANY</p>
+            <input type="text" value="${data.company}"/>
+        </div>
+        <div class="listForm">
+            <p>PERSONNEL AREA</p>
+            <input type="text" value="${data.personal_area}"/>
+        </div>
+        <div class="listForm">
+            <p>PERSONNEL SUB AREA</p>
+            <input type="text" value="${data.personal_sub_area}"/>
+        </div>
+        <div class="listForm">
+            <p>EMPLOYEE TYPE</p>
+            <input type="text" value="${data.employee_type}"/>
+        </div>
+        <div class="listForm">
+            <p>RECEIVER <small id="help">(Position Minimum L4)</small></p>
+            <input type="text" id="receiver" value="${data.receiver}"/>
+        </div>
+        <div class="listForm">
+            <p>EFFECTIVE DATE START</p>
+            <input type="date" id="start" name="trip-start" value="yyyy-mm-dd" min="2018-01-01" max="2018-12-31">
+        </div>
+        <div class="listForm">
+            <p>COMMENT</p>
+            <input type="text" />
+        </div>`)
           
         },
         error: function(err){
             console.log(err)
         }
     })
+}
+
+
+function submitForm(){
+    alert("aaaaaaaaaaaaaaa")
+    // document.getElementById('regForm').style.display = "none";
+    employee = $('#employee-selection').val()
+    receiver = $('#receiver').val()
+    requester = $('#requester-nama').text()
+    position = $('#position-list').val()
+    
+    alert(employee)
+    alert(receiver)
+    alert(requester)
+    alert(position)
+    // $.ajax({
+    //     method: 'POST',
+    //     url: 'http://localhost:7000/submitToHRD',
+    //     beforeSend: function(req) {
+    //         req.setRequestHeader('Authorization', getCookie('token'));
+    //         req.setRequestHeader("Content-Type", "application/json");
+    //     },
+    //     data: JSON.stringify({
+    //         "employee_id": $('#employee-selection').val(),
+    //         "receiver": $('#receiver').val(),
+    //         "requester": $('#userLogInuserLogIn').val()
+    //     }),
+    //     success: function(res){
+    //         console.log(res)
+    //     },
+    //     error: function(err){
+    //         console.log(err)
+    //     }
+    // })
 }
 
 function getOneRecordId(){
@@ -390,7 +396,7 @@ if (getCookie('requester') !== 'true'){
 
 $(document).ready(function () {
     $("#request-tab").click(function () {
-        $("#new-request").slideToggle();
+        $("#regForm").slideToggle();
         $(".second-box").slideUp();
         
     });
@@ -398,7 +404,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $("#commenthis").click(function () {
         $(".second-box").slideToggle();
-        $("#new-request").slideUp();
+        $("#regForm").slideUp();
     });
 });
 

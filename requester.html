@@ -38,12 +38,12 @@
                         
                         <div class="listForm">
                             <p>ON BEHALF NAME</p>
-                            <input type="text" />
+                            <input type="text" class="database-input" />
                             <small id="help">(Position Minimum L4)</small>
                         </div>
                         <div class="listForm">
                             <p>ON BEHALF POSITION</p>
-                            <input type="text" />
+                            <input type="text" class="database-input" />
                         </div>
                         <div class="listForm">
                             <p>EMPLOYEE</p>
@@ -69,56 +69,12 @@
                     <div id="proposed">
                         <div class="listForm">
                             <p>POSITION CODE</p>
-                            <select class="down-list" id="position-list" onchange="getProposedPositionData()">
+                            <select class="down-list" id="position-list" onchange="getPositionData()">
                                 <option disabled selected>--Position--</option>
                             </select>
                         </div>
-                        <div class="listForm">
-                            <p>POSITION</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>COST CENTER</p>
-                            <div>
-                                <input type="text" class="doubleinput1" /><br>
-                                <input type="text" class="doubleinput2" />
-                            </div>
-                        </div>
-                        <div class="listForm">
-                            <p>DISTRIBUTION COST CENTER</p>
-                            <div>
-                                <input type="text" class="doubleinput1" /><br>
-                                <input type="text" class="doubleinput2" />
-                            </div>
-                        </div>
-                        <div class="listForm">
-                            <p>COMPANY</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>PERSONNEL AREA</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>PERSONNEL SUB AREA</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>EMPLOYEE TYPE</p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>RECEIVER <small id="help">(Position Minimum L4)</small></p>
-                            <input type="text" />
-                        </div>
-                        <div class="listForm">
-                            <p>EFFECTIVE DATE START</p>
-                            <input type="date" id="start" name="trip-start" value="yyyy-mm-dd" min="2018-01-01" max="2018-12-31">
-                        </div>
-                        <div class="listForm">
-                            <p>JUSTIFICATION</p>
-                            <input type="text" />
-                        </div>
+
+                        
                     </div>
                 </div>
                 <div style="overflow:auto;">
@@ -172,7 +128,8 @@
                 if (currentTab >= x.length) {
                     // ... the form gets submitted:
                     document.getElementById("regForm").submit();
-                    return false;
+                    submitForm()
+                    return;
                 }
                 // Otherwise, display the correct tab:
                 showTab(currentTab);
@@ -376,17 +333,14 @@
                     <p>POSITION CODE</p>
                     <input type="text" />
                 </div>
-                <div class="modal-listForm">
-                    <p>POSITION</p>
-                    <input type="text" />
-                </div>
+
                 <div class="modal-listForm">
                     <p>COST CENTER</p>
                     <input type="text" /><input type="text" />
                 </div>
                 <div class="modal-listForm">
                     <p>DISTRIBUTION COST CENTER</p>
-                    <input type="text" /><input type="text" />
+                    <input type="text" />
                 </div>
                 <div class="modal-listForm">
                     <p>COMPANY</p>

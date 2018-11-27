@@ -252,6 +252,7 @@ footer {
   padding: 5px;
 }
 #regForm {
+  display: none;
   background-color: #ffffff;
   box-shadow: 10px 10px 10px #000000;
   margin: 100px auto;
