@@ -315,7 +315,42 @@ font-size: 17px;
 /* #######################################
 ############## MODAL HEADER ##############
 ####################################### */
+textarea{
+    border: 1px solid rgb(131, 131, 131);
+    &:focus{
+        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+        border: 1px solid rgba(81, 203, 238, 1);
+    }
+}
 
+.comment-hismodal{
+    
+    .headercomment{
+        margin-top: 50px;
+        background-color: rgb(202, 206, 209);
+        padding: 15px 0px;
+        color: #3e3535;
+    }
+    .his-modal{
+        display: flex;
+        justify-content: space-evenly;
+        padding:10px;
+        p{
+            width: 100px;
+            text-align: center;
+        }
+       
+    }
+    .comment-modal{
+        display: flex;
+        justify-content: space-evenly;
+        padding:10px;
+        p{
+            width: 100px;
+            text-align: center;
+        }
+    }
+}
 #modal-form {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */

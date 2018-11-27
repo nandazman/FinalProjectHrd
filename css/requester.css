@@ -288,6 +288,37 @@ button:hover {
 /* #######################################
 ############## MODAL HEADER ##############
 ####################################### */
+textarea {
+  border: 1px solid #838383;
+}
+textarea:focus {
+  box-shadow: 0 0 5px #51cbee;
+  border: 1px solid #51cbee;
+}
+.comment-hismodal .headercomment {
+  margin-top: 50px;
+  background-color: #caced1;
+  padding: 15px 0px;
+  color: #3e3535;
+}
+.comment-hismodal .his-modal {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
+}
+.comment-hismodal .his-modal p {
+  width: 100px;
+  text-align: center;
+}
+.comment-hismodal .comment-modal {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
+}
+.comment-hismodal .comment-modal p {
+  width: 100px;
+  text-align: center;
+}
 #modal-form {
   display: none;
   /* Hidden by default */
