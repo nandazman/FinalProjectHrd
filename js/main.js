@@ -1,18 +1,11 @@
 /*
     Nanda
-    kalo mau jalanin bilang
-
 
 
     Fadhiel
     
 
-
-
-
-
     Syifa
-
 
 
 */
@@ -387,6 +380,9 @@ function getSAP(){
         success: function(res){
             response = JSON.parse(res)
             console.log(response)
+            $('#histories').children().text()
+            $('#histories').children()[1].innerHTML
+
         },
         error: function(err){
             console.log(err)
@@ -419,6 +415,7 @@ function commentHistory(task_id,record_id){
             comment_histories = (JSON.parse(res)).comment_history
             formData = (JSON.parse(res)).form_data
             console.log(comment_histories)
+            
             console.log("AAAAAAAAAAA")
             console.log(formData)
 
@@ -537,7 +534,54 @@ function commentHistory(task_id,record_id){
             <p>NOTE</p>
             <textarea rows="5" cols="30"></textarea>
         </div>`)
+
+        var i;
+        for(i = 1; i < comment_histories.data.length; i+=2 ){
+            $('.comment-hismodal').append(`
+            <div class="comment-modal">
+                <p>XXX</p>
+                <p>${comment_histories.data[i].object.display_name}</p>
+                <p>XXX</p>
+                <p>XXX</p>
+                <p>${comment_histories.data[i].published}</p>
+                <p>${comment_histories.data[i+1].published}</p>
+                <p>XXX</p>
+                <p>XXX</p>
+            </div>`)
+            if (i == 3){
+                i ++;
+                $('.comment-hismodal').append(`
+            <div class="comment-modal">
+                <p>XXX</p>
+                <p>${comment_histories.data[i].object.display_name}</p>
+                <p>XXX</p>
+                <p>XXX</p>
+                <p>${comment_histories.data[i].published}</p>
+                <p>XXX</p>
+                <p>XXX</p>
+                <p>XXX</p>
+            </div>`)
+            }
+            console.log(comment_histories.data[i].object.display_name)
+        }
         
+        // comment_histories.data.forEach( (history, index) => {
+        //     console.log(history, index)
+        //     console.log("aing maung", comment_histories.data[index])
+        //     $('.comment-modal').append(`
+        //     <div class="comment-modal">
+        //             <p>XXX</p>
+        //             <p>${comment_histories.data[index].actor.display_name}</p>
+        //             <p>XXX</p>
+        //             <p>XXX</p>
+        //             <p>XXX</p>
+        //             <p>XXX</p>
+        //             <p>XXX</p>
+        //             <p>XXX</p>
+        //         </div>
+        //     `)
+        // }
+        // )
         },
         error: function(err){
             console.log(err)
@@ -605,13 +649,7 @@ $(document).ready(function () {
     });
 });
 
-// function showModal(taskid,recordid) {
-//     document.getElementById('modal-form').style.display = "block";
-//     $('#confirmation').append(`<button onclick="submitTask('${taskid}','${recordid}','Approved')" id="approve">Approved</button>`)
-//     if (getCookie('hr') != 'true'){
-//         $('#confirmation').append(`<button onclick="submitTask('${taskid}','${recordid}','Revised')" id="revise">Revised</button>`)
-//     }
-// }
+
 document.getElementById("close").onclick = function () {
     document.getElementById('modal-form').style.display = "none";
     document.getElementById('approve').remove()

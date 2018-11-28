@@ -15,7 +15,7 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHRD'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -315,6 +315,11 @@ def get_Summary():
 @app.route('/getSAP', methods = ["GET"])
 def get_SAP():
     if request.method == 'GET':
+        flow_before = {
+            'Department Manager': ['HR Department', 'HR Company'],
+            'Senior Manager ': 'Department Manager'
+            }
+        
         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
         
         SAP = Summary.query.all()
@@ -327,9 +332,24 @@ def get_SAP():
                     })
 
             result = json.loads(r.text)
-            allSAP.append(result['data'])
+            # GET last person who submit when record finished
+            if result['data'][-1]['type'] == 'record:state:completed':
+                last_submitted = 'Proposed HR Department'
+                # GET last person who submit when 2 hr have not approved
+            elif result['data'][-1]['type'] == 'task:assigned' and result['data'][-2]['type'] == 'task:assigned':
+                last_submitted = 'Requester'
+                # GET last person who submit when one hr already submitted
+            elif result['data'][-1]['type'] == 'task:completed:comment':
+                last_submitted = result['data'][-1]['object']['display_name']
+                # GET last person who submit when after all hr submitted
+            elif result['data'][-1]['type'] == 'task:assigned':
+                last_submitted = flow_before[result['data'][-1]['target']['display_name']]
+
+            allSAP.append(last_submitted)
         SAP = json.dumps(allSAP)
-        print(result)
+        
+        print(allSAP)
+
         return SAP, 200
 # @app.route('/getProfile', methods = ["GET"])
 # def profile():
