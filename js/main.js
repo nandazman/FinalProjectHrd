@@ -1,4 +1,19 @@
 /*
+    Nanda
+    kalo mau jalanin bilang
+
+
+
+    Fadhiel
+    
+
+
+
+
+
+    Syifa
+
+
 
 */
 function getCookie(cname) {
@@ -22,6 +37,7 @@ function deleteCookie(){
     document.cookie = ' requester=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
     document.cookie = ' token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
     document.cookie = ' hr=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+    window.location = 'login.html'
 }
 
 function security(){
@@ -49,7 +65,7 @@ function allTask(){
         },
         dataType: 'json',
         success: function(res){
-            console.log(res)
+            
             var requester = res.data
             if (requester.length == 0){
                 $('#alltaskuser').append(`<div class="taskitem")">
@@ -58,7 +74,7 @@ function allTask(){
             } else {
                 requester.forEach(task => {
                     
-                    $('#alltaskuser').append(`<div class="taskitem" onclick="showModal('${task.id}','${task.record_id}'); commentHistory('${task.id}','${task.record_id}')">
+                    $('#alltaskuser').append(`<div class="taskitem" onclick="commentHistory('${task.id}','${task.record_id}')">
                     <img src="image1.jpg">
                     <p>Dear ${task.assignee.name}</p>
                     <p>${task.id}</p>
@@ -138,7 +154,7 @@ function getProfile(){
             $('#user').append(`<div class="greeting">Hello,<div class="dropdown"> 
             <span>${data.nama}</span>
             <div class="dropdown-content">
-            <a href="#">Sign Out</a>
+            <span onclick="deleteCookie()">Sign Out</span>
             </div>
             </div>!
             </div>`)
@@ -369,7 +385,8 @@ function getSAP(){
             req.setRequestHeader('Authorization', getCookie('token'));
         },
         success: function(res){
-            console.log(res)
+            response = JSON.parse(res)
+            console.log(response)
         },
         error: function(err){
             console.log(err)
@@ -380,6 +397,13 @@ function getSAP(){
 
 function commentHistory(task_id,record_id){
     alert("summary")
+
+    document.getElementById('modal-form').style.display = "block";
+    $('#confirmation').append(`<button onclick="submitTask('${task_id}','${record_id}','Approved')" id="approve">Approved</button>`)
+    if (getCookie('hr') != 'true'){
+        $('#confirmation').append(`<button onclick="submitTask('${task_id}','${record_id}','Revised')" id="revise">Revised</button>`)
+    }
+    
     $.ajax({
         method: 'POST',
         url: 'http://localhost:7000/tableSummary',
@@ -392,11 +416,128 @@ function commentHistory(task_id,record_id){
             "recordid": record_id 
             }),
         success: function(res){
-            commentHistory = (JSON.parse(res)).comment_history
+            comment_histories = (JSON.parse(res)).comment_history
             formData = (JSON.parse(res)).form_data
-            console.log(commentHistory)
+            console.log(comment_histories)
             console.log("AAAAAAAAAAA")
             console.log(formData)
+
+            $("#modal-requester").append(`<div class="modal-listForm">
+            <p>REQUESTER NAME</p>
+            <p class="ans">${formData.requester.name}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>REQUESTER NPK</p>
+            <p class="ans">${formData.requester.npk}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>REQUESTER POSITION</p>
+            <p class="ans">${formData.requester.position}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>ON BEHALF NAME</p>
+            <p class="ans">${formData.behalf.behalf_name}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>ON BEHALF POSITION</p>
+            <p class="ans">${formData.behalf.behalf_position}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>EMPLOYEE</p>
+            <div>
+                <p class="ans inans">${formData.employee.employee_name}</p>
+                <p class="ans">${formData.employee.employee_npk}</p>
+            </div>
+        </div>
+        <div class="modal-listForm">
+            <p>RECORD ID</p>
+            <p class="ans">${formData.record_id}</p>
+        </div>`)
+
+        $('#modal-current').append(`<div class="modal-listForm">
+        <p>POSITION CODE</p>
+        <p class="ans">${formData.current.position_code}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>POSITION</p>
+            <p class="ans">${formData.current.position}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>COMPANY</p>
+            <p class="ans">${formData.current.company}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>COST CENTER</p>
+            <div>
+                <p class="ans inans">${formData.current.cost_center_code}</p>
+                <p class="ans">${formData.current.cost_center}</p>
+            </div>
+        </div>
+        <div class="modal-listForm">
+            <p>PERSONAL AREA</p>
+            <p class="ans">${formData.current.personal_area}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>EMPLOYEE GROUP</p>
+            <p class="ans">${formData.current.employee_group}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>EMPLOYEE SUBGROUP</p>
+            <p class="ans">${formData.current.employee_sub_group}</p>
+        </div>`)
+
+        $('#modal-proposed').append(`<div class="modal-listForm">
+        <p>POSITION CODE</p>
+        <p class="ans">${formData.proposed.position_code}</p>
+        </div>
+        <div class="modal-listForm">
+        <p>POSITION</p>
+        <p class="ans">${formData.proposed.position}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>COST CENTER</p>
+            <div>
+                <p class="ans inans">${formData.proposed.cost_center_code}</p>
+                <p class="ans">${formData.proposed.cost_center}</p>
+            </div>
+        </div>
+        <div class="modal-listForm">
+            <p>DISTRIBUTION COST CENTER</p>
+            <p class="ans">${formData.proposed.distribution_cost_center}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>COMPANY</p>
+            <p class="ans">${formData.proposed.company}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>PERSONAL AREA</p>
+            <p class="ans">${formData.proposed.personal_area}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>PERSONAL SUB AREA</p> 
+            <p class="ans">${formData.proposed_personal_sub_area}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>EMPLOYEE TYPE</p>
+            <p class="ans">${formData.proposed.type}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>RECEIVER</p>
+            <p class="ans">${formData.receiver}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>EFFECTIVE DATE START</p>
+            <p class="ans">${formData.date}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>COMMENT</p>
+            <p class="ans">${formData.comment}</p>
+        </div>
+        <div class="modal-listForm">
+            <p>NOTE</p>
+            <textarea rows="5" cols="30"></textarea>
+        </div>`)
+        
         },
         error: function(err){
             console.log(err)
@@ -464,13 +605,13 @@ $(document).ready(function () {
     });
 });
 
-function showModal(taskid,recordid) {
-    document.getElementById('modal-form').style.display = "block";
-    $('#confirmation').append(`<button onclick="submitTask('${taskid}','${recordid}','Approved')" id="approve">Approved</button>`)
-    if (getCookie('hr') != 'true'){
-        $('#confirmation').append(`<button onclick="submitTask('${taskid}','${recordid}','Revised')" id="revise">Revised</button>`)
-    }
-}
+// function showModal(taskid,recordid) {
+//     document.getElementById('modal-form').style.display = "block";
+//     $('#confirmation').append(`<button onclick="submitTask('${taskid}','${recordid}','Approved')" id="approve">Approved</button>`)
+//     if (getCookie('hr') != 'true'){
+//         $('#confirmation').append(`<button onclick="submitTask('${taskid}','${recordid}','Revised')" id="revise">Revised</button>`)
+//     }
+// }
 document.getElementById("close").onclick = function () {
     document.getElementById('modal-form').style.display = "none";
     document.getElementById('approve').remove()

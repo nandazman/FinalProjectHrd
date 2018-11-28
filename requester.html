@@ -131,14 +131,12 @@
                 x[currentTab].style.display = "none";
                 // Increase or decrease the current tab by 1:
                 currentTab = currentTab + n;
-                alert(currentTab)
-                alert(x.length)
                 // if you have reached the end of the form...
                 if (currentTab >= x.length) {
                     // ... the form gets submitted:
                     // document.getElementById("regForm").submit();
                     submitForm()
-                    alert('finish')
+                    alert('Submitted')
                     return false;
                 }
                 // Otherwise, display the correct tab:
@@ -252,133 +250,24 @@
             <header class="modal-header">
                 <h3><span class="title">REQUESTER INFORMATION</span></h3>
             </header>
-            <div>
-                <div class="modal-listForm">
-                    <p>REQUESTER NAME</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>REQUESTER NPK</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>REQUESTER POSITION</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>ON BEHALF NAME</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>ON BEHALF POSITION</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>EMPLOYEE</p>
-                    <div>
-                        <p class="ans inans"></p>
-                        <p class="ans"></p>
-                    </div>
-                </div>
-                <div class="modal-listForm">
-                    <p>PROCESS ID</p>
-                    <p class="ans"></p>
-                </div>
+            <div id="modal-requester">
+                
             </div>
 
             <!--current-->
             <header class="modal-header">
                 <h3><span class="title">CURRENT</span></h3>
             </header>
-            <div>
-                <div class="modal-listForm">
-                    <p>POSITION CODE</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>POSITION</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>COMPANY</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>COST CENTER</p>
-                    <div>
-                        <p class="ans inans"></p>
-                        <p class="ans"></p>
-                    </div>
-                </div>
-                <div class="modal-listForm">
-                    <p>PERSONAL AREA</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>EMPLOYEE GROUP</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>EMPLOYEE SUBGROUP</p>
-                    <p class="ans"></p>
-                </div>
+            <div id="modal-current">
+                
             </div>
             <!--proposed-->
             <header class="modal-header">
                 <h3><span class="title">PROPOSED</span></h3>
             </header>
             <div>
-                <div class="modal-listForm">
-                    <p>POSITION CODE</p>
-                    <p class="ans"></p>
-                </div>
-
-
-                <div class="modal-listForm">
-                    <p>COST CENTER</p>
-                    <div>
-                        <p class="ans inans"></p>
-                        <p class="ans"></p>
-                    </div>
-                </div>
-                <div class="modal-listForm">
-                    <p>DISTRIBUTION COST CENTER</p>
-                    <div>
-                        <p class="ans inans"></p>
-                        <p class="ans"></p>
-                    </div>
-                </div>
-                <div class="modal-listForm">
-                    <p>COMPANY</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>PERSONNEL AREA</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>PERSONNEL SUB AREA</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>EMPLOYEE TYPE</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>RECEIVER</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>EFFECTIVE DATE START</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>JUSTIFICATION</p>
-                    <p class="ans"></p>
-                </div>
-                <div class="modal-listForm">
-                    <p>COMMENT</p>
-                    <textarea rows="5" cols="30"></textarea>
+                <div id="modal-proposed">
+                    
                 </div>
 
                 <div id="confirmation">
@@ -424,7 +313,8 @@
     <script>
         getProfile()
         allTask()
-        
+        security()
+        getSAP()
     </script>
 </body>
 

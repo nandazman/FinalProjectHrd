@@ -298,7 +298,7 @@ font-size: 17px;
     min-width: 90px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    a {
+    span {
       color: black;
       padding: 2px;
       text-decoration: none;
@@ -313,6 +313,7 @@ font-size: 17px;
   }
 
 .dropdown:hover {
+    cursor: pointer;
     .dropdown-content {display: block;}
 }
 /* #######################################
@@ -444,6 +445,9 @@ textarea{
         margin-right: 35px;
         width: 250px;
         padding: 5px;
+        &:focus{
+            background-color: white;
+        }
     }
 }
 
@@ -477,6 +481,7 @@ textarea{
                 &:focus{
                     box-shadow: 0 0 5px rgba(81, 203, 238, 1);
                     border: 1px solid rgba(81, 203, 238, 1);
+                    background-color:white;
                 }
             }
             .doublelist1{
@@ -489,6 +494,7 @@ textarea{
                 &:focus{
                     box-shadow: 0 0 5px rgba(81, 203, 238, 1);
                     border: 1px solid rgba(81, 203, 238, 1);
+                    background-color:white;
                 }
             }
             .doubleinput1{
@@ -502,6 +508,7 @@ textarea{
                 &:focus{
                     box-shadow: 0 0 5px rgba(81, 203, 238, 1);
                     border: 1px solid rgba(81, 203, 238, 1);
+                    background-color:white;
                 }
             }
             .doubleinput2{
