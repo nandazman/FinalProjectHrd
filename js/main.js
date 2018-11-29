@@ -334,14 +334,14 @@ function getPositionData(){
 
 
 function submitForm(){
-    alert("aaaaaaaaaaaaaaa")
+    
     document.getElementById('regForm').style.display = "none";
     employee = $('#employee-selection option:selected').text()
     receiver = $('#receiver').val()
     requester = $('#requester-nama').text()
     position = $('#position-list').val()
     behalf = $('#behalf-position').val()
-    alert(position)
+   
 
     $.ajax({
         method: 'POST',
@@ -379,9 +379,62 @@ function getSAP(){
         },
         success: function(res){
             response = JSON.parse(res)
-            console.log(response)
-            $('#histories').children().text()
-            $('#histories').children()[1].innerHTML
+            var i = 0
+            response.forEach( (data) => {
+
+                
+                $('#comments').append(`<div class="comment" id="commentator">
+                <p>Record ID</p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+            </div>`)
+                if (data == "Requester"){
+
+                }
+                else if (typeof data == "object"){
+                
+                    // $('.comment')[0].children[1]
+                    for(var j = 1; j <= data.length; j++){
+                        $('.comment')[i].children[j].innerHTML = '<img src="checked.png">'
+                    }
+                } else if (data == "HR Company"){
+                    
+                    j = 1
+                    k = 1
+                    while( $('#histories').children()[k-1].innerHTML != data){
+                        k++;
+                        
+                        if($('#histories').children()[k].innerHTML == data){
+                            
+                            $('.comment')[i].children[j+1].innerHTML = '<img src="checked.png">'
+                        }
+                        
+                        j++;
+                    }
+                } else {
+                   
+                    j = 1
+                    k = 1
+                    console.log("BATAS")
+                    while( $('#histories').children()[k-1].innerHTML != data){
+                        k++;
+                        console.log($('#histories').children()[k-1].innerHTML)
+                        console.log(data)
+                        $('.comment')[i].children[j].innerHTML = '<img src="checked.png">'
+                        j++;
+                    }
+                    
+                    
+                }
+                i++;
+            })
+            // GET header table
+            // $('#histories').children()[1].innerHTML
+
+            // $('#comments').children()[1].innerHTML
 
         },
         error: function(err){

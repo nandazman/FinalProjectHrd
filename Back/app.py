@@ -15,7 +15,7 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHRD'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -317,7 +317,8 @@ def get_SAP():
     if request.method == 'GET':
         flow_before = {
             'Department Manager': ['HR Department', 'HR Company'],
-            'Senior Manager ': 'Department Manager'
+            'Senior Manager ': 'Department Manager',
+            'Proposed HR Department': 'Senior Manager'
             }
         
         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
@@ -332,6 +333,7 @@ def get_SAP():
                     })
 
             result = json.loads(r.text)
+  
             # GET last person who submit when record finished
             if result['data'][-1]['type'] == 'record:state:completed':
                 last_submitted = 'Proposed HR Department'
