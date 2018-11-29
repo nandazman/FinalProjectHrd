@@ -120,20 +120,6 @@ function submitTask(taskid,recordid,status){
     })
 }
 
-// Menangkal Asyncrhonousnya AJAX
-// $.when(
-//     $.ajax({
-
-//     }),
-//     $.ajax({
-
-//     })
-// ).done(function(hasilAjax1, hasilAjax2){
-    
-// })
-
-
-
 function getProfile(){
     $.ajax({
         method: 'GET',
@@ -235,7 +221,7 @@ function getEmployeeData(){
                 <p class="ans">${data.employee_sub_group}</p>
             </div>
             `)
-            alert(data.id)
+            
             $.ajax({
                 method: 'POST',
                 url: 'http://localhost:7000/proposed',
@@ -265,7 +251,6 @@ function getEmployeeData(){
         }
     })
 }
-
 
 function getPositionData(){
 
@@ -332,7 +317,6 @@ function getPositionData(){
     })
 }
 
-
 function submitForm(){
     
     document.getElementById('regForm').style.display = "none";
@@ -380,17 +364,20 @@ function getSAP(){
         success: function(res){
             response = JSON.parse(res)
             var i = 0
-            response.forEach( (data) => {
-
+            response.forEach( (content) => {
+                var data = content.last_submitted
+                
                 
                 $('#comments').append(`<div class="comment" id="commentator">
-                <p>Record ID</p>
+                <p></p>
                 <p></p>
                 <p></p>
                 <p></p>
                 <p></p>
                 <p></p>
             </div>`)
+                
+                $('.comment')[i].children[0].innerHTML = content.record_id.split("-")[2]
                 if (data == "Requester"){
 
                 }
@@ -414,15 +401,14 @@ function getSAP(){
                         
                         j++;
                     }
-                } else {
+                } else if (data != ""){
                    
                     j = 1
                     k = 1
-                    console.log("BATAS")
+                    
                     while( $('#histories').children()[k-1].innerHTML != data){
                         k++;
-                        console.log($('#histories').children()[k-1].innerHTML)
-                        console.log(data)
+                        
                         $('.comment')[i].children[j].innerHTML = '<img src="checked.png">'
                         j++;
                     }
@@ -431,10 +417,6 @@ function getSAP(){
                 }
                 i++;
             })
-            // GET header table
-            // $('#histories').children()[1].innerHTML
-
-            // $('#comments').children()[1].innerHTML
 
         },
         error: function(err){
@@ -443,9 +425,8 @@ function getSAP(){
     })
 }
 
-
 function commentHistory(task_id,record_id){
-    alert("summary")
+    
 
     document.getElementById('modal-form').style.display = "block";
     $('#confirmation').append(`<button onclick="submitTask('${task_id}','${record_id}','Approved')" id="approve">Approved</button>`)
@@ -468,9 +449,6 @@ function commentHistory(task_id,record_id){
             comment_histories = (JSON.parse(res)).comment_history
             formData = (JSON.parse(res)).form_data
             console.log(comment_histories)
-            
-            console.log("AAAAAAAAAAA")
-            console.log(formData)
 
             $("#modal-requester").append(`<div class="modal-listForm">
             <p>REQUESTER NAME</p>
@@ -565,7 +543,7 @@ function commentHistory(task_id,record_id){
         </div>
         <div class="modal-listForm">
             <p>PERSONAL SUB AREA</p> 
-            <p class="ans">${formData.proposed_personal_sub_area}</p>
+            <p class="ans">${formData.proposed.personal_sub_area}</p>
         </div>
         <div class="modal-listForm">
             <p>EMPLOYEE TYPE</p>
@@ -589,52 +567,139 @@ function commentHistory(task_id,record_id){
         </div>`)
 
         var i;
-        for(i = 1; i < comment_histories.data.length; i+=2 ){
+        for(i = 2; i < comment_histories.data.length; i+= 2){
+            
+            if (comment_histories.data[i].name == "Task completed"){
             $('.comment-hismodal').append(`
             <div class="comment-modal">
                 <p>XXX</p>
-                <p>${comment_histories.data[i].object.display_name}</p>
+                <p>${comment_histories.data[i].actor.display_name}</p>
                 <p>XXX</p>
                 <p>XXX</p>
+                <p>${comment_histories.data[i-1].published}</p>
                 <p>${comment_histories.data[i].published}</p>
-                <p>${comment_histories.data[i+1].published}</p>
-                <p>XXX</p>
-                <p>XXX</p>
-            </div>`)
-            if (i == 3){
-                i ++;
-                $('.comment-hismodal').append(`
-            <div class="comment-modal">
-                <p>XXX</p>
-                <p>${comment_histories.data[i].object.display_name}</p>
-                <p>XXX</p>
-                <p>XXX</p>
-                <p>${comment_histories.data[i].published}</p>
-                <p>XXX</p>
                 <p>XXX</p>
                 <p>XXX</p>
             </div>`)
             }
-            console.log(comment_histories.data[i].object.display_name)
+            // If both hr havent approved
+            else if (comment_histories.data[i].name == "Task assigned" && i + 1 == comment_histories.data.length){
+               alert("ini hr belum approve")
+               $('.comment-hismodal').append([
+                   `<div class="comment-modal">
+                        <p>XXX</p>
+                        <p>${comment_histories.data[i-1].object.display_name}</p>
+                        <p>XXX</p>
+                        <p>XXX</p>
+                        <p>${comment_histories.data[i-1].published}</p>
+                        <p></p>
+                        <p>XXX</p>
+                        <p>XXX</p>
+                    </div>`,
+                    `<div class="comment-modal">
+                        <p>XXX</p>
+                        <p>${comment_histories.data[i].object.display_name}</p>
+                        <p>XXX</p>
+                        <p>XXX</p>
+                        <p>${comment_histories.data[i].published}</p>
+                        <p></p>
+                        <p>XXX</p>
+                        <p>XXX</p>
+                    </div>`
+                ])
+            }
+            // if one hr have approved
+            else if (comment_histories.data[i+1].name == "Task completed" && i + 2 == comment_histories.data.length){
+                completed_name = comment_histories.data[i+1].actor.display_name
+                completed_date = comment_histories.data[i+1].published
+
+                $('.comment-hismodal').append([
+                    `<div class="comment-modal">
+                            <p>XXX</p>
+                            <p>${comment_histories.data[i-1].object.display_name}</p>
+                            <p>XXX</p>
+                            <p>XXX</p>
+                            <p>${comment_histories.data[i-1].published}</p>
+                            <p></p>
+                            <p>XXX</p>
+                            <p>XXX</p>
+                        </div>`,
+                        `<div class="comment-modal">
+                            <p>XXX</p>
+                            <p>${comment_histories.data[i].object.display_name}</p>
+                            <p>XXX</p>
+                            <p>XXX</p>
+                            <p>${comment_histories.data[i].published}</p>
+                            <p>${completed_date}</p>
+                            <p>XXX</p>
+                            <p>XXX</p>
+                        </div>`
+                    ])
+                
+            }
+            // if both hr approved
+            else if (comment_histories.data[i+1].name == "Task completed" && comment_histories.data[i+2].name == "Task completed"){
+                first_hr = comment_histories.data[i-1].object.display_name
+                second_hr = comment_histories.data[i].object.display_name
+                first_complete = comment_histories.data[i+1].actor.display_name
+                second_complete = comment_histories.data[i+2].actor.display_name
+                if (first_hr == first_complete){
+                    $('.comment-hismodal').append([
+                        `<div class="comment-modal">
+                                <p>XXX</p>
+                                <p>${first_hr}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                                <p>${comment_histories.data[i-1].published}</p>
+                                <p>${comment_histories.data[i+1].published}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                            </div>`,
+                            `<div class="comment-modal">
+                                <p>XXX</p>
+                                <p>${second_hr}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                                <p>${comment_histories.data[i].published}</p>
+                                <p>${comment_histories.data[i+2].published}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                            </div>`
+                        ])
+                } 
+                else if (first_hr == second_complete){
+                    $('.comment-hismodal').append([
+                        `<div class="comment-modal">
+                                <p>XXX</p>
+                                <p>${first_hr}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                                <p>${comment_histories.data[i-1].published}</p>
+                                <p>${comment_histories.data[i+2].published}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                            </div>`,
+                            `<div class="comment-modal">
+                                <p>XXX</p>
+                                <p>${second_hr}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                                <p>${comment_histories.data[i].published}</p>
+                                <p>${comment_histories.data[i+1].published}</p>
+                                <p>XXX</p>
+                                <p>XXX</p>
+                            </div>`
+                        ])
+                }
+                i +=2;
+            }
+            else if (comment_histories.data[i].name == "Task assigned" && (comment_histories.data[i-1].object.display_name == "Hader Partem" && comment_histories.data[i].object.display_name == "Haper Usa")){
+                alert("ini hader partemn")
+             }
+            
         }
         
-        // comment_histories.data.forEach( (history, index) => {
-        //     console.log(history, index)
-        //     console.log("aing maung", comment_histories.data[index])
-        //     $('.comment-modal').append(`
-        //     <div class="comment-modal">
-        //             <p>XXX</p>
-        //             <p>${comment_histories.data[index].actor.display_name}</p>
-        //             <p>XXX</p>
-        //             <p>XXX</p>
-        //             <p>XXX</p>
-        //             <p>XXX</p>
-        //             <p>XXX</p>
-        //             <p>XXX</p>
-        //         </div>
-        //     `)
-        // }
-        // )
+
         },
         error: function(err){
             console.log(err)
@@ -679,8 +744,6 @@ function getTableSummary(){
 }
 
 
-
-
 /****** FOR INTERACRTION IN FRON END ******/
 if (getCookie('requester') !== 'true'){
     $("#request-tab").remove()
@@ -695,6 +758,7 @@ $(document).ready(function () {
         
     });
 });
+
 $(document).ready(function () {
     $("#commenthis").click(function () {
         $(".second-box").slideToggle();
@@ -710,6 +774,7 @@ document.getElementById("close").onclick = function () {
         document.getElementById('revise').remove()
     }
 }
+
 window.onclick = function (event) {
     if (event.target == document.getElementById('modal-form')) {
         document.getElementById('modal-form').style.display = "none";
