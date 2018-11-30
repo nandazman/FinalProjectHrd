@@ -16,7 +16,7 @@ function logIn(){
                 var isRequest = false;
             }
             if (document.getElementById('email').value[0] == 'h' || document.getElementById('email').value[0] == 'H' ){
-                alert(document.getElementById('email').value[0])
+                
                 var isHr = true;
             } else {
                 var isHr = false;

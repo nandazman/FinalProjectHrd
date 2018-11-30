@@ -15,7 +15,7 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHRD'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -179,7 +179,7 @@ def proposed_position():
     
         request_data = request.get_json()
         position_id = request_data['id']
-        print(position_id)
+        # print(position_id)
         position_data = Position.query.filter_by(id = position_id).first()
 
         position_list = Position.query.filter(and_(Position.id != position_data.id, Position.departemen_id != position_data.departemen_id, Position.departemen_id != 1)).all()
@@ -206,13 +206,13 @@ def proposed_data():
         request_data = request.get_json()
         position_id = request_data['id']
         position_data = Position.query.filter_by(id=position_id).first()
-        print(position_data)
+        # print(position_data)
         
         receiver = AccessUser.query.join(Position).add_columns(Position.departemen_id).filter(Position.departemen_id == position_data.departemen_id).first()
         receiver_email = receiver[0].email
         receier_id = receiver[0].id
-        print(receiver)
-        print(receiver[0].email)
+        # print(receiver)
+        # print(receiver[0].email)
         employee = {
                 'id': position_data.id,
                 'position_code': position_data.position_code,
@@ -248,7 +248,7 @@ def get_Summary():
         receiver_data = AccessUser.query.filter_by(id = summary_data.receiver_id).first()
         # GET employee data
         employee_data = Employee.query.join(Position).add_columns(Employee.nama, Employee.npk, Position.position_code, Position.position, Position.company, Position.cost_center, Position.cost_center_code, Position.personal_area, Position.employee_group, Position.employee_sub_group).filter(Employee.id == summary_data.employee_id).first()
-        print(employee_data)
+        # print(employee_data)
         # GET target position
         proposed_position = Position.query.filter_by(id = summary_data.position_id).first()
         # Summary data for form
@@ -296,6 +296,22 @@ def get_Summary():
         userDB = AccessUser.query.filter_by(email = decoded['email']).first()
         user_token = userDB.token
 
+        user = AccessUser.query.join(Position).add_columns(AccessUser.role, AccessUser.nama, Position.position).all()
+        
+        positions = {}
+        activities = ['Prepare Rotation', 'HRCS Verification', 'MAIN HR Verification', 'MBD Approval', 'SM Approval', 'HRBD Verification']
+        i = 0
+        for data in user:
+            
+            positions[data[2]] = {
+                'position' : data[3],
+                'activity': activities[i]
+            }
+            i = i +1
+            # print(positions)
+
+       
+        # print(positions)
         # GET comment history
         r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + request_data['recordid'] + "/stageview", headers = {
                     "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
@@ -306,7 +322,8 @@ def get_Summary():
         # Put form data and comment history in one variable to send to Front End
         summarize = {
             'form_data': summary,
-            'comment_history': result
+            'comment_history': result,
+            'comment_history_from_db': positions
         }
         
         summarize = json.dumps(summarize)
@@ -326,56 +343,59 @@ def get_SAP():
         SAP = Summary.query.all()
         userDB = AccessUser.query.filter_by(email = decoded['email']).first()
         user_token = userDB.token
-      
+        
         allSAP = []
         for data in SAP:
-            r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + data.record_id + "/stageview", headers = {
-                        "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
-                    })
-            
-            result = json.loads(r.text)
-
-            # GET last person who submit when record finished
-            if result['data'][-1]['type'] == 'record:state:completed':
-                data = {
-                    'last_submitted' : 'Proposed HR Department',
-                    'record_id' : data.record_id
-                }
-            # When there is revision to requester
-            elif result['data'][-1]['type'] == 'task:assigned' and result['data'][-1]['target']['display_name'] == "Requester":
-                data = {
-                    'last_submitted' : '',
-                    'record_id' : data.record_id
-                }
+            if data is not None:
+                r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + data.record_id + "/stageview", headers = {
+                            "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+                        })
                 
-            # GET last person who submit when 2 hr have not approved
-            elif result['data'][-1]['type'] == 'task:assigned' and result['data'][-2]['type'] == 'task:assigned':
-                data = {
-                    'last_submitted' : 'Requester',
-                    'record_id' : data.record_id
-                }
+                result = json.loads(r.text)
 
-            # GET last person who submit when one hr already submitted
-            elif result['data'][-1]['type'] == 'task:completed:comment':
-                data = {
-                    'last_submitted' : result['data'][-1]['object']['display_name'],
-                    'record_id' : data.record_id
-                }
-            # GET last person who submit when after all hr submitted
-            elif result['data'][-1]['type'] == 'task:assigned':
-                data = {
-                    'last_submitted' : flow_before[result['data'][-1]['target']['display_name']],
-                    'record_id' : data.record_id
-                }
+                # GET last person who submit when record finished
+                if result['data'][-1]['type'] == 'record:state:completed':
+                    data = {
+                        'last_submitted' : 'Proposed HR Department',
+                        'record_id' : data.record_id
+                    }
+                # When there is revision to requester
+                elif result['data'][-1]['type'] == 'task:assigned' and result['data'][-1]['target']['display_name'] == "Requester":
+                    data = {
+                        'last_submitted' : '',
+                        'record_id' : data.record_id
+                    }
+                    
+                # GET last person who submit when 2 hr have not approved
+                elif result['data'][-1]['type'] == 'task:assigned' and result['data'][-2]['type'] == 'task:assigned':
+                    data = {
+                        'last_submitted' : 'Requester',
+                        'record_id' : data.record_id
+                    }
 
+                # GET last person who submit when one hr already submitted
+                elif result['data'][-1]['type'] == 'task:completed:comment':
+                    data = {
+                        'last_submitted' : result['data'][-1]['object']['display_name'],
+                        'record_id' : data.record_id
+                    }
+                # GET last person who submit when after all hr submitted
+                elif result['data'][-1]['type'] == 'task:assigned':
+                    data = {
+                        'last_submitted' : flow_before[result['data'][-1]['target']['display_name']],
+                        'record_id' : data.record_id
+                    }
+
+                
+
+                allSAP.append(data)
+            SAP = json.dumps(allSAP)
             
+            # print(allSAP)
 
-            allSAP.append(data)
-        SAP = json.dumps(allSAP)
-        
-        print(allSAP)
-
-        return SAP, 200
+            return SAP, 200
+        else:
+            return "There is no SAP"
 # @app.route('/getProfile', methods = ["GET"])
 # def profile():
 #     if request.method == 'GET':
@@ -544,11 +564,12 @@ def waitingRespone(user_token,url,task_id):
         })
 
     result = json.loads(r.text)
-    
+    # if already got response and task id is different with current one
     if result['data'] != [] and result['data'][-1]['id'] != task_id:
         return result
     return waitingRespone(user_token,url,task_id)
-# fungsi untuk memasukan data ke db
+
+# insert to db
 
 def submit_to_database(record_id, process_id,request_data):
 
@@ -664,7 +685,7 @@ def submit_task():
             
 
             if nextTarget == "Germen_hrd@makersinsitute.id":
-                print(nextTarget)
+                # print(nextTarget)
                 submit_data = {
                     "data": {
                         "form_data": {

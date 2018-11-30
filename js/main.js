@@ -95,7 +95,7 @@ function submitTask(taskid,recordid,status){
             "taskid": taskid,
             "recordid": recordid,
             "status": status,
-            "comment": "mantap approve"
+            "comment": $('textarea').val()
         }),
 
         success: function(res){
@@ -104,15 +104,7 @@ function submitTask(taskid,recordid,status){
             $('#modal-form').slideUp()
             $('#revise').remove()
             $('#approve').remove()
-            // var requester = res.data
-            // requester.forEach(task => {
-            //     $('#alltaskuser').append(`<div class="taskitem" onclick="showModal('${task.id}')">
-            //     <img src="image1.jpg">
-            //     <p>Dear ${task.assignee.name}</p>
-            //     <p>${task.id}</p>
-            // </div>`)
-            
-            // })
+
         },
         error: function(err){
             alert(err.response)
@@ -448,8 +440,9 @@ function commentHistory(task_id,record_id){
         success: function(res){
             comment_histories = (JSON.parse(res)).comment_history
             formData = (JSON.parse(res)).form_data
-            console.log(comment_histories)
-
+            data_from_db = (JSON.parse(res)).comment_history_from_db
+            console.log(data_from_db)
+            $('#modal-requester').empty()
             $("#modal-requester").append(`<div class="modal-listForm">
             <p>REQUESTER NAME</p>
             <p class="ans">${formData.requester.name}</p>
@@ -482,6 +475,7 @@ function commentHistory(task_id,record_id){
             <p class="ans">${formData.record_id}</p>
         </div>`)
 
+        $('#modal-current').empty()
         $('#modal-current').append(`<div class="modal-listForm">
         <p>POSITION CODE</p>
         <p class="ans">${formData.current.position_code}</p>
@@ -514,6 +508,7 @@ function commentHistory(task_id,record_id){
             <p class="ans">${formData.current.employee_sub_group}</p>
         </div>`)
 
+        $('#modal-proposed').empty()
         $('#modal-proposed').append(`<div class="modal-listForm">
         <p>POSITION CODE</p>
         <p class="ans">${formData.proposed.position_code}</p>
@@ -566,136 +561,181 @@ function commentHistory(task_id,record_id){
             <textarea rows="5" cols="30"></textarea>
         </div>`)
 
-        var i;
-        for(i = 2; i < comment_histories.data.length; i+= 2){
-            
+        
+        $('#comment-hismodal').empty()
+        $('#comment-hismodal').append(`<div class="headercomment">
+        <h4>COMMENT-HISTORY</h4>
+    </div>
+    <div class="his-modal">
+        <p>Participant</p>
+        <p>Name</p>
+        <p>Position</p>
+        <p>Activity</p>
+        <p>Started</p>
+        <p>Completed</p>
+        <p>Response</p>
+        <p>Comment</p>
+    </div>`)
+        var j = -1
+        for(var i = 2; i <= comment_histories.data.length; i+= 2){
+            j++;
+            if (i == comment_histories.data.length){
+                i--;
+            }
             if (comment_histories.data[i].name == "Task completed"){
-            $('.comment-hismodal').append(`
+                var date_started = new Date(comment_histories.data[i-1].published);
+                var date_finished = new Date(comment_histories.data[i].published)
+            $('#comment-hismodal').append(`
             <div class="comment-modal">
                 <p>XXX</p>
                 <p>${comment_histories.data[i].actor.display_name}</p>
-                <p>XXX</p>
-                <p>XXX</p>
-                <p>${comment_histories.data[i-1].published}</p>
-                <p>${comment_histories.data[i].published}</p>
-                <p>XXX</p>
-                <p>XXX</p>
+                <p>${data_from_db[comment_histories.data[i].actor.display_name].position}</p>
+                <p>${data_from_db[comment_histories.data[i].actor.display_name].activity}</p>
+                <p>${date_started.toLocaleString()}</p>
+                <p>${date_finished.toLocaleString()}</p>
+                <p>Approved</p>
+                <p>${comment_histories.data[i].target.content}</p>
             </div>`)
+                if (comment_histories.data[i].actor.display_name == "Rudi Sejahtera" ){
+                    $('.comment-modal')[j].children[6].innerHTML = "Proposed"
+                }
             }
             // If both hr havent approved
-            else if (comment_histories.data[i].name == "Task assigned" && i + 1 == comment_histories.data.length){
-               alert("ini hr belum approve")
-               $('.comment-hismodal').append([
+            else if (comment_histories.data[i].name == "Task assigned" && comment_histories.data[i-1].name == "Task assigned" && i + 1 == comment_histories.data.length){
+                var date_started1 = new Date(comment_histories.data[i-1].published)
+                var date_started2 = new Date(comment_histories.data[i].published)
+                alert("ini hr belum approve")
+               $('#comment-hismodal').append([
                    `<div class="comment-modal">
                         <p>XXX</p>
                         <p>${comment_histories.data[i-1].object.display_name}</p>
-                        <p>XXX</p>
-                        <p>XXX</p>
-                        <p>${comment_histories.data[i-1].published}</p>
-                        <p></p>
-                        <p>XXX</p>
-                        <p>XXX</p>
+                        <p>${data_from_db[comment_histories.data[i-1].object.display_name].position}</p>
+                        <p>${data_from_db[comment_histories.data[i-1].object.display_name].activity}</p>
+                        <p>${date_started1.toLocaleString()}</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
                     </div>`,
                     `<div class="comment-modal">
                         <p>XXX</p>
                         <p>${comment_histories.data[i].object.display_name}</p>
-                        <p>XXX</p>
-                        <p>XXX</p>
-                        <p>${comment_histories.data[i].published}</p>
-                        <p></p>
-                        <p>XXX</p>
-                        <p>XXX</p>
+                        <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
+                        <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
+                        <p>${date_started2.toLocaleString()}</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
                     </div>`
                 ])
             }
+            // if task assigend to anyone but first two hr
+            else if (comment_histories.data[i].name == "Task assigned" && i + 1 == comment_histories.data.length){
+                var date_started = new Date(comment_histories.data[i].published)
+                $('#comment-hismodal').append(
+                    `<div class="comment-modal">
+                         <p>XXX</p>
+                         <p>${comment_histories.data[i].object.display_name}</p>
+                         <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
+                         <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
+                         <p>${date_started.toLocaleString()}</p>
+                         <p>Waiting</p>
+                         <p>Waiting</p>
+                         <p>Waiting</p>
+                     </div>`)
+            }
             // if one hr have approved
             else if (comment_histories.data[i+1].name == "Task completed" && i + 2 == comment_histories.data.length){
-                completed_name = comment_histories.data[i+1].actor.display_name
-                completed_date = comment_histories.data[i+1].published
+                var date_started1 = new Date(comment_histories.data[i-1].published)
+                var date_started2 = new Date(comment_histories.data[i].published)
+                var completed_name = comment_histories.data[i+1].actor.display_name
+                var completed_date = new Date(comment_histories.data[i+1].published)
 
-                $('.comment-hismodal').append([
+                $('#comment-hismodal').append([
                     `<div class="comment-modal">
                             <p>XXX</p>
                             <p>${comment_histories.data[i-1].object.display_name}</p>
-                            <p>XXX</p>
-                            <p>XXX</p>
-                            <p>${comment_histories.data[i-1].published}</p>
-                            <p></p>
-                            <p>XXX</p>
-                            <p>XXX</p>
+                            <p>${data_from_db[comment_histories.data[i-1].object.display_name].position}</p>
+                            <p>${data_from_db[comment_histories.data[i-1].object.display_name].activity}</p>
+                            <p>${date_started1.toLocaleString()}</p>
+                            <p>Waiting</p>
+                            <p>Waiting</p>
+                            <p>Waiting</p>
                         </div>`,
                         `<div class="comment-modal">
                             <p>XXX</p>
                             <p>${comment_histories.data[i].object.display_name}</p>
-                            <p>XXX</p>
-                            <p>XXX</p>
-                            <p>${comment_histories.data[i].published}</p>
-                            <p>${completed_date}</p>
-                            <p>XXX</p>
-                            <p>XXX</p>
+                            <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
+                            <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
+                            <p>${date_started2.toLocaleString()}</p>
+                            <p>${completed_date.toLocaleString()}</p>
+                            <p>Approved</p>
+                            <p>${comment_histories.data[i+1].target.content}</p>
                         </div>`
                     ])
                 
             }
             // if both hr approved
             else if (comment_histories.data[i+1].name == "Task completed" && comment_histories.data[i+2].name == "Task completed"){
-                first_hr = comment_histories.data[i-1].object.display_name
-                second_hr = comment_histories.data[i].object.display_name
-                first_complete = comment_histories.data[i+1].actor.display_name
-                second_complete = comment_histories.data[i+2].actor.display_name
+                var first_hr = comment_histories.data[i-1].object.display_name
+                var second_hr = comment_histories.data[i].object.display_name
+                var first_complete = comment_histories.data[i+1].actor.display_name
+                var second_complete = comment_histories.data[i+2].actor.display_name
+                var date_started1 = new Date(comment_histories.data[i-1].published)
+                var date_started2 = new Date(comment_histories.data[i].published)
+                var date_finsihed1 = new Date(comment_histories.data[i+1].published)
+                var date_finished2 = new Date(comment_histories.data[i+2].published)
                 if (first_hr == first_complete){
-                    $('.comment-hismodal').append([
+                    $('#comment-hismodal').append([
                         `<div class="comment-modal">
                                 <p>XXX</p>
                                 <p>${first_hr}</p>
-                                <p>XXX</p>
-                                <p>XXX</p>
-                                <p>${comment_histories.data[i-1].published}</p>
-                                <p>${comment_histories.data[i+1].published}</p>
-                                <p>XXX</p>
-                                <p>XXX</p>
+                                <p>${data_from_db[first_hr].position}</p>
+                                <p>${data_from_db[first_hr].activity}</p>
+                                <p>${date_started1.toLocaleString()}</p>
+                                <p>${date_finsihed1.toLocaleString()}</p>
+                                <p>Approved</p>
+                                <p>${comment_histories.data[i+1].target.content}</p>
                             </div>`,
                             `<div class="comment-modal">
                                 <p>XXX</p>
                                 <p>${second_hr}</p>
-                                <p>XXX</p>
-                                <p>XXX</p>
-                                <p>${comment_histories.data[i].published}</p>
-                                <p>${comment_histories.data[i+2].published}</p>
-                                <p>XXX</p>
-                                <p>XXX</p>
+                                <p>${data_from_db[second_hr].position}</p>
+                                <p>${data_from_db[second_hr].activity}</p>
+                                <p>${date_started2.toLocaleString()}</p>
+                                <p>${date_finished2.toLocaleString()}</p>
+                                <p>Approved</p>
+                                <p>${comment_histories.data[i+2].target.content}</p>
                             </div>`
                         ])
                 } 
                 else if (first_hr == second_complete){
-                    $('.comment-hismodal').append([
+                    $('#comment-hismodal').append([
                         `<div class="comment-modal">
                                 <p>XXX</p>
                                 <p>${first_hr}</p>
+                                <p>${data_from_db[first_hr].position}</p>
+                                <p>${data_from_db[first_hr].activity}</p>
+                                <p>${date_started1.toLocaleString()}</p>
+                                <p>${date_finished2.toLocaleString()}</p>
                                 <p>XXX</p>
-                                <p>XXX</p>
-                                <p>${comment_histories.data[i-1].published}</p>
-                                <p>${comment_histories.data[i+2].published}</p>
-                                <p>XXX</p>
-                                <p>XXX</p>
+                                <p>${comment_histories.data[i+2].target.content}</p>
                             </div>`,
                             `<div class="comment-modal">
                                 <p>XXX</p>
                                 <p>${second_hr}</p>
+                                <p>${data_from_db[second_hr].position}</p>
+                                <p>${data_from_db[second_hr].activity}</p>
+                                <p>${date_started2.toLocaleString()}</p>
+                                <p>${date_finished1.toLocaleString()}</p>
                                 <p>XXX</p>
-                                <p>XXX</p>
-                                <p>${comment_histories.data[i].published}</p>
-                                <p>${comment_histories.data[i+1].published}</p>
-                                <p>XXX</p>
-                                <p>XXX</p>
+                                <p>${comment_histories.data[i+1].target.content}</p>
                             </div>`
                         ])
                 }
                 i +=2;
+                j++;
+                
             }
-            else if (comment_histories.data[i].name == "Task assigned" && (comment_histories.data[i-1].object.display_name == "Hader Partem" && comment_histories.data[i].object.display_name == "Haper Usa")){
-                alert("ini hader partemn")
-             }
             
         }
         
