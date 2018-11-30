@@ -578,6 +578,7 @@ function commentHistory(task_id,record_id){
     </div>`)
         var j = -1
         for(var i = 2; i <= comment_histories.data.length; i+= 2){
+            console.log(comment_histories)
             j++;
             if (i == comment_histories.data.length){
                 i--;
@@ -672,7 +673,7 @@ function commentHistory(task_id,record_id){
                             <p>${comment_histories.data[i+1].target.content}</p>
                         </div>`
                     ])
-                
+                break;
             }
             // if both hr approved
             else if (comment_histories.data[i+1].name == "Task completed" && comment_histories.data[i+2].name == "Task completed"){
