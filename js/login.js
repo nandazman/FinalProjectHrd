@@ -15,15 +15,19 @@ function logIn(){
             } else {
                 var isRequest = false;
             }
-            if (document.getElementById('email').value[0] == 'h' || document.getElementById('email').value[0] == 'H' ){
-                
+            if (document.getElementById('email').value[0] == 'h') {
                 var isHr = true;
+                var isProposed = true;
+            } else if (document.getElementById('email').value[0] == 'H') {
+                var isHr = true;
+                var isProposed = false;
             } else {
                 var isHr = false;
             }
             document.cookie = `token=${res}`;
             document.cookie = `requester=${isRequest}`;
-            document.cookie = `hr=${isHr}`
+            document.cookie = `hr=${isHr}`;
+            document.cookie = `proposedHr=${isProposed}`
             window.location = "/requester.html";
         },
         error: function(err){

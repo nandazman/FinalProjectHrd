@@ -296,10 +296,10 @@ def get_Summary():
         userDB = AccessUser.query.filter_by(email = decoded['email']).first()
         user_token = userDB.token
 
-        user = AccessUser.query.join(Position).add_columns(AccessUser.role, AccessUser.nama, Position.position).all()
+        user = AccessUser.query.join(Position).order_by(AccessUser.id).add_columns(AccessUser.role, AccessUser.nama, Position.position).all()
         
         positions = {}
-        activities = ['Prepare Rotation', 'HRCS Verification', 'MAIN HR Verification', 'MBD Approval', 'SM Approval', 'HRBD Verification']
+        activities = ['Prepare Rotation', 'HRCS Verification', 'MAIN HR Verification', 'SM Approval', 'MBD Approval', 'HRBD Verification']
         i = 0
         for data in user:
             print(data)
@@ -525,7 +525,10 @@ def submit_to_HRD(req_comment, user_token):
         })
 
     result = json.loads(r.text)
-    task_id = 0
+    if result is None:
+        task_id = 0
+    elif result is not None:
+        task_id = result['data'][-1]['id']
     # get manager email dan task id
 
     result = waitingRespone(user_token,url, task_id)
@@ -640,25 +643,25 @@ def get_task():
 
         return json.dumps(result)
 
-@app.route('/submitTask', methods = ['GET', 'POST'])
+@app.route('/submitTask', methods = ['GET', 'POST','PUT'])
 ### Submit task by User ###
 def submit_task():
+    currentToTarget = {
+        "HR Department": "Germen_hrd@makersinsitute.id",
+        "HR Company": "Germen_hrd@makersinsitute.id",
+        "Department Manager": "status_revise",
+        "Senior Manager ": "status_revise",
+        "Proposed HR Department": "sent_email",
+        "Requester": ["Hader_hrd@makersinstitute.id","Haper_hrd@makersinstitute.id"]
+    }
+    decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+    userDB = AccessUser.query.filter_by(email = decoded['email']).first()
+    user_token = userDB.token
+
     if request.method == "POST":
-        currentToTarget = {
-            "HR Department": "Germen_hrd@makersinsitute.id",
-            "HR Company": "Germen_hrd@makersinsitute.id",
-            "Department Manager": "status_revise",
-            "Senior Manager ": "status_revise",
-            "Proposed HR Department": "sent_email",
-            "Requester": ["Hader_hrd@makersinstitute.id","Haper_hrd@makersinstitute.id"]
-            }
-        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
-    
-    
-        userDB = AccessUser.query.filter_by(email = decoded['email']).first()
 
         if userDB is not None:
-            user_token = userDB.token
+            
             request_data = request.get_json()
             task_id = request_data.get('taskid')
             record_id = request_data.get('recordid')
@@ -673,6 +676,7 @@ def submit_task():
             
             # get manager email dan task id
             for data in result['data']:
+                # not all array have target display_name
                 try:
                     if data['target']['id'] == task_id:
                         currentUserTask = data['target']['display_name']
@@ -704,13 +708,61 @@ def submit_task():
                         "comment": req_comment
                     }
                 }
-            elif nextTarget == "sent_email":
-                submit_data = {
-                    "data": {
-                        "comment": req_comment
-                    }
-                }
-            elif nextTarget[0] ==  "Hader_hrd@makersinstitute.id":
+            
+
+            r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
+                "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+            })
+
+            
+            return "Submitted", 200
+
+        else:
+            return "Bad request", 400
+
+    elif request.method == "PUT":
+
+        if userDB is not None:
+            request_data = request.get_json()
+            task_id = request_data.get('taskid')
+            record_id = request_data.get('recordid')
+            
+
+            r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + record_id + "/stageview", data = request_data, headers = {
+                    "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+                })
+
+            result = json.loads(r.text)
+            
+            # get manager email dan task id
+            for data in result['data']:
+                # not all array have target display_name
+                try:
+                    if data['target']['id'] == task_id:
+                        currentUserTask = data['target']['display_name']
+                        break
+                except KeyError:
+                    continue
+            
+            nextTarget = currentToTarget[currentUserTask]
+
+            if nextTarget[0] ==  "Hader_hrd@makersinstitute.id":
+                behalf_name = request_data.get('behalf-name')
+                behalf_position = request_data.get('behalf-position')
+                distribution = request_data.get('distribution')
+                date = request_data.get('date')
+                comment = request_data.get('comment')
+
+                revised = Summary.query.filter_by(record_id = record_id).first()
+
+                
+                revised.behalf_name = behalf_name
+                revised.behalf_position = behalf_position
+                revised.dates = date
+                revised.coment = comment
+                revised.distribution_cost_center = distribution
+                db.session.commit()
+
                 submit_data = {
                     "data": {
                         "form_data": {
@@ -718,41 +770,27 @@ def submit_task():
                             "pvHrdept": nextTarget[0],
                             "pvHrcomp": nextTarget[1]
                         },
-                        "comment": req_comment
+                        "comment": comment
                     }
                 }
+            elif nextTarget == "sent_email":
+                comment = request_data.get('comment')
+
+                proposed_position = Summary.query.filter_by(record_id = record_id).first()
+                current_position = Employee.query.filter_by(id = proposed_position.employee_id).first()
+                current_position.position_id = proposed_position.position_id
+                db.session.commit()
+                
+                submit_data = {
+                    "data": {
+                        "comment": comment
+                    }
+                }   
 
             r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
                 "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
             })
 
-            result = json.loads(r.text)
-            # nextTarget = result['data'][0]['form_data']['pvHrdept']
-
-
-
-            # gerakin flow dari requester ke hrd
-            # task list dari requester bakal pindah ke hrd
-            # submit_data = {
-            #     "data": {
-            #         "form_data": {
-            #             # ini ngirim ke siapa aja
-            #             "pvHrdept": hrdDepartment,
-            #             "pvHrcomp": hrdCompany
-            #         },
-            #         "comment": req_comment
-            #     }
-            # }
-
-            # # buat ngirim requestnya
-            # r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
-            #     "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
-            # })
-
-            # result = json.loads(r.text)
-
-            # return result
-            
             return "Submitted", 200
         else:
             return "Bad request", 400

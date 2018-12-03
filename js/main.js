@@ -30,6 +30,7 @@ function deleteCookie(){
     document.cookie = ' requester=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
     document.cookie = ' token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
     document.cookie = ' hr=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+    document.cookie = ' `proposedHr=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
     window.location = 'login.html'
 }
 
@@ -83,33 +84,86 @@ function allTask(){
 }
 
 function submitTask(taskid,recordid,status){
+    // 'behalf-name': $('#behalf-name').val(),
+    // 'behalf-position' : $('#behalf-position').val(),
+    // "distribution": $('#distribution-cost').val(),
+    // "date": $('#date-start').val(),
+    // "comment": $('#comment-requester').val()
+    
+    if ($('textarea').val() == ""){
+        alert("Note must be inputted")
+        return
+    }
 
-    $.ajax({
-        method: 'POST',
-        url: 'http://localhost:7000/submitTask',
-        beforeSend: function(req) {
-            req.setRequestHeader('Authorization', getCookie('token')),
-            req.setRequestHeader("Content-Type", "application/json");
-        },
-        data: JSON.stringify({
-            "taskid": taskid,
-            "recordid": recordid,
-            "status": status,
-            "comment": $('textarea').val()
-        }),
+    if (getCookie('requester') == 'true' || getCookie('proposedHr') == 'true'){
+        $.ajax({
+            method: 'PUT',
+            url: 'http://localhost:7000/submitTask',
+            beforeSend: function(req) {
+                req.setRequestHeader('Authorization', getCookie('token')),
+                req.setRequestHeader("Content-Type", "application/json");
+            },
+            data: JSON.stringify({
+                "taskid": taskid,
+                "recordid": recordid,
+                "status": status,
+                'behalf-name': $('#behalf-name-revised').val(),
+                'behalf-position' : $('#behalf-position-revised').val(),
+                "distribution": $('#distribution-cost-revised').val(),
+                "date": $('#date-start-revised').val(),
+                "comment": $('textarea').val()
+            }),
+    
+            success: function(res){
+                
+                $('#alltaskuser .taskitem p:contains("'+taskid+'")').parent().remove()
+                $('#modal-form').slideUp()
+                $('#revise').remove()
+                $('#approve').remove()
+                if ($('#alltaskuser').has('.taskitem').length == 0) {
+                    $('#alltaskuser').append(`<div class="taskitem")">
+                    <h3>There is no task at the moment</h3>
+                </div>`)
+                }
+            },
+            error: function(err){
+                alert(err.response)
+            }
+        })
+    } else if (getCookie('requester') !== 'true'){ 
+        $.ajax({
+            method: 'POST',
+            url: 'http://localhost:7000/submitTask',
+            beforeSend: function(req) {
+                req.setRequestHeader('Authorization', getCookie('token')),
+                req.setRequestHeader("Content-Type", "application/json");
+            },
+            data: JSON.stringify({
+                "taskid": taskid,
+                "recordid": recordid,
+                "status": status,
+                "comment": $('textarea').val()
+            }),
 
-        success: function(res){
-            
-            $('#alltaskuser .taskitem p:contains("'+taskid+'")').parent().remove()
-            $('#modal-form').slideUp()
-            $('#revise').remove()
-            $('#approve').remove()
+            success: function(res){
+                
+                $('#alltaskuser .taskitem p:contains("'+taskid+'")').parent().remove()
+                $('#modal-form').slideUp()
+                $('#revise').remove()
+                $('#approve').remove()
+                if ($('#alltaskuser').has('.taskitem').length == 0) {
+                    $('#alltaskuser').append(`<div class="taskitem")">
+                    <h3>There is no task at the moment</h3>
+                </div>`)
+                }
+            },
+            error: function(err){
+                alert(err.response)
+            }
+        })
+    } 
 
-        },
-        error: function(err){
-            alert(err.response)
-        }
-    })
+
 }
 
 function getProfile(){
@@ -312,12 +366,6 @@ function getPositionData(){
 function submitForm(){
     
     document.getElementById('regForm').style.display = "none";
-    employee = $('#employee-selection option:selected').text()
-    receiver = $('#receiver').val()
-    requester = $('#requester-nama').text()
-    position = $('#position-list').val()
-    behalf = $('#behalf-position').val()
-   
 
     $.ajax({
         method: 'POST',
@@ -422,7 +470,7 @@ function commentHistory(task_id,record_id){
 
     document.getElementById('modal-form').style.display = "block";
     $('#confirmation').append(`<button onclick="submitTask('${task_id}','${record_id}','Approved')" id="approve">Approved</button>`)
-    if (getCookie('hr') != 'true'){
+    if (getCookie('hr') != 'true' && getCookie('requester') != 'true'){
         $('#confirmation').append(`<button onclick="submitTask('${task_id}','${record_id}','Revised')" id="revise">Revised</button>`)
     }
     
@@ -454,16 +502,28 @@ function commentHistory(task_id,record_id){
         <div class="modal-listForm">
             <p>REQUESTER POSITION</p>
             <p class="ans">${formData.requester.position}</p>
+        </div>`)
+        if (getCookie('requester') == 'true'){
+            $("#modal-requester").append(`<div class="modal-listForm">
+            <p>ON BEHALF NAME</p>
+            <input type="text" class="ans" value="${formData.behalf.behalf_name}" id="behalf-name-revised">
         </div>
         <div class="modal-listForm">
+            <p>ON BEHALF POSITION</p>
+            <input type="text" class="ans" value="${formData.behalf.behalf_position}" id="behalf-position-revised">
+        </div>`)
+        } else if(getCookie('requester') !== 'true'){
+            $("#modal-requester").append(`<div class="modal-listForm">
             <p>ON BEHALF NAME</p>
             <p class="ans">${formData.behalf.behalf_name}</p>
         </div>
         <div class="modal-listForm">
             <p>ON BEHALF POSITION</p>
             <p class="ans">${formData.behalf.behalf_position}</p>
-        </div>
-        <div class="modal-listForm">
+        </div>`)
+        }
+        
+        $("#modal-requester").append(`<div class="modal-listForm">
             <p>EMPLOYEE</p>
             <div>
                 <p class="ans inans">${formData.employee.employee_name}</p>
@@ -523,12 +583,19 @@ function commentHistory(task_id,record_id){
                 <p class="ans inans">${formData.proposed.cost_center_code}</p>
                 <p class="ans">${formData.proposed.cost_center}</p>
             </div>
-        </div>
-        <div class="modal-listForm">
+        </div>`)
+        if (getCookie('requester') == 'true'){
+            $("#modal-proposed").append(`<div class="modal-listForm">
+            <p>DISTRIBUTION COST CENTER</p>
+            <input type="text" value="${formData.proposed.distribution_cost_center}" id="distribution-cost-revised">
+        </div>`)
+        } else if(getCookie('requester') !== 'true'){
+            $("#modal-proposed").append(`<div class="modal-listForm">
             <p>DISTRIBUTION COST CENTER</p>
             <p class="ans">${formData.proposed.distribution_cost_center}</p>
-        </div>
-        <div class="modal-listForm">
+        </div>`)
+        }
+        $("#modal-proposed").append(`<div class="modal-listForm">
             <p>COMPANY</p>
             <p class="ans">${formData.proposed.company}</p>
         </div>
@@ -547,18 +614,25 @@ function commentHistory(task_id,record_id){
         <div class="modal-listForm">
             <p>RECEIVER</p>
             <p class="ans">${formData.receiver}</p>
-        </div>
-        <div class="modal-listForm">
+        </div>`)
+        if (getCookie('requester') == 'true'){
+            $("#modal-proposed").append(`<div class="modal-listForm">
+            <p>EFFECTIVE DATE START</p>
+            <input type="date" value="${formData.date}" id="date-start-revised">
+        </div>`)
+        } else if(getCookie('requester') !== 'true'){
+            $("#modal-proposed").append(`<div class="modal-listForm">
             <p>EFFECTIVE DATE START</p>
             <p class="ans">${formData.date}</p>
-        </div>
-        <div class="modal-listForm">
+        </div>`)
+        }
+        $("#modal-proposed").append(`<div class="modal-listForm">
             <p>COMMENT</p>
             <p class="ans">${formData.comment}</p>
         </div>
         <div class="modal-listForm">
             <p>NOTE</p>
-            <textarea rows="5" cols="30"></textarea>
+            <textarea rows="5" cols="30" id="comment"></textarea>
         </div>`)
 
         
@@ -580,6 +654,7 @@ function commentHistory(task_id,record_id){
         for(var i = 2; i <= comment_histories.data.length; i+= 2){
             console.log(comment_histories)
             j++;
+            console.log(i)
             if (i == comment_histories.data.length){
                 i--;
             }
@@ -683,7 +758,7 @@ function commentHistory(task_id,record_id){
                 var second_complete = comment_histories.data[i+2].actor.display_name
                 var date_started1 = new Date(comment_histories.data[i-1].published)
                 var date_started2 = new Date(comment_histories.data[i].published)
-                var date_finsihed1 = new Date(comment_histories.data[i+1].published)
+                var date_finished1 = new Date(comment_histories.data[i+1].published)
                 var date_finished2 = new Date(comment_histories.data[i+2].published)
                 if (first_hr == first_complete){
                     $('#comment-hismodal').append([
@@ -693,7 +768,7 @@ function commentHistory(task_id,record_id){
                                 <p>${data_from_db[first_hr].position}</p>
                                 <p>${data_from_db[first_hr].activity}</p>
                                 <p>${date_started1.toLocaleString()}</p>
-                                <p>${date_finsihed1.toLocaleString()}</p>
+                                <p>${date_finished1.toLocaleString()}</p>
                                 <p>Approved</p>
                                 <p>${comment_histories.data[i+1].target.content}</p>
                             </div>`,
@@ -718,7 +793,7 @@ function commentHistory(task_id,record_id){
                                 <p>${data_from_db[first_hr].activity}</p>
                                 <p>${date_started1.toLocaleString()}</p>
                                 <p>${date_finished2.toLocaleString()}</p>
-                                <p>XXX</p>
+                                <p>Approved</p>
                                 <p>${comment_histories.data[i+2].target.content}</p>
                             </div>`,
                             `<div class="comment-modal">
@@ -728,7 +803,7 @@ function commentHistory(task_id,record_id){
                                 <p>${data_from_db[second_hr].activity}</p>
                                 <p>${date_started2.toLocaleString()}</p>
                                 <p>${date_finished1.toLocaleString()}</p>
-                                <p>XXX</p>
+                                <p>Approved</p>
                                 <p>${comment_histories.data[i+1].target.content}</p>
                             </div>`
                         ])
@@ -787,10 +862,12 @@ function getTableSummary(){
 
 /****** FOR INTERACRTION IN FRON END ******/
 if (getCookie('requester') !== 'true'){
-    $("#request-tab").remove()
-    $("#commenthis").remove()
-    $("#form-input").remove()
+    $("#request-tab").hide()
+    $("#commenthis").hide()
+    $("#form-input").hide()
+    
 }
+
 
 $(document).ready(function () {
     $("#request-tab").click(function () {
@@ -820,7 +897,7 @@ window.onclick = function (event) {
     if (event.target == document.getElementById('modal-form')) {
         document.getElementById('modal-form').style.display = "none";
         document.getElementById('approve').remove()
-        if (getCookie('hr') != 'true'){
+        if (getCookie('hr') != 'true' && getCookie('requester') !== 'true'){
             document.getElementById('revise').remove()
         }
     }
