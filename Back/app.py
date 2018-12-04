@@ -8,14 +8,14 @@ import os
 import jwt
 import requests
 from sqlalchemy import and_
-
+import time
 
 
 
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHR'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -458,15 +458,20 @@ def create_record():
 
         # submit flow pake record_id dan token
         # ke fungsi submit_record
-        submit_record(record_id, user_token)
-
+        task_updated = submit_record(record_id, user_token)
+        print(task_updated)
+        if task_updated['status'] == "try again":
+            task = json.dumps(task_updated)
+            submit_to_database(record_id, "None",request_data)
+            return task
+        
         # gerakin flow dari requester ke manager
         # dimasukin variabel karena butuh task list
         process_instance = submit_to_HRD(req_comment, user_token)
 
         # masukin data ke database
         # ngriim record id sama process id dari process_instance
-        data_db = submit_to_database(record_id, process_instance['data']['process_id'],request_data)
+        submit_to_database(record_id, process_instance['data']['process_id'],request_data)
 
         # return berupa id, dan statusnya
         return "Submitted", 200
@@ -476,6 +481,27 @@ def create_record():
 
 # fungsi untuk submit record
 def submit_record(record_id, user_token):
+    # cek task id yang terbaru
+    query = "folder=app:task:all&page[number]=1&page[size]=10&filter[name]=Requester&filter[state]=active&filter[definition_id]=%s" % (
+        os.getenv("DEFINITION_ID"))
+    
+    # ngubah url nya
+    url = os.getenv("BASE_URL_TASK")+"?"+quote(query, safe="&=")
+
+    # bearer %s user tokennya
+    # buat ngambil task ddari si requesternya apa aja
+    r = requests.get(url , headers = {
+            "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+        })
+
+    result = json.loads(r.text)
+
+    # check if whether task id currently exist
+    if result is None:
+        task_id = 0
+    elif result is not None:
+        task_id = result['data'][-1]['id']
+
     # data template untuk ngesubmit record di body nya nextflow
     record_instance = {
         "data": {
@@ -501,9 +527,24 @@ def submit_record(record_id, user_token):
             "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
         })
 
-    result = json.loads(r.text)
+    # new_result = json.loads(r.text)
 
-    return result
+    time.sleep(5)
+
+    r = requests.get(url , headers = {
+            "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+        })
+
+    result = json.loads(r.text) 
+    
+    if result is None or (result is not None and task_id == result['data'][-1]['id']):
+        response = {
+            'status': "try again",
+            'task_id': task_id
+        }
+        return response
+    elif result is not None and task_id != result['data'][-1]['id']:
+        return "New task updated"
 
 # fungsi untuk gerakin flow dari requester ke manager
 # submit tar gerak flownya dari start ke proses selanjutnya
@@ -525,14 +566,18 @@ def submit_to_HRD(req_comment, user_token):
         })
 
     result = json.loads(r.text)
+
+    ######### kalo berhasil ini dihapus #################
+    # check if whether task id currently exist
     if result is None:
         task_id = 0
     elif result is not None:
         task_id = result['data'][-1]['id']
-    # get manager email dan task id
+    
 
     result = waitingRespone(user_token,url, task_id)
 
+    # get manager email dan task id
     hrdDepartment = result['data'][0]['form_data']['pvHrdept']
     hrdCompany = result['data'][0]['form_data']['pvHrcomp']
     task_id = result['data'][-1]['id']

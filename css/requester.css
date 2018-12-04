@@ -558,13 +558,35 @@ textarea:focus {
 #regForm .invalid {
   background-color: #d1d1d1;
 }
-table {
-  margin: auto;
-  border-collapse: collapse;
+#modal-confirmation {
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  padding-top: 50px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.726);
+  /* Black w/ opacity */
 }
-table th,
-table td {
-  border-collapse: collapse;
-  width: 115px;
-  padding: 10px;
+#modal-confirmation #modal-confirm {
+  width: 300px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+  background-color: white;
+  padding: 20px 10px;
+  position: relative;
+  top: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  animation-name: showmodal;
+  animation-duration: 0.4s;
+  border-radius: 5px;
+}
+#modal-confirmation #modal-confirm #modal-header-confirm button {
+  margin: 10px;
 }

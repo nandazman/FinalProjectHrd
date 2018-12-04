@@ -386,7 +386,10 @@ function submitForm(){
             "comment": $('#comment-requester').val()
         }),
         success: function(res){
-            console.log(res)
+            if (res != "Submitted" || res != "Token not found"){
+                response = JSON.parse(res)
+            }
+            console.log(response)
         },
         error: function(err){
             console.log(err)
@@ -888,7 +891,7 @@ $(document).ready(function () {
 document.getElementById("close").onclick = function () {
     document.getElementById('modal-form').style.display = "none";
     document.getElementById('approve').remove()
-    if (getCookie('hr') != 'true'){
+    if (getCookie('hr') != 'true' && getCookie('requester') !== 'true'){
         document.getElementById('revise').remove()
     }
 }

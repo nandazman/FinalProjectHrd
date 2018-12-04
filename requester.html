@@ -135,10 +135,11 @@
                 // if you have reached the end of the form...
                 if (currentTab >= x.length) {
                     // ... the form gets submitted:
-                    // document.getElementById("regForm").submit();
                     submitForm()
+                    // document.getElementById("regForm").submit();
+                    
                     alert('Submitted')
-                    return false;
+                    
                 }
                 // Otherwise, display the correct tab:
                 showTab(currentTab);
@@ -303,6 +304,17 @@
         </section>
     </div>
 
+    <!--Confirmation Modal-->
+    <div id="modal-confirmation" class="modal">
+        <section id="modal-confirm">
+            <div id="modal-header-confirm">
+                <h2>Task Hasnt Updated</h2>
+                <p>Try again?</p>
+                <button>Yes</button>
+                <button>No</button>
+            </div>
+        </section>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="js/main.js"></script>
 
