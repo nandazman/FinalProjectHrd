@@ -2,14 +2,17 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
 }
 
 body{
-    background: rgb(4, 66, 99);
+    // background-image: linear-gradient(to bottom right, #603410, #a27957);
+    background: blanchedalmond;
+    height: 100vh;
 }
 
 #user{
-    margin: 0px 0px 100px 188px;
+    margin: 0px 0px 50px 188px;
     text-align: left;
     font-size: 24px;
     color: white;
@@ -24,8 +27,8 @@ section {
 
 header{
     display: flex;
-    justify-content: space-evenly;
     padding: 10px;
+    justify-content: space-around;
     .tittle{
         height: 180px;
         width:344px;
@@ -58,6 +61,10 @@ header{
 }
 .greeting{
     display: flex;
+    font-family: 'Acme', sans-serif;
+    color: brown;
+    font-size: 30px;
+
 }
 // atas
 .request{
@@ -133,6 +140,7 @@ footer {
     padding-bottom: 10px;
     color:rgb(255, 255, 255);
     text-align: center;
+    color: brown;
 }
 
 #new-request, .second-box{
@@ -144,25 +152,36 @@ footer {
     width: 70vw;
     margin: auto;
     color: white;
-    font-family: 'Catamaran', sans-serif;
+    // font-family: 'Catamaran', sans-serif;
+    h3{
+        font-family: 'Abel', sans-serif;
+        font-size: 4.5rem;
+        font-weight: 300;
+        line-height: 1.2;
+        font-size: 60px;
+        color: brown;
+    }
     .taskitem{
         display: flex;
+        font-family: 'Catamaran', sans-serif;
         justify-content: space-around;
         align-items: center;
         padding: 10px;
         margin: 20px;
-        border-left: 20px solid black;
+        border-left: 20px solid #a74c4c;
         background-color: #eceff1;
-        box-shadow: 10px 10px 10px #000000;
+        box-shadow: 10px 10px 10px #a74c4c;
         transition: all 0.5s;
         color: black;
+        box-shadow: 0 4px 8px 0 brown;
+        background-color: #f8f9fa5e;
         img{
             height: 80px;
             width: 60px;
             border-radius: 5px;
         } 
         &:hover{
-            box-shadow: 15px 15px 1px #000000;
+            box-shadow: 15px 15px 1px #a74c4c;
             cursor: pointer;
             margin-right: -10px;
 
@@ -171,7 +190,7 @@ footer {
 }
 
 button {
-background-color: #85b6d1;
+background-color: #d1b9a6;
 color: #3e3535;
 // box-shadow: 0px 1px 0px 0px #000;
 border-radius: 5px;
@@ -306,11 +325,16 @@ font-size: 17px;
       font-size: 15px;
       font-family: 'Heebo', sans-serif;
       text-align: center;
+      background-color: #d1b9a6;
       &:hover {
-          background-color: #ddd;
+          background-color: brown;
         }
     }
   }
+
+.dropdown{
+    margin-left: 5px;
+} 
 
 .dropdown:hover {
     cursor: pointer;
@@ -331,14 +355,21 @@ textarea{
     
     .headercomment{
         margin-top: 50px;
-        background-color: rgb(202, 206, 209);
+        // background-color: rgb(202, 206, 209);
         padding: 15px 0px;
         color: #3e3535;
     }
     .his-modal{
         display: flex;
         justify-content: space-evenly;
-        padding:10px;
+        padding: 10px;
+        background-color: #48120e;
+        color: white;
+        font-weight: bold;
+        height: 70px;
+        align-items: center;
+        margin: 0px 10px auto;
+        border-radius: 5px;
         p{
             width: 100px;
             text-align: center;
@@ -348,10 +379,22 @@ textarea{
     .comment-modal{
         display: flex;
         justify-content: space-evenly;
-        padding:10px;
+        padding: 10px;
+        align-items: center;
+        border-bottom: 5px ridge brown;
+        margin: 0px 15px auto;
+        height: 70px;
         p{
             width: 100px;
             text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            &:hover{
+                white-space: normal;
+                text-overflow:ellipsis;
+             
+            }
         }
     }
 }
@@ -371,6 +414,7 @@ textarea{
 #modal-header {
     text-align: center;
     padding:10px 0px;
+    margin-bottom: 50px;
     #close{
         cursor: pointer;
     }
@@ -411,6 +455,7 @@ textarea{
 }
 
 .modal-header {
+    text-align: left;
     .number {
         border:1px solid black;
         border-radius: 50%;
@@ -418,7 +463,8 @@ textarea{
         margin:0px 20px;
     }
     .title {
-        border-bottom: 1px solid black;
+        border-bottom: black;
+        // text-align: left;
     }
 }
 
@@ -429,21 +475,21 @@ textarea{
     .doubleinput1{
         margin-right: 35px;
         height: 16px;
-        width: 250px;
+        width: 300px;
         margin-bottom: 15px;
     }
     .doubleinput2{
         margin-right: 35px;
         height: 16px;
-        width: 250px;
+        width: 300px;
     }
     p {
-        width: 250px;
+        width: 300px;
         padding: 5px;
     }
     input {
         margin-right: 35px;
-        width: 250px;
+        width: 300px;
         padding: 5px;
         &:focus{
             background-color: white;
@@ -551,4 +597,19 @@ textarea{
         }
 }
   
+table{
+    margin: auto;
+    border-collapse: collapse;
+    // border: 1px solid black;
+    th, td{
+        // border: 1px solid black;
+        border-collapse: collapse;
+        width: 115px;
+        padding: 10px;
+    }   
+}
 
+// th {
+//     background-color: black;
+//     color: white;
+// }

@@ -176,12 +176,12 @@ function getProfile(){
         success: function(res){
             
             data = JSON.parse(res)
-            $('#user').append(`<div class="greeting">Hello,<div class="dropdown"> 
-            <span>${data.nama}</span>
+            $('#user').append(`<div class="greeting">Hello, ${data.nama}!<div class="dropdown"> 
+            <img src="css/down.png">
             <div class="dropdown-content">
             <span onclick="deleteCookie()">Sign Out</span>
             </div>
-            </div>!
+            </div>
             </div>`)
             $('#new-information').prepend(`<div class="listForm">
             <p>REQUESTER NAME</p>

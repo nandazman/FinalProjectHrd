@@ -1,0 +1,92 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(0, 0, 0);
+    // background-image: url('https://images.unsplash.com/photo-1471469478635-911c1858d22e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=e7d63272ec42ba808a66cf0dab689034&dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb');
+    background-image: url(logo.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+#container {
+    // border:5px solid black;
+    // background-image: url('https://images.unsplash.com/photo-1471469478635-911c1858d22e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=e7d63272ec42ba808a66cf0dab689034&dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb');
+    // opacity: 0.5;
+    box-shadow: 0 4px 8px 0 rgb(99, 99, 99);
+    background-color: #f8f9fa5e;
+    // border-radius: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 350px;
+    height: 450px;
+    // width: 500px;
+    // height: 500px;
+    h1 {
+        margin:10px;
+        color: #603410;
+    }
+}
+
+.form{
+    display: flex; 
+    align-items: center;
+    margin:15px auto;
+    // border: 1px solid #f8f9fa;
+    background-color:#d8d9da73;
+    box-shadow: 1px 1px 4px black;
+    width:300px;
+    // border-radius: 5px;
+    input {
+        width:245px;
+        border: none;
+        padding:10px 5px;
+        border-left:1px solid black;
+        background-color:#d8d9da00;
+        &:focus{
+            box-shadow: 1px 1px 5px #111f23;
+            border: 1px solid #fff0;
+        }   
+    }
+    img {
+        padding:0px 15px;
+      }
+}
+
+.form label, .form button{
+    padding:5px;
+}
+
+button {
+    border: 0px solid;
+    text-decoration: none;
+    background-color: #d1b9a6;
+    padding: 10px 15px;
+    box-shadow: 0px 1px 5px #000;
+    color: #3e3535;
+    width: 300px;
+    font-weight: bolder;
+    font-size: 15px;
+}
+
+form button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    box-shadow:3px 3px 5px black;
+}
+
+footer {
+    position: absolute;
+    bottom: 3vh;
+    margin:0 auto;
+    color:#eaeaea;
+}
