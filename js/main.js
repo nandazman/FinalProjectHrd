@@ -50,6 +50,7 @@ function security(){
 
 
 function allTask(){
+    
     $.ajax({
         method: 'POST',
         url: 'http://localhost:7000/GetTask',
@@ -62,14 +63,16 @@ function allTask(){
             
             var requester = res.data
             if (requester.length == 0){
+                $('#alltaskuser').empty()
                 $('#alltaskuser').append(`<div class="taskitem")">
                 <h3>There is no task at the moment</h3>
             </div>`)
             } else {
+                $('#alltaskuser').empty()
                 requester.forEach(task => {
                     
                     $('#alltaskuser').append(`<div class="taskitem" onclick="commentHistory('${task.id}','${task.record_id}')">
-                    <img src="image1.jpg">
+                    <img src="man-user.png">
                     <p>Dear ${task.assignee.name}</p>
                     <p>${task.id}</p>
                 </div>`)
@@ -234,6 +237,7 @@ function getEmployeeData(){
         }),
         success: function(res){
             data = JSON.parse(res)
+            $('#current').empty()
             $('#current').append(`
             <div class="listForm">
                 <p>POSITION CODE</p>
@@ -280,6 +284,8 @@ function getEmployeeData(){
                 success: function(res){
                     data = JSON.parse(res)
                     
+                    $('#position-list').empty()
+                    $('#position-list').append(`<option disabled selected>--Position--</option>`)
                     data.forEach(data=> {
                         $('#position-list').append(`
                             <option value="${data.id}">${data.position_code} - ${data.position}</option>
@@ -313,8 +319,8 @@ function getPositionData(){
         success: function(res){
             
             data = JSON.parse(res)
-           
-            $('#proposed').append(`<div class="listForm">
+            $('#position-data').empty()
+            $('#position-data').append(`<div class="listForm">
             <p>COST CENTER</p>
             <div>
                 <input type="text" class="doubleinput1" value="${data.cost_center_code}"/><br>
@@ -369,7 +375,7 @@ function submitForm(){
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/submitToHRD',
+        url: 'http://localhost:7000/submitRecord',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -386,10 +392,7 @@ function submitForm(){
             "comment": $('#comment-requester').val()
         }),
         success: function(res){
-            if (res != "Submitted" || res != "Token not found"){
-                response = JSON.parse(res)
-            }
-            console.log(response)
+            console.log(res)
         },
         error: function(err){
             console.log(err)
@@ -891,7 +894,7 @@ $(document).ready(function () {
 document.getElementById("close").onclick = function () {
     document.getElementById('modal-form').style.display = "none";
     document.getElementById('approve').remove()
-    if (getCookie('hr') != 'true' && getCookie('requester') !== 'true'){
+    if (getCookie('hr') != 'true'){
         document.getElementById('revise').remove()
     }
 }

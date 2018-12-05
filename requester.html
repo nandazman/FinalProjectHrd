@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Heebo|Catamaran|Noto+Sans+SC|Abel|Acme|Rajdhani" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="css/requester.css" />
-    <link rel="icon" type="image/png" href="4 - Copy.png">
+    <link rel="icon" type="image/png" href="4.png">
    
 
 </head>
@@ -39,8 +39,8 @@
 
                         <div class="listForm">
                             <p>ON BEHALF NAME</p>
-                            <input type="text" id="behalf-name" />
-                            <small id="help">(Position Minimum L4)</small>
+                            <input type="text" id="behalf-name" placeholder="(Position Minimum L4)" />
+                            <!-- <small id="help">(Position Minimum L4)</small> -->
                         </div>
                         <div class="listForm">
                             <p>ON BEHALF POSITION</p>
@@ -73,6 +73,9 @@
                             <select class="down-list" id="position-list" onchange="getPositionData()">
                                 <option disabled selected>--Position--</option>
                             </select>
+                        </div>
+                        <div id="position-data">
+
                         </div>
 
 
@@ -135,11 +138,10 @@
                 // if you have reached the end of the form...
                 if (currentTab >= x.length) {
                     // ... the form gets submitted:
-                    submitForm()
                     // document.getElementById("regForm").submit();
-                    
+                    submitForm()
                     alert('Submitted')
-                    
+                    return false;
                 }
                 // Otherwise, display the correct tab:
                 showTab(currentTab);
@@ -193,9 +195,11 @@
 
         <!--tasklist-->
         <div class="task">
-
+            <div class="tasklist-header">
+                <h3>TASK LIST</h3><img id="reload" src="refresh.png" onclick="allTask()">                  
+            </div>
             <div id="alltaskuser">
-                <h3>TASK LIST</h3>
+                
 
             </div>
 
@@ -304,17 +308,6 @@
         </section>
     </div>
 
-    <!--Confirmation Modal-->
-    <div id="modal-confirmation" class="modal">
-        <section id="modal-confirm">
-            <div id="modal-header-confirm">
-                <h2>Task Hasnt Updated</h2>
-                <p>Try again?</p>
-                <button>Yes</button>
-                <button>No</button>
-            </div>
-        </section>
-    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="js/main.js"></script>
 

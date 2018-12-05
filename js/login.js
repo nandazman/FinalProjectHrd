@@ -23,6 +23,7 @@ function logIn(){
                 var isProposed = false;
             } else {
                 var isHr = false;
+                var isProposed = false;
             }
             document.cookie = `token=${res}`;
             document.cookie = `requester=${isRequest}`;

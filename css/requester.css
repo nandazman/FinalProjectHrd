@@ -29,11 +29,13 @@ header .tittle {
   padding: 36px;
   background-color: white;
   border-radius: 7px;
-  box-shadow: 10px 10px 10px #000000;
+  box-shadow: 10px 10px 10px #a74c4c;
 }
 header .tittle:hover {
   cursor: pointer;
   opacity: 0.7;
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
 }
 header .tittle #new-req {
   color: #ff7f4f;
@@ -83,12 +85,12 @@ header .tittle img {
   margin-right: -10px;
 }
 .second-box {
-  color: white;
+  color: brown;
   font-family: 'Heebo', sans-serif;
+  margin-top: 50px;
 }
 .second-box #comment-history {
-  border: 1px solid white;
-  box-shadow: 10px 10px 10px #000000;
+  box-shadow: 0 4px 8px 0 brown;
   width: 70vw;
   margin: 20px auto;
   margin-bottom: 10px;
@@ -97,6 +99,8 @@ header .tittle img {
   display: flex;
   justify-content: space-evenly;
   padding: 10px;
+  align-items: center;
+  border-bottom: 5px ridge brown;
 }
 .second-box #comment-history .history p {
   width: 100px;
@@ -162,7 +166,7 @@ footer {
   background-color: #f8f9fa5e;
 }
 .task .taskitem img {
-  height: 80px;
+  height: 60px;
   width: 60px;
   border-radius: 5px;
 }
@@ -190,8 +194,9 @@ button:hover {
   margin-bottom: 15px;
 }
 #regForm {
+  display: none;
   background-color: #ffffff;
-  box-shadow: 10px 10px 10px #000000;
+  box-shadow: 10px 10px 10px #a74c4c;
   margin: 100px auto;
   padding: 30px;
   width: 60%;
@@ -315,6 +320,7 @@ button:hover {
 ####################################### */
 textarea {
   border: 1px solid #838383;
+  width: 300px;
 }
 textarea:focus {
   box-shadow: 0 0 5px #51cbee;
@@ -382,7 +388,7 @@ textarea:focus {
 #modal-header {
   text-align: center;
   padding: 10px 0px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 #modal-header #close {
   cursor: pointer;
@@ -425,6 +431,7 @@ textarea:focus {
 }
 .modal-header {
   text-align: left;
+  background-color: brown;
 }
 .modal-header .number {
   border: 1px solid black;
@@ -459,14 +466,17 @@ textarea:focus {
   margin-right: 35px;
   width: 300px;
   padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #DDDDDD;
 }
 .modal-listForm input:focus {
-  background-color: white;
+  box-shadow: 0 0 5px #51cbee;
+  border: 1px solid #51cbee;
 }
 #regForm {
   display: none;
   background-color: #ffffff;
-  box-shadow: 10px 10px 10px #000000;
+  box-shadow: 10px 10px 10px #a74c4c;
   margin: 100px auto;
   padding: 30px;
   width: 60%;
@@ -589,4 +599,65 @@ textarea:focus {
 }
 #modal-confirmation #modal-confirm #modal-header-confirm button {
   margin: 10px;
+}
+.tasklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+.tasklist-header img:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  animation: rotate 2s;
+  animation-iteration-count: infinite;
+}
+#nextBtn {
+  cursor: pointer;
+}
+#prevBtn {
+  cursor: pointer;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
 }

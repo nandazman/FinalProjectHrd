@@ -8,14 +8,14 @@ import os
 import jwt
 import requests
 from sqlalchemy import and_
-import time
+
 
 
 
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHR'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -117,6 +117,8 @@ def profile():
         user = json.dumps(user_nama)
 
         return user
+    else:
+        return "Method not allowed", 405
 
 @app.route('/employee', methods = ["GET"])
 def employee():
@@ -422,7 +424,7 @@ def get_SAP():
 ####################### Nextflow ########################
 #########################################################
 
-@app.route('/submitToHRD', methods = ['GET', 'POST'])
+@app.route('/submitRecord', methods = ['GET', 'POST'])
 ##### inisasi nextflow atau create record #####
 def create_record():
     decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
@@ -458,20 +460,15 @@ def create_record():
 
         # submit flow pake record_id dan token
         # ke fungsi submit_record
-        task_updated = submit_record(record_id, user_token)
-        print(task_updated)
-        if task_updated['status'] == "try again":
-            task = json.dumps(task_updated)
-            submit_to_database(record_id, "None",request_data)
-            return task
-        
+        submit_record(record_id, user_token,request_data)
+
         # gerakin flow dari requester ke manager
         # dimasukin variabel karena butuh task list
-        process_instance = submit_to_HRD(req_comment, user_token)
+        # process_instance = submit_to_HRD(req_comment, user_token)
 
         # masukin data ke database
         # ngriim record id sama process id dari process_instance
-        submit_to_database(record_id, process_instance['data']['process_id'],request_data)
+        # data_db = submit_to_database(record_id, process_instance['data']['process_id'],request_data)
 
         # return berupa id, dan statusnya
         return "Submitted", 200
@@ -480,28 +477,7 @@ def create_record():
         return "Token not found", 404
 
 # fungsi untuk submit record
-def submit_record(record_id, user_token):
-    # cek task id yang terbaru
-    query = "folder=app:task:all&page[number]=1&page[size]=10&filter[name]=Requester&filter[state]=active&filter[definition_id]=%s" % (
-        os.getenv("DEFINITION_ID"))
-    
-    # ngubah url nya
-    url = os.getenv("BASE_URL_TASK")+"?"+quote(query, safe="&=")
-
-    # bearer %s user tokennya
-    # buat ngambil task ddari si requesternya apa aja
-    r = requests.get(url , headers = {
-            "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
-        })
-
-    result = json.loads(r.text)
-
-    # check if whether task id currently exist
-    if result is None:
-        task_id = 0
-    elif result is not None:
-        task_id = result['data'][-1]['id']
-
+def submit_record(record_id, user_token,request):
     # data template untuk ngesubmit record di body nya nextflow
     record_instance = {
         "data": {
@@ -527,24 +503,12 @@ def submit_record(record_id, user_token):
             "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
         })
 
-    # new_result = json.loads(r.text)
+    result = json.loads(r.text)
+    submit_to_database(record_id, "null",request)
+    return "submitted", 200
 
-    time.sleep(5)
 
-    r = requests.get(url , headers = {
-            "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
-        })
-
-    result = json.loads(r.text) 
     
-    if result is None or (result is not None and task_id == result['data'][-1]['id']):
-        response = {
-            'status': "try again",
-            'task_id': task_id
-        }
-        return response
-    elif result is not None and task_id != result['data'][-1]['id']:
-        return "New task updated"
 
 # fungsi untuk gerakin flow dari requester ke manager
 # submit tar gerak flownya dari start ke proses selanjutnya
@@ -566,18 +530,14 @@ def submit_to_HRD(req_comment, user_token):
         })
 
     result = json.loads(r.text)
-
-    ######### kalo berhasil ini dihapus #################
-    # check if whether task id currently exist
     if result is None:
         task_id = 0
     elif result is not None:
         task_id = result['data'][-1]['id']
-    
+    # get manager email dan task id
 
     result = waitingRespone(user_token,url, task_id)
 
-    # get manager email dan task id
     hrdDepartment = result['data'][0]['form_data']['pvHrdept']
     hrdCompany = result['data'][0]['form_data']['pvHrcomp']
     task_id = result['data'][-1]['id']
@@ -677,7 +637,7 @@ def get_task():
         # https://mosaic-engine.dev.nextflow.tech/makers/api/tasks?folder=app:task:all&filter[name]=%s&filter%5Bstate%5D=active&filter%5Bdefinition_id%5D=definitions%3Abpmn%3Afabf8af1-4516-4876-ba13-a7c9ee118133
         # ngubah url nya
         url = os.getenv("BASE_URL_TASK")+"?"+quote(query, safe="&=")
-        # print(url)
+        
         # bearer %s user tokennya
         # buat ngambil task ddari si requesternya apa aja
         r = requests.get(url , headers = {
@@ -685,7 +645,7 @@ def get_task():
             })
 
         result = json.loads(r.text)
-
+        
         return json.dumps(result)
 
 @app.route('/submitTask', methods = ['GET', 'POST','PUT'])
@@ -779,7 +739,7 @@ def submit_task():
 
             result = json.loads(r.text)
             
-            # get manager email dan task id
+            # get manager email dan task id 
             for data in result['data']:
                 # not all array have target display_name
                 try:
@@ -798,16 +758,6 @@ def submit_task():
                 date = request_data.get('date')
                 comment = request_data.get('comment')
 
-                revised = Summary.query.filter_by(record_id = record_id).first()
-
-                
-                revised.behalf_name = behalf_name
-                revised.behalf_position = behalf_position
-                revised.dates = date
-                revised.coment = comment
-                revised.distribution_cost_center = distribution
-                db.session.commit()
-
                 submit_data = {
                     "data": {
                         "form_data": {
@@ -818,6 +768,25 @@ def submit_task():
                         "comment": comment
                     }
                 }
+
+                r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
+                    "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+                })
+
+                response = json.loads(r.text)
+                
+                process_id = response['data']['process_id']
+
+                revised = Summary.query.filter_by(record_id = record_id).first()
+                revised.process_id = process_id
+                revised.behalf_name = behalf_name
+                revised.behalf_position = behalf_position
+                revised.dates = date
+                revised.coment = comment
+                revised.distribution_cost_center = distribution
+                db.session.commit()
+
+                
             elif nextTarget == "sent_email":
                 comment = request_data.get('comment')
 
@@ -832,9 +801,9 @@ def submit_task():
                     }
                 }   
 
-            r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
-                "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
-            })
+                r = requests.post(os.getenv("BASE_URL_TASK") + "/" + task_id + "/submit", data = json.dumps(submit_data), headers = {
+                    "Content-Type": "application/json", "Authorization": "Bearer %s" % user_token
+                })
 
             return "Submitted", 200
         else:
