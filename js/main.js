@@ -53,7 +53,7 @@ function allTask(){
     
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/GetTask',
+        url: 'http://localhost:7700/GetTask',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token')),
             req.setRequestHeader("Content-Type", "application/json");
@@ -101,7 +101,7 @@ function submitTask(taskid,recordid,status){
     if (getCookie('requester') == 'true' || getCookie('proposedHr') == 'true'){
         $.ajax({
             method: 'PUT',
-            url: 'http://localhost:7000/submitTask',
+            url: 'http://localhost:7700/submitTask',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token')),
                 req.setRequestHeader("Content-Type", "application/json");
@@ -136,7 +136,7 @@ function submitTask(taskid,recordid,status){
     } else if (getCookie('requester') !== 'true'){ 
         $.ajax({
             method: 'POST',
-            url: 'http://localhost:7000/submitTask',
+            url: 'http://localhost:7700/submitTask',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token')),
                 req.setRequestHeader("Content-Type", "application/json");
@@ -172,7 +172,7 @@ function submitTask(taskid,recordid,status){
 function getProfile(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7000/getProfile',
+        url: 'http://localhost:7700/getProfile',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
         },
@@ -200,7 +200,7 @@ function getProfile(){
         </div>`)
         $.ajax({
             method: 'GET',
-            url: 'http://localhost:7000/employee',
+            url: 'http://localhost:7700/employee',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token'));
             },
@@ -227,7 +227,7 @@ function getEmployeeData(){
     // console.log($('#employee-selection').val())
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/current',
+        url: 'http://localhost:7700/current',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -274,7 +274,7 @@ function getEmployeeData(){
             
             $.ajax({
                 method: 'POST',
-                url: 'http://localhost:7000/proposed',
+                url: 'http://localhost:7700/proposed',
                 beforeSend: function(req) {
                     req.setRequestHeader("Content-Type", "application/json");
                 },
@@ -308,7 +308,7 @@ function getPositionData(){
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/proposeddata',
+        url: 'http://localhost:7700/proposeddata',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -375,7 +375,7 @@ function submitForm(){
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/submitRecord',
+        url: 'http://localhost:7700/submitRecord',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -403,7 +403,7 @@ function submitForm(){
 function getSAP(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7000/getSAP',
+        url: 'http://localhost:7700/getSAP',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
         },
@@ -482,7 +482,7 @@ function commentHistory(task_id,record_id){
     
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/tableSummary',
+        url: 'http://localhost:7700/tableSummary',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -832,7 +832,7 @@ function commentHistory(task_id,record_id){
 function getOneRecordId(){
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/',
+        url: 'http://localhost:7700/',
         beforeSend: function(req) {
             req.setRequestHeader("Content-Type", "application/json");
             req.setRequestHeader('Authorization', getcookie('token'));
@@ -852,7 +852,7 @@ function getOneRecordId(){
 function getTableSummary(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7000/',
+        url: 'http://localhost:7700/',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getcookie('token'));
         },

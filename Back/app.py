@@ -15,7 +15,7 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:bismillah@localhost:5432/DBHrd'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)

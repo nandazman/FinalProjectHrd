@@ -1,7 +1,7 @@
 function logIn(){
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/login',
+        url: 'http://localhost:7700/login',
         beforeSend: function(req) {
             req.setRequestHeader("Content-Type", "application/json");
         },
