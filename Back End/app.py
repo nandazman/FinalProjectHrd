@@ -9,13 +9,9 @@ import jwt
 import requests
 from sqlalchemy import and_
 
-
-
-
-
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHR'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -35,7 +31,6 @@ class Position(db.Model):
     employee_group = db.Column(db.String())
     employee_sub_group = db.Column(db.String())
     departemen_id = db.Column(db.Integer, db.ForeignKey("departemen.id"))
-
 
 class Departemen(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -99,8 +94,7 @@ def login():
     else:
         return 'Method Not Allowed', 405
 
-
-@app.route('/getProfile', methods = ["GET"])
+@app.route('/user-profile', methods = ["GET"])
 def profile():
     if request.method == 'GET':
         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
@@ -120,7 +114,7 @@ def profile():
     else:
         return "Method not allowed", 405
 
-@app.route('/employee', methods = ["GET"])
+@app.route('/employee-list', methods = ["GET"])
 def employee():
     if request.method == 'GET':
         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
@@ -146,7 +140,7 @@ def employee():
         # print(data)
         return data, 200
 
-@app.route('/current', methods = ['POST'])
+@app.route('/current-employee-data', methods = ['POST'])
 def current_data():
     if request.method == 'POST':
 
@@ -175,7 +169,7 @@ def current_data():
         
         return data, 200
 
-@app.route('/proposed', methods = ['POST'])
+@app.route('/proposed-position-list', methods = ['POST'])
 def proposed_position():
     if request.method == 'POST':
     
@@ -197,8 +191,7 @@ def proposed_position():
 
         return data, 200
 
-
-@app.route('/proposeddata', methods = ['POST'])
+@app.route('/proposed-position-data', methods = ['POST'])
 def proposed_data():
     if request.method == 'POST':
 
@@ -233,8 +226,7 @@ def proposed_data():
         
         return data, 200
 
-
-@app.route('/tableSummary', methods = ["POST"])
+@app.route('/comment-history', methods = ["POST"])
 def get_Summary():
     if request.method == 'POST':
         
@@ -243,14 +235,12 @@ def get_Summary():
         record_id = request_data['recordid']
         summary_data = Summary.query.filter_by(record_id = record_id).first()
         
-        
         # GET requester data
         requester_data = AccessUser.query.join(Position).add_columns(AccessUser.nama, AccessUser.npk, Position.position).filter(AccessUser.id == summary_data.requester_id).first()
         # GET receiver data
         receiver_data = AccessUser.query.filter_by(id = summary_data.receiver_id).first()
         # GET employee data
         employee_data = Employee.query.join(Position).add_columns(Employee.nama, Employee.npk, Position.position_code, Position.position, Position.company, Position.cost_center, Position.cost_center_code, Position.personal_area, Position.employee_group, Position.employee_sub_group).filter(Employee.id == summary_data.employee_id).first()
-        # print(employee_data)
         # GET target position
         proposed_position = Position.query.filter_by(id = summary_data.position_id).first()
         # Summary data for form
@@ -331,7 +321,7 @@ def get_Summary():
         summarize = json.dumps(summarize)
         return summarize , 200
 
-@app.route('/getSAP', methods = ["GET"])
+@app.route('/SAP-list', methods = ["GET"])
 def get_SAP():
     if request.method == 'GET':
         flow_before = {
@@ -397,34 +387,11 @@ def get_SAP():
 
         return SAP, 200
         
-# @app.route('/getProfile', methods = ["GET"])
-# def profile():
-#     if request.method == 'GET':
-#         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
-
-#         user = AccessUser.query.filter_by(email=decoded['email']).first()
-#         position = Position.query.filter_by(id=user.position_id).first()
-#         user_nama = {
-#             "nama": user.nama,
-#             "npk": user.npk,
-#             "role": position.position
-#         }
-#         user = json.dumps(user_nama)
-
-#         return user
-
-# @app.route('/employee', methods = ["GET"])
-# def employee():
-#     if request.method == 'GET':
-#         decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
-
-
-
 #########################################################
 ####################### Nextflow ########################
 #########################################################
 
-@app.route('/submitRecord', methods = ['GET', 'POST'])
+@app.route('/submit-record', methods = ['GET', 'POST'])
 ##### inisasi nextflow atau create record #####
 def create_record():
     decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
@@ -507,9 +474,6 @@ def submit_record(record_id, user_token,request):
     submit_to_database(record_id, "null",request)
     return "submitted", 200
 
-
-    
-
 # fungsi untuk gerakin flow dari requester ke manager
 # submit tar gerak flownya dari start ke proses selanjutnya
 def submit_to_HRD(req_comment, user_token):
@@ -577,7 +541,6 @@ def waitingRespone(user_token,url,task_id):
     return waitingRespone(user_token,url,task_id)
 
 # insert to db
-
 def submit_to_database(record_id, process_id,request_data):
 
     req_employee_data = request_data.get('employee')
@@ -620,7 +583,7 @@ def submit_to_database(record_id, process_id,request_data):
     else:
         return None
 
-@app.route('/GetTask', methods = ['GET', 'POST'])
+@app.route('/task-list', methods = ['GET', 'POST'])
 #### Get access user task ####
 def get_task():
     decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
@@ -648,7 +611,7 @@ def get_task():
         
         return json.dumps(result)
 
-@app.route('/submitTask', methods = ['GET', 'POST','PUT'])
+@app.route('/submit-task', methods = ['GET', 'POST','PUT'])
 ### Submit task by User ###
 def submit_task():
     currentToTarget = {

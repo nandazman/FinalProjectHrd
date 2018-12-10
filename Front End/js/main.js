@@ -1,12 +1,9 @@
 /*
     Nanda
 
-
     Fadhiel
     
-
     Syifa
-
 
 */
 function getCookie(cname) {
@@ -25,13 +22,12 @@ function getCookie(cname) {
     return "";
 }
 
-
 function deleteCookie(){
-    document.cookie = ' requester=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
-    document.cookie = ' token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
-    document.cookie = ' hr=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
-    document.cookie = ' `proposedHr=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
-    window.location = 'login.html'
+    document.cookie = ' requester=; expires=""; '
+    document.cookie = ' token=; expires=""; '
+    document.cookie = ' hr=; expires=""; '
+    document.cookie = ' proposedHr=; expires=""; '
+    window.location = ' login.html '
 }
 
 function security(){
@@ -48,12 +44,11 @@ function security(){
 
 /******* INTERACTION WITH BACK END ******/
 
-
 function allTask(){
     
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/GetTask',
+        url: 'http://localhost:7000/task-list',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token')),
             req.setRequestHeader("Content-Type", "application/json");
@@ -70,6 +65,7 @@ function allTask(){
                     </div>`)
             } else {
                 $('#alltaskuser').empty()
+                requester = requester.reverse()
                 requester.forEach(task => {
                     
                     $('#alltaskuser').append(`
@@ -102,7 +98,7 @@ function submitTask(taskid,recordid,status){
     if (getCookie('requester') == 'true' || getCookie('proposedHr') == 'true'){
         $.ajax({
             method: 'PUT',
-            url: 'http://localhost:7000/submitTask',
+            url: 'http://localhost:7000/submit-task',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token')),
                 req.setRequestHeader("Content-Type", "application/json");
@@ -138,7 +134,7 @@ function submitTask(taskid,recordid,status){
     } else if (getCookie('requester') !== 'true'){ 
         $.ajax({
             method: 'POST',
-            url: 'http://localhost:7000/submitTask',
+            url: 'http://localhost:7000/submit-task',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token')),
                 req.setRequestHeader("Content-Type", "application/json");
@@ -175,7 +171,7 @@ function submitTask(taskid,recordid,status){
 function getProfile(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7000/getProfile',
+        url: 'http://localhost:7000/user-profile',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
         },
@@ -210,7 +206,7 @@ function getProfile(){
 
         $.ajax({
             method: 'GET',
-            url: 'http://localhost:7000/employee',
+            url: 'http://localhost:7000/employee-list',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token'));
             },
@@ -237,7 +233,7 @@ function getEmployeeData(){
     // console.log($('#employee-selection').val())
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/current',
+        url: 'http://localhost:7000/current-employee-data',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -284,7 +280,7 @@ function getEmployeeData(){
             
             $.ajax({
                 method: 'POST',
-                url: 'http://localhost:7000/proposed',
+                url: 'http://localhost:7000/proposed-position-list',
                 beforeSend: function(req) {
                     req.setRequestHeader("Content-Type", "application/json");
                 },
@@ -318,7 +314,7 @@ function getPositionData(){
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/proposeddata',
+        url: 'http://localhost:7000/proposed-position-data',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -387,7 +383,7 @@ function submitForm(){
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/submitRecord',
+        url: 'http://localhost:7000/submit-record',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -415,7 +411,7 @@ function submitForm(){
 function getSAP(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7000/getSAP',
+        url: 'http://localhost:7000/SAP-list',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
         },
@@ -484,7 +480,6 @@ function getSAP(){
 
 function commentHistory(task_id,record_id){
     
-
     document.getElementById('modal-form').style.display = "block";
     $('#confirmation').append(`<button onclick="submitTask('${task_id}','${record_id}','Approved')" id="approve">Approved</button>`)
     if (getCookie('hr') != 'true' && getCookie('requester') != 'true'){
@@ -493,7 +488,7 @@ function commentHistory(task_id,record_id){
     
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/tableSummary',
+        url: 'http://localhost:7000/comment-history',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -861,51 +856,14 @@ function commentHistory(task_id,record_id){
     })
 }
 
-function getOneRecordId(){
-    $.ajax({
-        method: 'POST',
-        url: 'http://localhost:7000/',
-        beforeSend: function(req) {
-            req.setRequestHeader("Content-Type", "application/json");
-            req.setRequestHeader('Authorization', getcookie('token'));
-        },
-        data: JSON.stringify({
-            "record_id": document.getElementById('record_id').value
-        }),
-        success: function(res){
-            console.log(res)
-        },
-        error: function(err){
-            console.log(err)
-        }
-    })
-}
-
-function getTableSummary(){
-    $.ajax({
-        method: 'GET',
-        url: 'http://localhost:7000/',
-        beforeSend: function(req) {
-            req.setRequestHeader('Authorization', getcookie('token'));
-        },
-        success: function(res){
-            console.log(res)
-        },
-        error: function(err){
-            console.log(err)
-        }
-    })
-}
-
-
 /****** FOR INTERACRTION IN FRON END ******/
+
 if (getCookie('requester') !== 'true'){
     $("#request-tab").hide()
     $("#commenthis").hide()
     $("#form-input").hide()
     
 }
-
 
 $(document).ready(function () {
     $("#request-tab").click(function () {
@@ -921,7 +879,6 @@ $(document).ready(function () {
         $("#regForm").slideUp();
     });
 });
-
 
 document.getElementById("close").onclick = function () {
     document.getElementById('modal-form').style.display = "none";
