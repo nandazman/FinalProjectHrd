@@ -53,7 +53,7 @@ function allTask(){
     
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7700/GetTask',
+        url: 'http://localhost:7000/GetTask',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token')),
             req.setRequestHeader("Content-Type", "application/json");
@@ -64,19 +64,20 @@ function allTask(){
             var requester = res.data
             if (requester.length == 0){
                 $('#alltaskuser').empty()
-                $('#alltaskuser').append(`<div class="taskitem")">
-                <h3>There is no task at the moment</h3>
-            </div>`)
+                $('#alltaskuser').append(`
+                    <div class="taskitem")">
+                        <h3>There is no task at the moment</h3>
+                    </div>`)
             } else {
                 $('#alltaskuser').empty()
                 requester.forEach(task => {
                     
-                    $('#alltaskuser').append(`<div class="taskitem" onclick="commentHistory('${task.id}','${task.record_id}')">
-                    <img src="man-user.png">
-                    <p>Dear ${task.assignee.name}</p>
-                    <p>${task.id}</p>
-                </div>`)
-                
+                    $('#alltaskuser').append(`
+                        <div class="taskitem" onclick="commentHistory('${task.id}','${task.record_id}')">
+                            <img src="source/man-user.png">
+                            <p>Dear ${task.assignee.name}</p>
+                            <p>${task.id}</p>
+                        </div>`)
                 })
             }
         },
@@ -101,7 +102,7 @@ function submitTask(taskid,recordid,status){
     if (getCookie('requester') == 'true' || getCookie('proposedHr') == 'true'){
         $.ajax({
             method: 'PUT',
-            url: 'http://localhost:7700/submitTask',
+            url: 'http://localhost:7000/submitTask',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token')),
                 req.setRequestHeader("Content-Type", "application/json");
@@ -124,9 +125,10 @@ function submitTask(taskid,recordid,status){
                 $('#revise').remove()
                 $('#approve').remove()
                 if ($('#alltaskuser').has('.taskitem').length == 0) {
-                    $('#alltaskuser').append(`<div class="taskitem")">
-                    <h3>There is no task at the moment</h3>
-                </div>`)
+                    $('#alltaskuser').append(`
+                    <div class="taskitem")">
+                        <h3>There is no task at the moment</h3>
+                    </div>`)
                 }
             },
             error: function(err){
@@ -136,7 +138,7 @@ function submitTask(taskid,recordid,status){
     } else if (getCookie('requester') !== 'true'){ 
         $.ajax({
             method: 'POST',
-            url: 'http://localhost:7700/submitTask',
+            url: 'http://localhost:7000/submitTask',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token')),
                 req.setRequestHeader("Content-Type", "application/json");
@@ -155,9 +157,10 @@ function submitTask(taskid,recordid,status){
                 $('#revise').remove()
                 $('#approve').remove()
                 if ($('#alltaskuser').has('.taskitem').length == 0) {
-                    $('#alltaskuser').append(`<div class="taskitem")">
-                    <h3>There is no task at the moment</h3>
-                </div>`)
+                    $('#alltaskuser').append(`
+                        <div class="taskitem")">
+                            <h3>There is no task at the moment</h3>
+                        </div>`)
                 }
             },
             error: function(err){
@@ -172,35 +175,42 @@ function submitTask(taskid,recordid,status){
 function getProfile(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7700/getProfile',
+        url: 'http://localhost:7000/getProfile',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
         },
         success: function(res){
             
             data = JSON.parse(res)
-            $('#user').append(`<div class="greeting">Hello, ${data.nama}!<div class="dropdown"> 
-            <img src="css/down.png">
-            <div class="dropdown-content">
-            <span onclick="deleteCookie()">Sign Out</span>
-            </div>
-            </div>
-            </div>`)
-            $('#new-information').prepend(`<div class="listForm">
-            <p>REQUESTER NAME</p>
-            <p id="requester-nama">${data.nama}</p>
-        </div>
-        <div class="listForm">
-            <p>REQUESTER NPK</p>
-            <p>${data.npk}</p>
-        </div>
-        <div class="listForm">
-            <p>REQUESTER POSITION</p>
-            <p>${data.role}</p>
-        </div>`)
+            $('#user').append(`
+                <div class="greeting">
+                    Hello, ${data.nama}!
+                    <div class="dropdown"> 
+                        <img src="source/down.png">
+                        <div class="dropdown-content">
+                            <span onclick="deleteCookie()">Sign Out</span>
+                        </div>
+                    </div>
+                </div>
+            `)
+            $('#new-information').prepend(`
+                <div class="listForm">
+                    <p>REQUESTER NAME</p>
+                    <p id="requester-nama">${data.nama}</p>
+                </div>
+                <div class="listForm">
+                    <p>REQUESTER NPK</p>
+                    <p>${data.npk}</p>
+                </div>
+                <div class="listForm">
+                    <p>REQUESTER POSITION</p>
+                    <p>${data.role}</p>
+                </div>
+            `)
+
         $.ajax({
             method: 'GET',
-            url: 'http://localhost:7700/employee',
+            url: 'http://localhost:7000/employee',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', getCookie('token'));
             },
@@ -227,7 +237,7 @@ function getEmployeeData(){
     // console.log($('#employee-selection').val())
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7700/current',
+        url: 'http://localhost:7000/current',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -274,7 +284,7 @@ function getEmployeeData(){
             
             $.ajax({
                 method: 'POST',
-                url: 'http://localhost:7700/proposed',
+                url: 'http://localhost:7000/proposed',
                 beforeSend: function(req) {
                     req.setRequestHeader("Content-Type", "application/json");
                 },
@@ -308,7 +318,7 @@ function getPositionData(){
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7700/proposeddata',
+        url: 'http://localhost:7000/proposeddata',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -320,47 +330,49 @@ function getPositionData(){
             
             data = JSON.parse(res)
             $('#position-data').empty()
-            $('#position-data').append(`<div class="listForm">
-            <p>COST CENTER</p>
-            <div>
-                <input type="text" class="doubleinput1" value="${data.cost_center_code}"/><br>
-                <input type="text" class="doubleinput2" value="${data.cost_center}"/>
-            </div>
-        </div>
-        <div class="listForm">
-            <p>DISTRIBUTION COST CENTER</p>
-            <div>
-                <input type="text" id="distribution-cost" class="database-input" /><br>
-            </div>
-        </div>
-        <div class="listForm">
-            <p>COMPANY</p>
-            <input type="text" value="${data.company}"/>
-        </div>
-        <div class="listForm">
-            <p>PERSONNEL AREA</p>
-            <input type="text" value="${data.personal_area}"/>
-        </div>
-        <div class="listForm">
-            <p>PERSONNEL SUB AREA</p>
-            <input type="text" value="${data.personal_sub_area}"/>
-        </div>
-        <div class="listForm">
-            <p>EMPLOYEE TYPE</p>
-            <input type="text" value="${data.employee_type}"/>
-        </div>
-        <div class="listForm">
-            <p>RECEIVER <small id="help">(Position Minimum L4)</small></p>
-            <input type="text" id="receiver" value="${data.receiver}"/>
-        </div>
-        <div class="listForm">
-            <p>EFFECTIVE DATE START</p>
-            <input type="date" id="date-start" name="trip-start" value="yyyy-mm-dd" min="2018-01-01" max="2018-12-31">
-        </div>
-        <div class="listForm">
-            <p>COMMENT</p>
-            <input id="comment-requester" type="text" />
-        </div>`)
+            $('#position-data').append(`
+                <div class="listForm">
+                    <p>COST CENTER</p>
+                    <div>
+                        <input type="text" class="doubleinput1" value="${data.cost_center_code}"/><br>
+                        <input type="text" class="doubleinput2" value="${data.cost_center}"/>
+                    </div>
+                </div>
+                <div class="listForm">
+                    <p>DISTRIBUTION COST CENTER</p>
+                    <div>
+                        <input type="text" id="distribution-cost" class="database-input" /><br>
+                    </div>
+                </div>
+                <div class="listForm">
+                    <p>COMPANY</p>
+                    <input type="text" value="${data.company}"/>
+                </div>
+                <div class="listForm">
+                    <p>PERSONNEL AREA</p>
+                    <input type="text" value="${data.personal_area}"/>
+                </div>
+                <div class="listForm">
+                    <p>PERSONNEL SUB AREA</p>
+                    <input type="text" value="${data.personal_sub_area}"/>
+                </div>
+                <div class="listForm">
+                    <p>EMPLOYEE TYPE</p>
+                    <input type="text" value="${data.employee_type}"/>
+                </div>
+                <div class="listForm">
+                    <p>RECEIVER <small id="help">(Position Minimum L4)</small></p>
+                    <input type="text" id="receiver" value="${data.receiver}"/>
+                </div>
+                <div class="listForm">
+                    <p>EFFECTIVE DATE START</p>
+                    <input type="date" id="date-start" name="trip-start" value="yyyy-mm-dd" min="2018-01-01" max="2018-12-31">
+                </div>
+                <div class="listForm">
+                    <p>COMMENT</p>
+                    <input id="comment-requester" type="text" />
+                </div>
+            `)
           
         },
         error: function(err){
@@ -375,7 +387,7 @@ function submitForm(){
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7700/submitRecord',
+        url: 'http://localhost:7000/submitRecord',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -403,7 +415,7 @@ function submitForm(){
 function getSAP(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7700/getSAP',
+        url: 'http://localhost:7000/getSAP',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
         },
@@ -414,14 +426,16 @@ function getSAP(){
                 var data = content.last_submitted
                 
                 
-                $('#comments').append(`<div class="comment" id="commentator">
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
-            </div>`)
+                $('#comments').append(`
+                    <div class="comment" id="commentator">
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                    </div>
+                `)
                 
                 $('.comment')[i].children[0].innerHTML = content.record_id.split("-")[2]
                 if (data == "Requester"){
@@ -431,7 +445,7 @@ function getSAP(){
                 
                     // $('.comment')[0].children[1]
                     for(var j = 1; j <= data.length; j++){
-                        $('.comment')[i].children[j].innerHTML = '<img src="checked.png">'
+                        $('.comment')[i].children[j].innerHTML = '<img src="source/checked.png">'
                     }
                 } else if (data == "HR Company"){
                     
@@ -442,7 +456,7 @@ function getSAP(){
                         
                         if($('#histories').children()[k].innerHTML == data){
                             
-                            $('.comment')[i].children[j+1].innerHTML = '<img src="checked.png">'
+                            $('.comment')[i].children[j+1].innerHTML = '<img src="source/checked.png">'
                         }
                         
                         j++;
@@ -454,16 +468,13 @@ function getSAP(){
                     
                     while( $('#histories').children()[k-1].innerHTML != data){
                         k++;
-                        
-                        $('.comment')[i].children[j].innerHTML = '<img src="checked.png">'
+                    
+                        $('.comment')[i].children[j].innerHTML = '<img src="source/checked.png">'
                         j++;
-                    }
-                    
-                    
+                    }   
                 }
                 i++;
             })
-
         },
         error: function(err){
             console.log(err)
@@ -482,7 +493,7 @@ function commentHistory(task_id,record_id){
     
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7700/tableSummary',
+        url: 'http://localhost:7000/tableSummary',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -497,165 +508,185 @@ function commentHistory(task_id,record_id){
             data_from_db = (JSON.parse(res)).comment_history_from_db
             console.log(data_from_db)
             $('#modal-requester').empty()
-            $("#modal-requester").append(`<div class="modal-listForm">
-            <p>REQUESTER NAME</p>
-            <p class="ans">${formData.requester.name}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>REQUESTER NPK</p>
-            <p class="ans">${formData.requester.npk}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>REQUESTER POSITION</p>
-            <p class="ans">${formData.requester.position}</p>
-        </div>`)
+            $("#modal-requester").append(`
+                <div class="modal-listForm">
+                    <p>REQUESTER NAME</p>
+                    <p class="ans">${formData.requester.name}</p>
+                </div>
+                <div class="modal-listForm">
+                    <p>REQUESTER NPK</p>
+                    <p class="ans">${formData.requester.npk}</p>
+                </div>
+                <div class="modal-listForm">
+                    <p>REQUESTER POSITION</p>
+                    <p class="ans">${formData.requester.position}</p>
+                </div>
+            `)
         if (getCookie('requester') == 'true'){
-            $("#modal-requester").append(`<div class="modal-listForm">
-            <p>ON BEHALF NAME</p>
-            <input type="text" class="ans" value="${formData.behalf.behalf_name}" id="behalf-name-revised">
-        </div>
-        <div class="modal-listForm">
-            <p>ON BEHALF POSITION</p>
-            <input type="text" class="ans" value="${formData.behalf.behalf_position}" id="behalf-position-revised">
-        </div>`)
+            $("#modal-requester").append(`
+                <div class="modal-listForm">
+                    <p>ON BEHALF NAME</p>
+                    <input type="text" class="ans" value="${formData.behalf.behalf_name}" id="behalf-name-revised">
+                </div>
+                <div class="modal-listForm">
+                    <p>ON BEHALF POSITION</p>
+                    <input type="text" class="ans" value="${formData.behalf.behalf_position}" id="behalf-position-revised">
+                </div>
+            `)
         } else if(getCookie('requester') !== 'true'){
-            $("#modal-requester").append(`<div class="modal-listForm">
-            <p>ON BEHALF NAME</p>
-            <p class="ans">${formData.behalf.behalf_name}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>ON BEHALF POSITION</p>
-            <p class="ans">${formData.behalf.behalf_position}</p>
-        </div>`)
+            $("#modal-requester").append(`
+                <div class="modal-listForm">
+                    <p>ON BEHALF NAME</p>
+                    <p class="ans">${formData.behalf.behalf_name}</p>
+                </div>
+                <div class="modal-listForm">
+                    <p>ON BEHALF POSITION</p>
+                    <p class="ans">${formData.behalf.behalf_position}</p>
+                </div>
+            `)
         }
         
-        $("#modal-requester").append(`<div class="modal-listForm">
-            <p>EMPLOYEE</p>
-            <div>
-                <p class="ans inans">${formData.employee.employee_name}</p>
-                <p class="ans">${formData.employee.employee_npk}</p>
+        $("#modal-requester").append(`
+            <div class="modal-listForm">
+                <p>EMPLOYEE</p>
+                <div>
+                    <p class="ans inans">${formData.employee.employee_name}</p>
+                    <p class="ans">${formData.employee.employee_npk}</p>
+                </div>
             </div>
-        </div>
-        <div class="modal-listForm">
-            <p>RECORD ID</p>
-            <p class="ans">${formData.record_id}</p>
-        </div>`)
+            <div class="modal-listForm">
+                <p>RECORD ID</p>
+                <p class="ans">${formData.record_id}</p>
+            </div>
+        `)
 
         $('#modal-current').empty()
-        $('#modal-current').append(`<div class="modal-listForm">
-        <p>POSITION CODE</p>
-        <p class="ans">${formData.current.position_code}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>POSITION</p>
-            <p class="ans">${formData.current.position}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>COMPANY</p>
-            <p class="ans">${formData.current.company}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>COST CENTER</p>
-            <div>
-                <p class="ans inans">${formData.current.cost_center_code}</p>
-                <p class="ans">${formData.current.cost_center}</p>
+        $('#modal-current').append(`
+            <div class="modal-listForm">
+                <p>POSITION CODE</p>
+                <p class="ans">${formData.current.position_code}</p>
             </div>
-        </div>
-        <div class="modal-listForm">
-            <p>PERSONAL AREA</p>
-            <p class="ans">${formData.current.personal_area}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>EMPLOYEE GROUP</p>
-            <p class="ans">${formData.current.employee_group}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>EMPLOYEE SUBGROUP</p>
-            <p class="ans">${formData.current.employee_sub_group}</p>
-        </div>`)
+            <div class="modal-listForm">
+                <p>POSITION</p>
+                <p class="ans">${formData.current.position}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>COMPANY</p>
+                <p class="ans">${formData.current.company}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>COST CENTER</p>
+                <div>
+                    <p class="ans inans">${formData.current.cost_center_code}</p>
+                    <p class="ans">${formData.current.cost_center}</p>
+                </div>
+            </div>
+            <div class="modal-listForm">
+                <p>PERSONAL AREA</p>
+                <p class="ans">${formData.current.personal_area}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>EMPLOYEE GROUP</p>
+                <p class="ans">${formData.current.employee_group}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>EMPLOYEE SUBGROUP</p>
+                <p class="ans">${formData.current.employee_sub_group}</p>
+            </div>
+        `)
 
         $('#modal-proposed').empty()
-        $('#modal-proposed').append(`<div class="modal-listForm">
-        <p>POSITION CODE</p>
-        <p class="ans">${formData.proposed.position_code}</p>
-        </div>
-        <div class="modal-listForm">
-        <p>POSITION</p>
-        <p class="ans">${formData.proposed.position}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>COST CENTER</p>
-            <div>
-                <p class="ans inans">${formData.proposed.cost_center_code}</p>
-                <p class="ans">${formData.proposed.cost_center}</p>
+        $('#modal-proposed').append(`
+            <div class="modal-listForm">
+                <p>POSITION CODE</p>
+                <p class="ans">${formData.proposed.position_code}</p>
             </div>
-        </div>`)
+            <div class="modal-listForm">
+                <p>POSITION</p>
+                <p class="ans">${formData.proposed.position}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>COST CENTER</p>
+                <div>
+                    <p class="ans inans">${formData.proposed.cost_center_code}</p>
+                    <p class="ans">${formData.proposed.cost_center}</p>
+                </div>
+            </div>
+        `)
         if (getCookie('requester') == 'true'){
-            $("#modal-proposed").append(`<div class="modal-listForm">
-            <p>DISTRIBUTION COST CENTER</p>
-            <input type="text" value="${formData.proposed.distribution_cost_center}" id="distribution-cost-revised">
-        </div>`)
+            $("#modal-proposed").append(`
+                <div class="modal-listForm">
+                    <p>DISTRIBUTION COST CENTER</p>
+                    <input type="text" value="${formData.proposed.distribution_cost_center}" id="distribution-cost-revised">
+                </div>`)
         } else if(getCookie('requester') !== 'true'){
-            $("#modal-proposed").append(`<div class="modal-listForm">
-            <p>DISTRIBUTION COST CENTER</p>
-            <p class="ans">${formData.proposed.distribution_cost_center}</p>
-        </div>`)
+            $("#modal-proposed").append(`
+                <div class="modal-listForm">
+                    <p>DISTRIBUTION COST CENTER</p>
+                    <p class="ans">${formData.proposed.distribution_cost_center}</p>
+                </div>`)
         }
-        $("#modal-proposed").append(`<div class="modal-listForm">
-            <p>COMPANY</p>
-            <p class="ans">${formData.proposed.company}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>PERSONAL AREA</p>
-            <p class="ans">${formData.proposed.personal_area}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>PERSONAL SUB AREA</p> 
-            <p class="ans">${formData.proposed.personal_sub_area}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>EMPLOYEE TYPE</p>
-            <p class="ans">${formData.proposed.type}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>RECEIVER</p>
-            <p class="ans">${formData.receiver}</p>
-        </div>`)
+        $("#modal-proposed").append(`
+            <div class="modal-listForm">
+                <p>COMPANY</p>
+                <p class="ans">${formData.proposed.company}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>PERSONAL AREA</p>
+                <p class="ans">${formData.proposed.personal_area}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>PERSONAL SUB AREA</p> 
+                <p class="ans">${formData.proposed.personal_sub_area}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>EMPLOYEE TYPE</p>
+                <p class="ans">${formData.proposed.type}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>RECEIVER</p>
+                <p class="ans">${formData.receiver}</p>
+            </div>`)
         if (getCookie('requester') == 'true'){
-            $("#modal-proposed").append(`<div class="modal-listForm">
-            <p>EFFECTIVE DATE START</p>
-            <input type="date" value="${formData.date}" id="date-start-revised">
-        </div>`)
+            $("#modal-proposed").append(`
+                <div class="modal-listForm">
+                    <p>EFFECTIVE DATE START</p>
+                    <input type="date" value="${formData.date}" id="date-start-revised">
+                </div>`)
         } else if(getCookie('requester') !== 'true'){
-            $("#modal-proposed").append(`<div class="modal-listForm">
-            <p>EFFECTIVE DATE START</p>
-            <p class="ans">${formData.date}</p>
-        </div>`)
+            $("#modal-proposed").append(`
+                <div class="modal-listForm">
+                    <p>EFFECTIVE DATE START</p>
+                    <p class="ans">${formData.date}</p>
+                </div>`)
         }
-        $("#modal-proposed").append(`<div class="modal-listForm">
-            <p>COMMENT</p>
-            <p class="ans">${formData.comment}</p>
-        </div>
-        <div class="modal-listForm">
-            <p>NOTE</p>
-            <textarea rows="5" cols="30" id="comment"></textarea>
-        </div>`)
+        $("#modal-proposed").append(`
+            <div class="modal-listForm">
+                <p>COMMENT</p>
+                <p class="ans">${formData.comment}</p>
+            </div>
+            <div class="modal-listForm">
+                <p>NOTE</p>
+                <textarea rows="5" cols="30" id="comment"></textarea>
+            </div>`)
 
         
         $('#comment-hismodal').empty()
-        $('#comment-hismodal').append(`<div class="headercomment">
-        <h4>COMMENT-HISTORY</h4>
-    </div>
-    <div class="his-modal">
-        <p>Participant</p>
-        <p>Name</p>
-        <p>Position</p>
-        <p>Activity</p>
-        <p>Started</p>
-        <p>Completed</p>
-        <p>Response</p>
-        <p>Comment</p>
-    </div>`)
+        $('#comment-hismodal').append(`
+            <div class="headercomment">
+                <h4>COMMENT-HISTORY</h4>
+            </div>
+            <div class="his-modal">
+                <p>Participant</p>
+                <p>Name</p>
+                <p>Position</p>
+                <p>Activity</p>
+                <p>Started</p>
+                <p>Completed</p>
+                <p>Response</p>
+                <p>Comment</p>
+            </div>
+        `)
         var j = -1
         for(var i = 2; i <= comment_histories.data.length; i+= 2){
             console.log(comment_histories)
@@ -668,16 +699,17 @@ function commentHistory(task_id,record_id){
                 var date_started = new Date(comment_histories.data[i-1].published);
                 var date_finished = new Date(comment_histories.data[i].published)
             $('#comment-hismodal').append(`
-            <div class="comment-modal">
-                <p>XXX</p>
-                <p>${comment_histories.data[i].actor.display_name}</p>
-                <p>${data_from_db[comment_histories.data[i].actor.display_name].position}</p>
-                <p>${data_from_db[comment_histories.data[i].actor.display_name].activity}</p>
-                <p>${date_started.toLocaleString()}</p>
-                <p>${date_finished.toLocaleString()}</p>
-                <p>Approved</p>
-                <p>${comment_histories.data[i].target.content}</p>
-            </div>`)
+                <div class="comment-modal">
+                    <p>XXX</p>
+                    <p>${comment_histories.data[i].actor.display_name}</p>
+                    <p>${data_from_db[comment_histories.data[i].actor.display_name].position}</p>
+                    <p>${data_from_db[comment_histories.data[i].actor.display_name].activity}</p>
+                    <p>${date_started.toLocaleString()}</p>
+                    <p>${date_finished.toLocaleString()}</p>
+                    <p>Approved</p>
+                    <p>${comment_histories.data[i].target.content}</p>
+                </div>
+            `)
                 if (comment_histories.data[i].actor.display_name == "Rudi Sejahtera" ){
                     $('.comment-modal')[j].children[6].innerHTML = "Proposed"
                 }
@@ -734,25 +766,25 @@ function commentHistory(task_id,record_id){
 
                 $('#comment-hismodal').append([
                     `<div class="comment-modal">
-                            <p>XXX</p>
-                            <p>${comment_histories.data[i-1].object.display_name}</p>
-                            <p>${data_from_db[comment_histories.data[i-1].object.display_name].position}</p>
-                            <p>${data_from_db[comment_histories.data[i-1].object.display_name].activity}</p>
-                            <p>${date_started1.toLocaleString()}</p>
-                            <p>Waiting</p>
-                            <p>Waiting</p>
-                            <p>Waiting</p>
-                        </div>`,
-                        `<div class="comment-modal">
-                            <p>XXX</p>
-                            <p>${comment_histories.data[i].object.display_name}</p>
-                            <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
-                            <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
-                            <p>${date_started2.toLocaleString()}</p>
-                            <p>${completed_date.toLocaleString()}</p>
-                            <p>Approved</p>
-                            <p>${comment_histories.data[i+1].target.content}</p>
-                        </div>`
+                        <p>XXX</p>
+                        <p>${comment_histories.data[i-1].object.display_name}</p>
+                        <p>${data_from_db[comment_histories.data[i-1].object.display_name].position}</p>
+                        <p>${data_from_db[comment_histories.data[i-1].object.display_name].activity}</p>
+                        <p>${date_started1.toLocaleString()}</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
+                    </div>`,
+                    `<div class="comment-modal">
+                        <p>XXX</p>
+                        <p>${comment_histories.data[i].object.display_name}</p>
+                        <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
+                        <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
+                        <p>${date_started2.toLocaleString()}</p>
+                        <p>${completed_date.toLocaleString()}</p>
+                        <p>Approved</p>
+                        <p>${comment_histories.data[i+1].target.content}</p>
+                    </div>`
                     ])
                 break;
             }
@@ -769,49 +801,49 @@ function commentHistory(task_id,record_id){
                 if (first_hr == first_complete){
                     $('#comment-hismodal').append([
                         `<div class="comment-modal">
-                                <p>XXX</p>
-                                <p>${first_hr}</p>
-                                <p>${data_from_db[first_hr].position}</p>
-                                <p>${data_from_db[first_hr].activity}</p>
-                                <p>${date_started1.toLocaleString()}</p>
-                                <p>${date_finished1.toLocaleString()}</p>
-                                <p>Approved</p>
-                                <p>${comment_histories.data[i+1].target.content}</p>
-                            </div>`,
-                            `<div class="comment-modal">
-                                <p>XXX</p>
-                                <p>${second_hr}</p>
-                                <p>${data_from_db[second_hr].position}</p>
-                                <p>${data_from_db[second_hr].activity}</p>
-                                <p>${date_started2.toLocaleString()}</p>
-                                <p>${date_finished2.toLocaleString()}</p>
-                                <p>Approved</p>
-                                <p>${comment_histories.data[i+2].target.content}</p>
-                            </div>`
+                            <p>XXX</p>
+                            <p>${first_hr}</p>
+                            <p>${data_from_db[first_hr].position}</p>
+                            <p>${data_from_db[first_hr].activity}</p>
+                            <p>${date_started1.toLocaleString()}</p>
+                            <p>${date_finished1.toLocaleString()}</p>
+                            <p>Approved</p>
+                            <p>${comment_histories.data[i+1].target.content}</p>
+                        </div>`,
+                        `<div class="comment-modal">
+                            <p>XXX</p>
+                            <p>${second_hr}</p>
+                            <p>${data_from_db[second_hr].position}</p>
+                            <p>${data_from_db[second_hr].activity}</p>
+                            <p>${date_started2.toLocaleString()}</p>
+                            <p>${date_finished2.toLocaleString()}</p>
+                            <p>Approved</p>
+                            <p>${comment_histories.data[i+2].target.content}</p>
+                        </div>`
                         ])
                 } 
                 else if (first_hr == second_complete){
                     $('#comment-hismodal').append([
                         `<div class="comment-modal">
-                                <p>XXX</p>
-                                <p>${first_hr}</p>
-                                <p>${data_from_db[first_hr].position}</p>
-                                <p>${data_from_db[first_hr].activity}</p>
-                                <p>${date_started1.toLocaleString()}</p>
-                                <p>${date_finished2.toLocaleString()}</p>
-                                <p>Approved</p>
-                                <p>${comment_histories.data[i+2].target.content}</p>
-                            </div>`,
-                            `<div class="comment-modal">
-                                <p>XXX</p>
-                                <p>${second_hr}</p>
-                                <p>${data_from_db[second_hr].position}</p>
-                                <p>${data_from_db[second_hr].activity}</p>
-                                <p>${date_started2.toLocaleString()}</p>
-                                <p>${date_finished1.toLocaleString()}</p>
-                                <p>Approved</p>
-                                <p>${comment_histories.data[i+1].target.content}</p>
-                            </div>`
+                            <p>XXX</p>
+                            <p>${first_hr}</p>
+                            <p>${data_from_db[first_hr].position}</p>
+                            <p>${data_from_db[first_hr].activity}</p>
+                            <p>${date_started1.toLocaleString()}</p>
+                            <p>${date_finished2.toLocaleString()}</p>
+                            <p>Approved</p>
+                            <p>${comment_histories.data[i+2].target.content}</p>
+                        </div>`,
+                        `<div class="comment-modal">
+                            <p>XXX</p>
+                            <p>${second_hr}</p>
+                            <p>${data_from_db[second_hr].position}</p>
+                            <p>${data_from_db[second_hr].activity}</p>
+                            <p>${date_started2.toLocaleString()}</p>
+                            <p>${date_finished1.toLocaleString()}</p>
+                            <p>Approved</p>
+                            <p>${comment_histories.data[i+1].target.content}</p>
+                        </div>`
                         ])
                 }
                 i +=2;
@@ -832,7 +864,7 @@ function commentHistory(task_id,record_id){
 function getOneRecordId(){
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7700/',
+        url: 'http://localhost:7000/',
         beforeSend: function(req) {
             req.setRequestHeader("Content-Type", "application/json");
             req.setRequestHeader('Authorization', getcookie('token'));
@@ -852,7 +884,7 @@ function getOneRecordId(){
 function getTableSummary(){
     $.ajax({
         method: 'GET',
-        url: 'http://localhost:7700/',
+        url: 'http://localhost:7000/',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getcookie('token'));
         },
