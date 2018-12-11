@@ -67,8 +67,8 @@ function showAllTask(){
             if (requester.length == 0){
                 $('#alltaskuser').empty()
                 $('#alltaskuser').append(`
-                    <div class="taskitem")">
-                        <h3>There is no task at the moment</h3>
+                    <div class="taskitem">
+                        <h4>There is no task at the moment</h4>
                     </div>`)
             } else {
                 $('#alltaskuser').empty()
@@ -90,6 +90,11 @@ function showAllTask(){
     })
 }
 
+// Refresh task list
+function refreshTask(){
+    alert("Task Refreshed")
+    showAllTask()
+}
 // Submit task by current user
 function submitTask(taskid,recordid,status){
     

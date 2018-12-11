@@ -10,7 +10,7 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHR'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:test@localhost:5432/DatabaseHRD'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
@@ -189,32 +189,25 @@ def currentEmployeeData():
 @app.route('/proposed-position-list', methods = ['POST'])
 def proposedPositionList():
     if request.method == 'POST':
-        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
-        user = AccessUser.query.filter_by(email=decoded['email']).first()
+        requestData = request.get_json()
+        positionId = requestData['id']
+        positionData = Position.query.filter_by(id = positionId).first()
+        ### Get position list that doesnt have the same position and departmen id  with current user
+        ### and main company position
+        positionList = Position.query.filter(and_(Position.id != positionData.id, Position.departemen_id != positionData.departemen_id, Position.departemen_id != 1)).all()
+        positions = []
 
-        if user is not None:
-            requestData = request.get_json()
-            positionId = requestData['id']
-            positionData = Position.query.filter_by(id = positionId).first()
-            ### Get position list that doesnt have the same position and departmen id  with current user
-            ### and main company position
-            positionList = Position.query.filter(and_(Position.id != positionData.id, Position.departemen_id != positionData.departemen_id, Position.departemen_id != 1)).all()
-            positions = []
+        for data in positionList:
+            position = {
+                'id': data.id,
+                'position_code': data.position_code,
+                'position': data.position
+            }
+            positions.append(position)
 
-            for data in positionList:
-                position = {
-                    'id': data.id,
-                    'position_code': data.position_code,
-                    'position': data.position
-                }
-                positions.append(position)
+        data = json.dumps(positions)
 
-            data = json.dumps(positions)
-
-            return data, 200
-        
-        else:
-            return "You have to logged in", 400
+        return data, 200
     else:
         return "Method not allowed", 405
 
@@ -428,7 +421,7 @@ def createRecord():
 
         user = AccessUser.query.filter_by(email = decoded['email']).first()
 
-        if userDB is not None:
+        if user is not None:
             userToken = user.token
             ### template for create recrod ###
             recordInstance = {
@@ -633,8 +626,11 @@ def submitTask():
             return "Bad request", 400
 
     elif request.method == "PUT":
-
-        if userDB is not None:
+        decoded = jwt.decode(request.headers["Authorization"], 'tralala', algorithms=['HS256'])
+        user = AccessUser.query.filter_by(email = decoded['email']).first()
+        userToken = user.token
+        
+        if user is not None:
             requestData = request.get_json()
             taskId = requestData.get('taskid')
             recordId = requestData.get('recordid')
