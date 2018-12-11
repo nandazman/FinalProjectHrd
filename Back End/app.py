@@ -224,10 +224,10 @@ def proposedPositionData():
             positionData = Position.query.filter_by(id = positionId).first()
             
             ### Get receiver data in proposed department ###
-            receiver = AccessUser.query.join(Position).add_columns(Position.departemen_id).filter(Position.departemen_id == positionData.departemen_id).first()
-            receiverEmail = receiver[0].email
-            receiverId = receiver[0].id
-
+            receiver = AccessUser.query.join(Position).filter(Position.departemen_id == positionData.departemen_id).first()
+            receiverEmail = receiver.email
+            receiverId = receiver.id
+            print(receiver)
             employee = {
                 'id': positionData.id,
                 'position_code': positionData.position_code,
@@ -273,39 +273,39 @@ def requestSummaryDataAndCommentHistory():
             # Summary data and comment history
             summary = {
                 'requester': {
-                'name': requesterData[1],
-                'npk': requesterData[2],
-                'position': requesterData[3]
+                    'name': requesterData[1],
+                    'npk': requesterData[2],
+                    'position': requesterData[3]
                 },
                 'behalf': {
-                'behalf_name': summaryData.behalf_name,
-                'behalf_position': summaryData.behalf_position
+                    'behalf_name': summaryData.behalf_name,
+                    'behalf_position': summaryData.behalf_position
                 },
                 'employee': {
-                'employee_name': employeeData[1],
-                'employee_npk': employeeData[2]
+                    'employee_name': employeeData[1],
+                    'employee_npk': employeeData[2]
                 },
                 'record_id': summaryData.record_id,
                 'current': {
-                'position_code': employeeData[3],
-                'position': employeeData[4],
-                'company': employeeData[5],
-                'cost_center_code': employeeData[7],
-                'cost_center': employeeData[6],
-                'personal_area': employeeData[8],
-                'employee_group': employeeData[9],
-                'employee_sub_group': employeeData[10]
+                    'position_code': employeeData[3],
+                    'position': employeeData[4],
+                    'company': employeeData[5],
+                    'cost_center_code': employeeData[7],
+                    'cost_center': employeeData[6],
+                    'personal_area': employeeData[8],
+                    'employee_group': employeeData[9],
+                    'employee_sub_group': employeeData[10]
                 },
                 'proposed': {
-                'position_code': proposedPosition.position_code,
-                'position': proposedPosition.position,
-                'distribution_cost_center': summaryData.distribution_cost_center,
-                'company': proposedPosition.company,
-                'cost_center_code': proposedPosition.cost_center_code,
-                'cost_center': proposedPosition.cost_center,
-                'personal_area': proposedPosition.personal_area,
-                'personal_sub_area': proposedPosition.personal_sub_area,
-                'type': proposedPosition.employee_type
+                    'position_code': proposedPosition.position_code,
+                    'position': proposedPosition.position,
+                    'distribution_cost_center': summaryData.distribution_cost_center,
+                    'company': proposedPosition.company,
+                    'cost_center_code': proposedPosition.cost_center_code,
+                    'cost_center': proposedPosition.cost_center,
+                    'personal_area': proposedPosition.personal_area,
+                    'personal_sub_area': proposedPosition.personal_sub_area,
+                    'type': proposedPosition.employee_type
                 },
                 'receiver': receiverData.nama,
                 'date': summaryData.dates,
@@ -328,8 +328,8 @@ def requestSummaryDataAndCommentHistory():
 
             ### GET comment history from nextflow ###
             r = requests.get(os.getenv("BASE_URL_RECORD") + "/" + requestData['recordid'] + "/stageview", headers = {
-                        "Content-Type": "application/json", "Authorization": "Bearer %s" % userToken
-                    })
+                    "Content-Type": "application/json", "Authorization": "Bearer %s" % userToken
+                })
 
             result = json.loads(r.text)
             
@@ -692,9 +692,10 @@ def submitTask():
                 
             elif nextTarget == "sent_email":
                 comment = requestData.get('comment')
+                ### change the position after all user approve ###
                 proposedPosition = Summary.query.filter_by(record_id = recordId).first()
-                currentPosition = Employee.query.filter_by(id = proposedPosition.employeeId).first()
-                currentPosition.position_id = proposedPosition.positionId
+                currentPosition = Employee.query.filter_by(id = proposedPosition.employee_id).first()
+                currentPosition.position_id = proposedPosition.position_id
                 db.session.commit()
                 
                 submitData = {

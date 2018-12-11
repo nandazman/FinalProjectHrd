@@ -1,12 +1,3 @@
-/*
-    Nanda
-
-    Fadhiel
-    
-    Syifa
-
-*/
-
 // Get selected cookie data
 function getCookie(cname) {
     var name = cname + "=";
@@ -131,7 +122,7 @@ function submitTask(taskid,recordid,status){
                 if ($('#alltaskuser').has('.taskitem').length == 0) {
                     $('#alltaskuser').append(`
                     <div class="taskitem")">
-                        <h3>There is no task at the moment</h3>
+                        <h4>There is no task at the moment</h4>
                     </div>`)
                 }
             },
@@ -163,7 +154,7 @@ function submitTask(taskid,recordid,status){
                 if ($('#alltaskuser').has('.taskitem').length == 0) {
                     $('#alltaskuser').append(`
                         <div class="taskitem")">
-                            <h3>There is no task at the moment</h3>
+                            <h4>There is no task at the moment</h4>
                         </div>`)
                 }
             },
