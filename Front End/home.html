@@ -7,7 +7,7 @@
     <title>FORTNITE CORPS | Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Heebo|Catamaran|Noto+Sans+SC|Abel|Acme|Rajdhani" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" media="screen" href="css/requester.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/home.css" />
     <link rel="icon" type="image/png" href="source/4.png">
    
 
@@ -21,11 +21,11 @@
         <header>
             <div class="tittle" id="request-tab">
                 <img src="source/contract.png">
-                <h4 id="new-req">NEW</h4>
+                <h4 id="new-req">NEW REQUEST</h4>
             </div>
             <div class="tittle" id="commenthis">
                 <img src="source/checklist.png">
-                <h4 id="comment">SAP</h4>
+                <h4 id="comment">SHOW SAP</h4>
             </div>
         </header>
         <!--form -->
@@ -49,7 +49,7 @@
                         <div class="listForm">
                             <p>EMPLOYEE</p>
                             <div>
-                                <select class="doublelist1" id="employee-selection" onchange="getEmployeeData()">
+                                <select class="doublelist1" id="employee-selection" onchange="showSelectedEmployeeData()">
                                     <option disabled selected>--Employee List--</option>
                                 </select>
 
@@ -70,7 +70,7 @@
                     <div id="proposed">
                         <div class="listForm">
                             <p>POSITION CODE</p>
-                            <select class="down-list" id="position-list" onchange="getPositionData()">
+                            <select class="down-list" id="position-list" onchange="showSelectedProposedPositionData()">
                                 <option disabled selected>--Position--</option>
                             </select>
                         </div>
@@ -196,7 +196,11 @@
         <!--tasklist-->
         <div class="task">
             <div class="tasklist-header">
-                <h3>TASK LIST</h3><img id="reload" src="source/refresh.png" onclick="allTask()">                  
+                <h3>TASK LIST</h3>
+                <div class="tooltip"> 
+                    <img id="reload" src="source/refresh.png" onclick="showAllTask()">    
+                    <span class="tooltiptext">Refresh List</span>              
+                </div>
             </div>
             <div id="alltaskuser">
                 
@@ -314,9 +318,12 @@
 
     <script>
         getProfile()
-        allTask()
+        showAllTask()
         security()
-        getSAP()
+        if (getCookie('requester') == 'true'){
+            showSAP()
+        }
+        
     </script>
 </body>
 

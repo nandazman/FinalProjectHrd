@@ -29,7 +29,7 @@ function logIn(){
             document.cookie = `requester=${isRequest}`;
             document.cookie = `hr=${isHr}`;
             document.cookie = `proposedHr=${isProposed}`
-            window.location = "/requester.html";
+            window.location = "/home.html";
         },
         error: function(err){
             console.log(err)

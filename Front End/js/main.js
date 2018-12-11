@@ -6,6 +6,8 @@
     Syifa
 
 */
+
+// Get selected cookie data
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -22,21 +24,25 @@ function getCookie(cname) {
     return "";
 }
 
+// Delete cookie when log out
 function deleteCookie(){
-    document.cookie = ' requester=; expires=""; '
-    document.cookie = ' token=; expires=""; '
-    document.cookie = ' hr=; expires=""; '
-    document.cookie = ' proposedHr=; expires=""; '
-    window.location = ' login.html '
+    document.cookie = ' requester=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
+    document.cookie = ' token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
+    document.cookie = ' hr=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
+    document.cookie = ' proposedHr=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
+    window.location = ' index.html '
 }
 
 function security(){
     var username = getCookie('token');
     if (username != ""){
-
+        return
     }else {
         alert('Please Login')
-        document.cookie = 'requester=${isRequest}; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+        document.cookie = ' requester=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
+        document.cookie = ' token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
+        document.cookie = ' hr=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
+        document.cookie = ' proposedHr=; expires=Thu, 01 Jan 1970 00:00:00 UTC; '
         window.location = 'login.html'
     }
 }
@@ -44,7 +50,8 @@ function security(){
 
 /******* INTERACTION WITH BACK END ******/
 
-function allTask(){
+// Show all task for current user
+function showAllTask(){
     
     $.ajax({
         method: 'POST',
@@ -55,7 +62,7 @@ function allTask(){
         },
         dataType: 'json',
         success: function(res){
-            
+            console.log(res)
             var requester = res.data
             if (requester.length == 0){
                 $('#alltaskuser').empty()
@@ -69,7 +76,7 @@ function allTask(){
                 requester.forEach(task => {
                     
                     $('#alltaskuser').append(`
-                        <div class="taskitem" onclick="commentHistory('${task.id}','${task.record_id}')">
+                        <div class="taskitem" onclick="showRequestSummaryAndCommentHistory('${task.id}','${task.record_id}')">
                             <img src="source/man-user.png">
                             <p>Dear ${task.assignee.name}</p>
                             <p>${task.id}</p>
@@ -83,12 +90,8 @@ function allTask(){
     })
 }
 
+// Submit task by current user
 function submitTask(taskid,recordid,status){
-    // 'behalf-name': $('#behalf-name').val(),
-    // 'behalf-position' : $('#behalf-position').val(),
-    // "distribution": $('#distribution-cost').val(),
-    // "date": $('#date-start').val(),
-    // "comment": $('#comment-requester').val()
     
     if ($('textarea').val() == ""){
         alert("Note must be inputted")
@@ -229,8 +232,9 @@ function getProfile(){
     })
 }
 
-function getEmployeeData(){
-    // console.log($('#employee-selection').val())
+// Show employee data
+function showSelectedEmployeeData(){
+    
     $.ajax({
         method: 'POST',
         url: 'http://localhost:7000/current-employee-data',
@@ -310,7 +314,8 @@ function getEmployeeData(){
     })
 }
 
-function getPositionData(){
+// Show propose position data
+function showSelectedProposedPositionData(){
 
     $.ajax({
         method: 'POST',
@@ -377,6 +382,7 @@ function getPositionData(){
     })
 }
 
+// Submit form requester to create and submit record
 function submitForm(){
     
     document.getElementById('regForm').style.display = "none";
@@ -408,7 +414,8 @@ function submitForm(){
     })
 }
 
-function getSAP(){
+// Show all SAP that currently or have been processed
+function showSAP(){
     $.ajax({
         method: 'GET',
         url: 'http://localhost:7000/SAP-list',
@@ -478,7 +485,8 @@ function getSAP(){
     })
 }
 
-function commentHistory(task_id,record_id){
+// Show summary of a current request and comment history
+function showRequestSummaryAndCommentHistory(task_id,record_id){
     
     document.getElementById('modal-form').style.display = "block";
     $('#confirmation').append(`<button onclick="submitTask('${task_id}','${record_id}','Approved')" id="approve">Approved</button>`)
@@ -488,7 +496,7 @@ function commentHistory(task_id,record_id){
     
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:7000/comment-history',
+        url: 'http://localhost:7000/request-summary-and-comment-history',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', getCookie('token'));
             req.setRequestHeader("Content-Type", "application/json");
@@ -695,7 +703,9 @@ function commentHistory(task_id,record_id){
                 var date_finished = new Date(comment_histories.data[i].published)
             $('#comment-hismodal').append(`
                 <div class="comment-modal">
-                    <p>XXX</p>
+                    <div class="img-modal">
+                        <img src="source/man-user.png"/>
+                    </div>
                     <p>${comment_histories.data[i].actor.display_name}</p>
                     <p>${data_from_db[comment_histories.data[i].actor.display_name].position}</p>
                     <p>${data_from_db[comment_histories.data[i].actor.display_name].activity}</p>
@@ -716,7 +726,9 @@ function commentHistory(task_id,record_id){
                 alert("ini hr belum approve")
                $('#comment-hismodal').append([
                    `<div class="comment-modal">
-                        <p>XXX</p>
+                        <div class="img-modal">
+                            <img src="source/man-user.png"/>
+                        </div>
                         <p>${comment_histories.data[i-1].object.display_name}</p>
                         <p>${data_from_db[comment_histories.data[i-1].object.display_name].position}</p>
                         <p>${data_from_db[comment_histories.data[i-1].object.display_name].activity}</p>
@@ -726,7 +738,9 @@ function commentHistory(task_id,record_id){
                         <p>Waiting</p>
                     </div>`,
                     `<div class="comment-modal">
-                        <p>XXX</p>
+                        <div class="img-modal">
+                            <img src="source/man-user.png"/>
+                        </div>
                         <p>${comment_histories.data[i].object.display_name}</p>
                         <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
                         <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
@@ -742,14 +756,16 @@ function commentHistory(task_id,record_id){
                 var date_started = new Date(comment_histories.data[i].published)
                 $('#comment-hismodal').append(
                     `<div class="comment-modal">
-                         <p>XXX</p>
-                         <p>${comment_histories.data[i].object.display_name}</p>
-                         <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
-                         <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
-                         <p>${date_started.toLocaleString()}</p>
-                         <p>Waiting</p>
-                         <p>Waiting</p>
-                         <p>Waiting</p>
+                        <div class="img-modal">
+                            <img src="source/man-user.png"/>
+                        </div>
+                        <p>${comment_histories.data[i].object.display_name}</p>
+                        <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
+                        <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
+                        <p>${date_started.toLocaleString()}</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
+                        <p>Waiting</p>
                      </div>`)
             }
             // if one hr have approved
@@ -761,7 +777,9 @@ function commentHistory(task_id,record_id){
 
                 $('#comment-hismodal').append([
                     `<div class="comment-modal">
-                        <p>XXX</p>
+                        <div class="img-modal">
+                            <img src="source/man-user.png"/>
+                        </div>
                         <p>${comment_histories.data[i-1].object.display_name}</p>
                         <p>${data_from_db[comment_histories.data[i-1].object.display_name].position}</p>
                         <p>${data_from_db[comment_histories.data[i-1].object.display_name].activity}</p>
@@ -771,7 +789,9 @@ function commentHistory(task_id,record_id){
                         <p>Waiting</p>
                     </div>`,
                     `<div class="comment-modal">
-                        <p>XXX</p>
+                        <div class="img-modal">
+                            <img src="source/man-user.png"/>
+                        </div>
                         <p>${comment_histories.data[i].object.display_name}</p>
                         <p>${data_from_db[comment_histories.data[i].object.display_name].position}</p>
                         <p>${data_from_db[comment_histories.data[i].object.display_name].activity}</p>
@@ -796,7 +816,9 @@ function commentHistory(task_id,record_id){
                 if (first_hr == first_complete){
                     $('#comment-hismodal').append([
                         `<div class="comment-modal">
-                            <p>XXX</p>
+                            <div class="img-modal">
+                                <img src="source/man-user.png"/>
+                            </div>
                             <p>${first_hr}</p>
                             <p>${data_from_db[first_hr].position}</p>
                             <p>${data_from_db[first_hr].activity}</p>
@@ -806,7 +828,9 @@ function commentHistory(task_id,record_id){
                             <p>${comment_histories.data[i+1].target.content}</p>
                         </div>`,
                         `<div class="comment-modal">
-                            <p>XXX</p>
+                            <div class="img-modal">
+                                <img src="source/man-user.png"/>
+                            </div>
                             <p>${second_hr}</p>
                             <p>${data_from_db[second_hr].position}</p>
                             <p>${data_from_db[second_hr].activity}</p>
@@ -820,7 +844,9 @@ function commentHistory(task_id,record_id){
                 else if (first_hr == second_complete){
                     $('#comment-hismodal').append([
                         `<div class="comment-modal">
-                            <p>XXX</p>
+                            <div class="img-modal">
+                                <img src="source/man-user.png"/>
+                            </div>
                             <p>${first_hr}</p>
                             <p>${data_from_db[first_hr].position}</p>
                             <p>${data_from_db[first_hr].activity}</p>
@@ -830,7 +856,9 @@ function commentHistory(task_id,record_id){
                             <p>${comment_histories.data[i+2].target.content}</p>
                         </div>`,
                         `<div class="comment-modal">
-                            <p>XXX</p>
+                            <div class="img-modal">
+                                <img src="source/man-user.png"/>
+                            </div>
                             <p>${second_hr}</p>
                             <p>${data_from_db[second_hr].position}</p>
                             <p>${data_from_db[second_hr].activity}</p>
@@ -856,7 +884,7 @@ function commentHistory(task_id,record_id){
     })
 }
 
-/****** FOR INTERACRTION IN FRON END ******/
+/****** FOR INTERACRTION IN FRONT END ******/
 
 if (getCookie('requester') !== 'true'){
     $("#request-tab").hide()
