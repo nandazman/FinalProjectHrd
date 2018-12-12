@@ -17,6 +17,20 @@ body{
     font-size: 24px;
     color: white;
     font-family: 'Heebo', sans-serif;
+    @media screen and (max-width: 659px) {
+        margin:0;
+    }
+    .greeting{
+        display: flex;
+        width: -moz-fit-content;
+        font-family: 'Acme', sans-serif;
+        color: brown;
+        font-size: 30px;
+        @media screen and (max-width: 659px) {
+            margin:0 auto;
+        }
+    }
+    
 }
 
 section {
@@ -29,13 +43,18 @@ header{
     display: flex;
     padding: 10px;
     justify-content: space-around;
+    flex-wrap:wrap;
     .tittle{
         height: 180px;
-        width:344px;
+        min-width:300px;
         padding: 36px;
         background-color: white;
         border-radius: 7px;
         box-shadow: 10px 10px 10px #a74c4c;
+        margin:0px 10px;
+        @media screen and (max-width: 659px) {
+            margin-top:50px;
+          }
         &:hover{
             cursor: pointer;
             opacity: 0.7;
@@ -61,13 +80,7 @@ header{
         }
     }
 }
-.greeting{
-    display: flex;
-    font-family: 'Acme', sans-serif;
-    color: brown;
-    font-size: 30px;
 
-}
 // atas
 .request{
     width: 70vw;
@@ -114,6 +127,14 @@ header{
                 width: 100px;
                 text-align: center;
                 vertical-align: middle;
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                &:hover{
+                    white-space: normal;
+                    overflow: unset;
+                }
             }
         }
         .comment{
@@ -176,7 +197,7 @@ footer {
         background-color: #eceff1;
         box-shadow: 10px 10px 10px #a74c4c;
         transition: all 0.5s;
-        color: brown;
+        color: black;
         box-shadow: 0 4px 8px 0 brown;
         background-color: #f8f9fa5e;
         img{
@@ -188,8 +209,8 @@ footer {
             box-shadow: 15px 15px 1px #a74c4c;
             cursor: pointer;
             margin-right: -10px;
-        }
 
+        }
     }
 }
 
@@ -379,6 +400,14 @@ textarea{
         p{
             width: 100px;
             text-align: center;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            &:hover{
+                white-space: normal;
+                overflow: unset;
+            }
         }
        
     }
@@ -405,7 +434,7 @@ textarea{
             text-overflow: ellipsis;
             &:hover{
                 white-space: normal;
-                text-overflow:ellipsis;
+                overflow: unset;
              
             }
         }
