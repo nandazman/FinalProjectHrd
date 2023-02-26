@@ -10,7 +10,7 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Dewa626429@localhost:5432/DatabaseHR'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Hahaha123@localhost:5432/DatabaseHR'
 app.config['SECRET_KEY'] = os.urandom(24)
 
 CORS(app)
